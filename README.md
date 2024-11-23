@@ -46,7 +46,7 @@ Suivre ce guide pour réinstaller le Secure Boot
 [Documentation Bazzite - Secure Boot Instructions](https://docs.bazzite.gg/General/Installation_Guide/secure_boot/#method-b-after-installation-method).  
 <br>
 
-### Host name
+### Configuration système
 Changement du nom du PC `hostnamectl set-hostname <hostname>`  
 Modification du menu KDE `kmenuedit`
 <br>
