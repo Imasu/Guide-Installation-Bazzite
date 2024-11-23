@@ -43,11 +43,12 @@ Suppression d'un package livré par défaut dans la couche de base `rpm-ostree o
 
 ### Secure Boot
 Suivre ce guide pour réinstaller le Secure Boot
-[Documentation Bazzite - Secure Boot Instructions](https://docs.bazzite.gg/General/Installation_Guide/secure_boot/#method-b-after-installation-method)  
+[Documentation Bazzite - Secure Boot Instructions](https://docs.bazzite.gg/General/Installation_Guide/secure_boot/#method-b-after-installation-method).  
 <br>
 
 ### Host name
-Commande `hostnamectl set-hostname <hostname>`  
+Changement du nom du PC `hostnamectl set-hostname <hostname>`  
+Modification du menu KDE `kmenuedit`
 <br>
 
 ### Flatpak
@@ -64,10 +65,21 @@ Commande `hostnamectl set-hostname <hostname>`
 - Apostrophe : Outil pour rédiger les fichiers ReadMe Github  
 <br><br>
 
+### AppImage
+Autre service d'applications notament pour celles achetées.  
+Gestion à partir de l'application `Gear Level`.  
+
+#### Applications intéressantes  
+- Cider (achetée via [itch.io](https://itch.io))  
+<br><br>
+
 ## Modding du système KDE
 Le modding du bureau KDE est particulier sur les distribution uBlue. **Il ne faut pas installer les thèmes KDE à partir de l'installateur KDE de base mais les installer manuellement** dans son répertoire Home.  
+Sauvegarde du bureau après paramètrage disponible sous `One Drive`  
+
 [Documentation Bazzite - Customisation du bureau KDE](https://docs.bazzite.gg/General/Desktop_Environment_Tweaks/)  
 [Bonne ressource sur le modding KDE](https://itsfoss.com/properly-theme-kde-plasma/)
+
 
 ### Installation des thèmes
 1. Sauvegarde du thème téléchargé depuis le [KDE Store](https://store.kde.org/browse/) dans le répertoire `~/.local/share/plasma/`  
@@ -91,7 +103,7 @@ Exemple: `~/.icons/:ro` dans la catégorie "Filesystem"
 Installer le composant en sur-couche `rpm-ostree install kvantum`  
 
 #### Références pour les thèmes
-Icones : Nova7, Nordzy, Fluent
+Icones : Nova7 (préféré), Nordzy, Fluent
 
 
 
