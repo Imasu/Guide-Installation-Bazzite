@@ -114,6 +114,25 @@ Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans
 - [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
 
+<br>
+En plus, il convient de vérifier que le CPU a le IOMMU activé:  
+Run the following command  
+
+```
+dmesg | grep -i -e DMAR -e IOMMU
+```
+  
+Si ce n'est pas le cas, lancer:
+```
+sudo rpm-ostree kargs \
+  --append-if-missing="intel_iommu=on" \
+  --append-if-missing="iommu=pt" \
+  --append-if-missing="rd.driver.pre=vfio_pci" \
+  --reboot
+```
+
+
+
 fin
 
 
