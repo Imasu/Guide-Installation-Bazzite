@@ -62,6 +62,7 @@ Modification du menu KDE `kmenuedit`
 - Rechercher un package `flatpak search <package>`  
 
 #### Applications intéressantes  
+A installer sur la session System pour éviter les doublons des packages de base et gagner de la place  
 - Bitwarden  
 - SaveDesktop : Sauvegarde du bureau linux pour restoration  
 - Apostrophe : Outil pour rédiger les fichiers ReadMe Github  
@@ -106,7 +107,13 @@ Installer le composant en sur-couche `rpm-ostree install kvantum`
 
 #### Références pour les thèmes
 Icones : Nova7 (préféré), Nordzy, Fluent
+<br><br>
 
+## Installation d'une machine virtuelle Windows avec copier/coller et taille de bureau ajustable
+Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.  
+- [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)
+- [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
 
+fin
 
 
