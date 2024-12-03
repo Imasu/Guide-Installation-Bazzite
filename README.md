@@ -60,6 +60,7 @@ Modification du menu KDE `kmenuedit`
 - Liste les flatpack d'une session `flatpack remote-ls <remote>`  
 - Installation et désinstallation sur la session utilisateur `flatpak install <remote> <package>` / `flatpak uninstall <remote> <package>`  
 - Rechercher un package `flatpak search <package>`  
+- Permissions d'un package `flatpak info --show-permissions <package>`
 
 #### Applications intéressantes  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place  
@@ -82,7 +83,6 @@ Sauvegarde du bureau après paramètrage disponible sous `One Drive`
 
 [Documentation Bazzite - Customisation du bureau KDE](https://docs.bazzite.gg/General/Desktop_Environment_Tweaks/)  
 [Bonne ressource sur le modding KDE](https://itsfoss.com/properly-theme-kde-plasma/)
-
 
 ### Installation des thèmes
 1. Sauvegarde du thème téléchargé depuis le [KDE Store](https://store.kde.org/browse/) dans le répertoire `~/.local/share/plasma/`  
@@ -131,8 +131,175 @@ sudo rpm-ostree kargs \
   --reboot
 ```
 
+A noter que mon processeur actuel ne permet pas un pass-through complet...  
+<br><br>
+
+## Installation d'un environnement de développement
+Choix d'une installation de VS-Code par Flatpak puis utilisation de conteneurs pour les développements.  
+Puisque sous Bazzite, utilisation d'une distrobox car mise à jour automatique de celle-ci par l'intermédiaire des commmandes de mise à jour.  
+
+### Container Distrobox  
+Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.
+Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init).  
+**Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
+
+Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)
+
+```
+distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/Damien/.local/share/containers-home/Arch-DevEnv
+```  
+
+### Configuration VS Code
+Installation de l'environnement en suivant ce guide [VSCode + Dev Containers and Toolbx/Distrobox setup for Fedora Silverblue](https://gist.github.com/lbssousa/bb081e35d483520928033b2797133d5e)  
+
+#### Installation de VS-Code par flatpak
+Installation  
+```
+flatpak search com.visualstudio.code  
+flatpak --user install flathub com.visualstudio.code
+```
+
+Configuration du flatpak  
+A partir d'une configuration standard (flatseal)  
+```
+flatpak --user override --env HOST_DISPLAY="$DISPLAY" --env HOST_SHELL="$SHELL" --env HOST_SSH_AUTH_SOCK="$SSH_AUTH_SOCK" com.visualsudio.code
+??? flatpak override --user --filesystem=xdg-run/podman com.visualstudio.code ???
+flatpak override --user --filesystem=/tmp com.visualstudio.code
+```
+
+#### Rend visible podman depuis VS Code sous flatpak  
+```
+mkdir -p ${HOME}/.var/app/com.visualstudio.code/data/node_modules/bin
+ln -sf /app/bin/host-spawn ${HOME}/.var/app/com.visualstudio.code/data/node_modules/bin/podman
+```
+
+#### Configuration de VS Code  
+1. Lancer VS Code
+2. Installer l'extension `Dev Containers`
+3. `CTRL+,` pour ouvrir l'éditeur de paramètres
+4. Rechercher `docker path` et remplacer la valeur par `podman`
+
+#### Configuration de l'extension Dev Containers
+Créer un fichier de configuration dans le répertoire `${HOME}/.config/containers/containers.conf`  
+```
+[containers]
+env = ["BUILDAH_FORMAT=docker"]
+label = false
+userns = "keep-id"
+```
+
+#### Configuration des containers distrobox (pour VS Code sous flatpak)
+Pour **chacun des containers distrobox**  
+1. Créer un fichier json dans le répertoire `${HOME}/.var/app/com.visualstudio.code/config/Code/User/globalStorage/ms-vscode-remote.remote-containers/nameConfigs/${YOUR_DISTROBOX_CONTAINER_NAME}.json`
+```
+{
+  "remoteUser": "${localEnv:USER}",
+  "settings": {
+    "dev.containers.copyGitConfig": false,
+    "dev.containers.gitCredentialHelperConfigLocation": "none"
+  },
+  "terminal.integrated.profiles.linux": {
+    "distrobox": {
+      "path": "${localEnv:SHELL}",
+      "args": [
+        "-l"
+      ]
+    },
+    "toolbx": {
+      "path": "/usr/sbin/capsh",
+      "args": [
+        "--caps=",
+        "--",
+        "-c",
+        "exec \"\$@\"",
+        "/bin/sh",
+        "${localEnv:SHELL}",
+        "-l"
+      ]
+    }
+  },
+  "terminal.integrated.defaultProfile.linux": "distrobox",
+  "remoteEnv": {
+    "COLORTERM": "${localEnv:COLORTERM}",
+    "DBUS_SESSION_BUS_ADDRESS": "${localEnv:DBUS_SESSION_BUS_ADDRESS}",
+    "DESKTOP_SESSION": "${localEnv:DESKTOP_SESSION}",
+    "DISPLAY": "${localEnv:HOST_DISPLAY}",
+    "LANG": "${localEnv:LANG}",
+    "SHELL": "${localEnv:HOST_SHELL}",
+    "SSH_AUTH_SOCK": "${localEnv:HOST_SSH_AUTH_SOCK}",
+    "TERM": "${localEnv:TERM}",
+    "VTE_VERSION": "${localEnv:VTE_VERSION}",
+    "XDG_CURRENT_DESKTOP": "${localEnv:XDG_CURRENT_DESKTOP}",
+    "XDG_DATA_DIRS": "${localEnv:XDG_DATA_DIRS}",
+    "XDG_MENU_PREFIX": "${localEnv:XDG_MENU_PREFIX}",
+    "XDG_RUNTIME_DIR": "${localEnv:XDG_RUNTIME_DIR}",
+    "XDG_SESSION_DESKTOP": "${localEnv:XDG_SESSION_DESKTOP}",
+    "XDG_SESSION_TYPE": "${localEnv:XDG_SESSION_TYPE}"
+  }
+}
+```
+2. Créer un répertoire pour les données VS-Code dans le container avec le code
+```
+sudo mkdir /.vscode-server
+sudo chown ${USER}:${USER} /.vscode-server
+ln -sf /.vscode-server ${HOME}/.vscode-server
+sudo chmod 755 /root
+sudo ln -sf /.vscode-server /root/.vscode-server
+```
+
+### Installation de GoLang dans le container Arch
+Référence : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/)  
+
+#### Installation des paquets
+1. Mise à jour du système:
+```
+sudo pacman -Syu
+```
+2. Installation de GoLang & Nano :
+```
+sudo pacman -S go nano
+```
+
+#### Mise en place de l'environnement de travail:
+1. création d'un répertoire pour les projets :
+```
+mkdir -p $HOME/go-projets
+```
+2. ajouter la variable d'environnement GOPATH dans le fichier `.bashrc` qui se situe sous $HOME:
+```
+export GOPA TH=$HOME/go-projets
+```
+
+#### Organisation des projets 
+Par projet, il est recommandé de créer ces trois sous-répertoires: `src, pkg, bin`  
+<br>
+
+### Utilisation de Github
+
+#### Première configuration de Github
+Initialisation de git sur le système (ici le container):
+```
+git config --global user.name  "Imasu"
+git config --global user.email "d2bouv@gmail.com"
+```
+  
+#### Clonage d'un repo
+Pour récupérer un projet maintenu sous Github, il suffit de ce mettre dans le répertoire parent et de lancer cette commande:
+```
+git clone https://github.com/imasu/mon_repo monrépertoirecible
+```
+Si pas de répertoire cible, le nom du repo sera utilisé.  
+
+#### Paramétrage de Git sous VS-Code
+Sous KDE, si VS-Code affiche un message d'erreur sur la gestion du portefeuille de clé.
+> You're running in a KDE environment but the OS keyring is not available for encryption. Ensure you have kwallet running.
+
+Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée suivante (raccourci depuis VS-Code `Ctrl+Shift+P` puis `Preferences : Configure Runtime Arguments`):
+```
+"password-store": "gnome-libsecret"
+```
 
 
-fin
 
 
+fin  
