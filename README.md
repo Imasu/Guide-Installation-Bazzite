@@ -2,10 +2,12 @@
 
 D.Bouvier  
 <br>
-
 [Documentation Bazzite](https://docs.bazzite.gg)  
-<br><br>
 
+
+
+
+<br><br><br>
 ## Pré installation
 
 ### Type et taille des partitions à créer
@@ -17,15 +19,19 @@ D.Bouvier
 |  /systemfile       |        > 40 Go     |       BTRFS        |
 
 Détail pour un partitionnement manuel [Fedora Manual Partitioning](https://docs.fedoraproject.org/en-US/fedora-silverblue/installation/)  
-<br><br>
 
+
+
+
+<br><br><br>
 ## Commandes utiles sur une uBlue
 
 ### Spécifique à uBlue
 Update manuel `ujust update`  
+Affiche le contenu du script ujust `ujust --show <script>`  
 <br>
 
-### Fedora Atomic
+### Commandes rpm-ostree d'une Fedora Atomic
 Liste des environnements `rpm-ostree status -v`  
 Conservation de l'environnement actuel (<n>=0) `sudo ostree admin pin <n>`  
 Dé-conservation d'un environnement `sudo ostre admin pin --unpin <n>`  
@@ -37,8 +43,11 @@ Installation d'un package sur la couche de base `rpm-ostree install <package>`
 Désinstallation d'un package sur la couche de base `rpm-ostree uninstall <package>`  
 <br>
 Suppression d'un package livré par défaut dans la couche de base `rpm-ostree override remove <package>`  
-<br><br>
 
+
+
+
+<br><br><br>
 ## Setup du système
 
 ### Secure Boot
@@ -48,35 +57,96 @@ Suivre ce guide pour réinstaller le Secure Boot
 
 ### Configuration système
 Changement du nom du PC `hostnamectl set-hostname <hostname>`  
-Modification du menu KDE `kmenuedit`  
-<br><br>
+Modification du menu sous KDE `kmenuedit`  
 
-## Système d'applications
+
+
+
+
+<br><br><br>
+## Setup des applications
 
 ### Flatpak
-
 #### Quelques commandes:  
 - Liste les sessions `flatpak remotes`  
 - Liste les flatpack d'une session `flatpack remote-ls <remote>`  
 - Installation et désinstallation sur la session utilisateur `flatpak install <remote> <package>` / `flatpak uninstall <remote> <package>`  
 - Rechercher un package `flatpak search <package>`  
-- Permissions d'un package `flatpak info --show-permissions <package>`
+- Permissions d'un package `flatpak info --show-permissions <package>`  
+<br>
+
+#### Paramétrage pour toutes les applications
+Ajouter pour toutes les applications les permissions suivantes
+```
+Accélaration GPU : enable
+```
+<br>
 
 #### Applications intéressantes  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place  
-- Bitwarden  
-- SaveDesktop : Sauvegarde du bureau linux pour restoration  
+- Betterbird : remplaçant de Thunderbird car intègre des correctifs que n'a pas la version originale  
+- Bitwarden : l'extension web est suffisante dans la pratique  
+- SaveDesktop : Sauvegarde du bureau linux pour restoration (ne fonctionne pas sur une atomic)  
 - Apostrophe : Outil pour rédiger les fichiers ReadMe Github  
-<br><br>
 
+
+<br><br>
 ### AppImage
 Autre service d'applications notament pour celles achetées.  
-Gestion à partir de l'application `Gear Level`.  
+Gestion à partir de l'application `Gear Level`  
 
 #### Applications intéressantes  
 - Cider (achetée via [itch.io](https://itch.io))  
-<br><br>
 
+
+
+
+<br><br><br>
+## Modding du système GNOME
+
+### Extensions supplémentaires
+Liste d'extensions à installer  
+- Dash to Dock  
+- Extension List  
+<br>
+
+### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
+1. Créer une distrobox pour la compilation du theme avec un home folder distinct
+`distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.local/share/containers/home-folder/sys-deskcustom"`
+2. Dans la distrobox, installer toutes les dépendances demandées : `sudo dnf install <packages>`
+3. Téléchager le thème dans un répertoire temporaire et l'installer avec les commandes
+```
+./install.sh -l
+./tweaks.sh -F
+```
+4. Copier le contenu des répertoires suivants dans leur homologue du système hôte
+```
+$HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0  ->  $HOME/.config/gtk-4.0
+$HOME/.local/share/containers/home-folder/sys-deskcustom/.themes          ->  $HOME/.local/share/themes
+```
+5. Installer les Flatpaks générés par l'installation  
+Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme`.  
+Sur le système hôte, aller dans ce répertoire et pour chaque sous répertoire installer le flatpak en mode system avec par exemple la commande  
+```
+flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.flatpak
+```
+6. Paramétrer les permissions Flatpak à partir de FlatSeal  
+Ajouter pour toutes les applications les permissions suivantes  
+```
+/var/home/dbouvier/.local/share/icons/*:ro
+/usr/share/icons/*:ro
+/var/home/dbouvier/.local/share/themes/*:ro
+xdg-config/gtk-4.0:ro
+xdg-config/gtk-3.0:ro
+```
+Il n'est pas certain qu'il faille jouer cette commande du fait des paramétrages précédents  
+```
+sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0
+```
+
+
+
+<br><br><br>
 ## Modding du système KDE
 Le modding du bureau KDE est particulier sur les distribution uBlue. **Il ne faut pas installer les thèmes KDE à partir de l'installateur KDE de base mais les installer manuellement** dans son répertoire Home.  
 Sauvegarde du bureau après paramètrage disponible sous `One Drive`  
@@ -87,34 +157,41 @@ Sauvegarde du bureau après paramètrage disponible sous `One Drive`
 ### Installation des thèmes
 1. Sauvegarde du thème téléchargé depuis le [KDE Store](https://store.kde.org/browse/) dans le répertoire `~/.local/share/plasma/`  
 2. Ouvrir les paramètres système et sélectionner un par un les composants à appliquer  
+<br>
 
-#### Localisation des composants KDE extraits
-- Thème Global: `~/.local/share/plasma/look-and-feel/  
+### Localisation des composants KDE extraits
+- Thème Global: `~/.local/share/plasma/look-and-feel/`  
 - Thème Plasma: `~/.local/share/plasma/desktoptheme/`  
 - Icônes et curseurs: `~/.local/share/icons/` (différent de la doc)  
-Installation à partir d'une archive .tar.gz
+Installation à partir d'une archive .tar.gz  
 
 #### Thème du Login Manager (SDDM)
-Utiliser `Discover` pour installer les thèmes SDDM.
+Utiliser `Discover` pour installer les thèmes SDDM.  
 Ces thèmes peuvent également être mis en sur-couche (/!\ risqué) s'ils sont disponibles sous forme de package RPM avec `rpm-ostree`  
+<br>
 
 #### Autorisation des Flatpaks à utiliser les thèmes
 Certains Flatpaks, ayant des problèmes avec les curseurs, nécessitent l'accès au filesystem. Leur octroyer individuellement ou globalement à partir de `Flatseal`  
 Exemple: `~/.icons/:ro` dans la catégorie "Filesystem"  
+<br>
 
 #### Thème requérant `kvantum`  
 Installer le composant en sur-couche `rpm-ostree install kvantum`  
+<br>
 
 #### Références pour les thèmes
-Icones : Nova7 (préféré), Nordzy, Fluent
-<br><br>
+Icones : Nova7 (préféré), Nordzy, Fluent  
 
+
+
+
+<br><br><br>
 ## Installation d'une machine virtuelle Windows avec copier/coller et taille de bureau ajustable
 Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.  
 - [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
-
 <br>
+
 En plus, il convient de vérifier que le CPU a le IOMMU activé:  
 Run the following command  
 
@@ -130,16 +207,18 @@ sudo rpm-ostree kargs \
   --append-if-missing="rd.driver.pre=vfio_pci" \
   --reboot
 ```
+A noter que mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
 
-A noter que mon processeur actuel ne permet pas un pass-through complet...  
-<br><br>
 
-## Installation d'un environnement de développement
-Choix d'une installation de VS-Code par Flatpak puis utilisation de conteneurs pour les développements.  
-Puisque sous Bazzite, utilisation d'une distrobox car mise à jour automatique de celle-ci par l'intermédiaire des commmandes de mise à jour.  
+
+
+<br><br><br>
+## Installation d'un environnement de développement containerizé
+Choix le plus simple et avisé !!  
+Utilisation d'une distrobox `NixOS` pour que cela soit plus simple à répliquer  
 
 ### Container Distrobox  
-Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.
+Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.  
 Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init).  
 **Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
 
@@ -147,7 +226,31 @@ Liste de containers [distrobox containers distros](https://github.com/89luca89/d
 
 ```
 distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/Damien/.local/share/containers-home/Arch-DevEnv
-```  
+```
+<br>
+
+### A écrire !!!!!
+
+
+
+
+<br><br><br>
+## Installation d'un environnement de développement sur le système hôte avec gestion de containers
+Pas le choix au final le plus avisé -> il est préférable d'installer l'environnement de dév (VS-Code, git, langage directement dans une distrobox  
+Installation de VS-Code par Flatpak puis utilisation de conteneurs pour les développements.  
+Puisque sous Bazzite, utilisation d'une distrobox car mise à jour automatique de celle-ci par l'intermédiaire des commmandes de mise à jour.  
+
+### Container Distrobox  
+Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.  
+Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init).  
+**Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
+
+Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)
+
+```
+distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/Damien/.local/share/containers-home/Arch-DevEnv
+```
+<br>
 
 ### Configuration VS Code
 Installation de l'environnement en suivant ce guide [VSCode + Dev Containers and Toolbx/Distrobox setup for Fedora Silverblue](https://gist.github.com/lbssousa/bb081e35d483520928033b2797133d5e)  
@@ -166,18 +269,21 @@ flatpak --user override --env HOST_DISPLAY="$DISPLAY" --env HOST_SHELL="$SHELL" 
 ??? flatpak override --user --filesystem=xdg-run/podman com.visualstudio.code ???
 flatpak override --user --filesystem=/tmp com.visualstudio.code
 ```
+<br>
 
 #### Rend visible podman depuis VS Code sous flatpak  
 ```
 mkdir -p ${HOME}/.var/app/com.visualstudio.code/data/node_modules/bin
 ln -sf /app/bin/host-spawn ${HOME}/.var/app/com.visualstudio.code/data/node_modules/bin/podman
 ```
+<br>
 
 #### Configuration de VS Code  
 1. Lancer VS Code
 2. Installer l'extension `Dev Containers`
 3. `CTRL+,` pour ouvrir l'éditeur de paramètres
 4. Rechercher `docker path` et remplacer la valeur par `podman`
+<br>
 
 #### Configuration de l'extension Dev Containers
 Créer un fichier de configuration dans le répertoire `${HOME}/.config/containers/containers.conf`  
@@ -187,6 +293,7 @@ env = ["BUILDAH_FORMAT=docker"]
 label = false
 userns = "keep-id"
 ```
+<br>
 
 #### Configuration des containers distrobox (pour VS Code sous flatpak)
 Pour **chacun des containers distrobox**  
@@ -247,6 +354,8 @@ sudo chmod 755 /root
 sudo ln -sf /.vscode-server /root/.vscode-server
 ```
 
+
+<br><br>
 ### Installation de GoLang dans le container Arch
 Référence : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/)  
 
@@ -259,6 +368,7 @@ sudo pacman -Syu
 ```
 sudo pacman -S go nano
 ```
+<br>
 
 #### Mise en place de l'environnement de travail:
 1. création d'un répertoire pour les projets :
@@ -269,11 +379,13 @@ mkdir -p $HOME/go-projets
 ```
 export GOPA TH=$HOME/go-projets
 ```
+<br>
 
 #### Organisation des projets 
 Par projet, il est recommandé de créer ces trois sous-répertoires: `src, pkg, bin`  
-<br>
 
+
+<br><br>
 ### Utilisation de Github
 
 #### Première configuration de Github
@@ -282,13 +394,15 @@ Initialisation de git sur le système (ici le container):
 git config --global user.name  "Imasu"
 git config --global user.email "d2bouv@gmail.com"
 ```
-  
+<br>
+
 #### Clonage d'un repo
 Pour récupérer un projet maintenu sous Github, il suffit de ce mettre dans le répertoire parent et de lancer cette commande:
 ```
 git clone https://github.com/imasu/mon_repo monrépertoirecible
 ```
 Si pas de répertoire cible, le nom du repo sera utilisé.  
+<br>
 
 #### Paramétrage de Git sous VS-Code
 Sous KDE, si VS-Code affiche un message d'erreur sur la gestion du portefeuille de clé.
