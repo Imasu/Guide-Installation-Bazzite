@@ -3,6 +3,7 @@
 D.Bouvier  
 <br>
 [Documentation Bazzite](https://docs.bazzite.gg)  
+[Blog généraliste sur Linux avec des astuces](https://www.linuxtricks.fr/pages/bienvenue-sur-linuxtricks)  
 
 
 
@@ -43,6 +44,18 @@ Installation d'un package sur la couche de base `rpm-ostree install <package>`
 Désinstallation d'un package sur la couche de base `rpm-ostree uninstall <package>`  
 <br>
 Suppression d'un package livré par défaut dans la couche de base `rpm-ostree override remove <package>`  
+<br>
+
+### Configuration de BASH
+Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/)  
+L'installation via wget fonctionne bien  
+Thème sélectionné: `powerline`  
+Corriger un problème d'autocompletion par ajout en fin de .bashrc de `complete -d cd`. [Source](https://github.com/ohmybash/oh-my-bash/issues/448)  
+<br>
+La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
+Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de $HOME  
+
+<br>
 
 
 
@@ -108,6 +121,8 @@ Gestion à partir de l'application `Gear Level`
 Liste d'extensions à installer  
 - Dash to Dock  
 - Extension List  
+- Media Label and Controls  
+- Weather O'Clock  
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
@@ -143,7 +158,7 @@ Il n'est pas certain qu'il faille jouer cette commande du fait des paramétrages
 ```
 sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0
 ```
-
+7. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`
 
 
 <br><br><br>
@@ -213,7 +228,7 @@ A noter que mon processeur actuel ne permet pas un pci pass-through complet... d
 
 
 <br><br><br>
-## Installation d'un environnement de développement containerizé
+## Installation d'un environnement de développement conteneurisé
 Choix le plus simple et avisé !!  
 Utilisation d'une distrobox `NixOS` pour que cela soit plus simple à répliquer  
 
@@ -222,12 +237,15 @@ Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la ve
 Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init).  
 **Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
 
-Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)
-
+Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)  
+Exemple (attention au répertoire pour le dossier $HOME du conteneur)  
 ```
-distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/Damien/.local/share/containers-home/Arch-DevEnv
+distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/$USER/.local/share/containers/home-folder/Arch-DevEnv
 ```
 <br>
+
+### Installation des outils
+
 
 ### A écrire !!!!!
 
@@ -241,15 +259,7 @@ Installation de VS-Code par Flatpak puis utilisation de conteneurs pour les dév
 Puisque sous Bazzite, utilisation d'une distrobox car mise à jour automatique de celle-ci par l'intermédiaire des commmandes de mise à jour.  
 
 ### Container Distrobox  
-Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.  
-Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init).  
-**Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
-
-Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)
-
-```
-distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/Damien/.local/share/containers-home/Arch-DevEnv
-```
+Cf supra.  
 <br>
 
 ### Configuration VS Code
