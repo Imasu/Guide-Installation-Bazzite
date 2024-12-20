@@ -4,11 +4,11 @@ D.Bouvier
 <br>
 [Documentation Bazzite](https://docs.bazzite.gg)  
 [Blog généraliste sur Linux avec des astuces](https://www.linuxtricks.fr/pages/bienvenue-sur-linuxtricks)  
-
-
-
-
 <br><br><br>
+
+
+
+
 ## Pré installation
 
 ### Type et taille des partitions à créer
@@ -20,11 +20,11 @@ D.Bouvier
 |  /systemfile       |        > 40 Go     |       BTRFS        |
 
 Détail pour un partitionnement manuel [Fedora Manual Partitioning](https://docs.fedoraproject.org/en-US/fedora-silverblue/installation/)  
-
-
-
-
 <br><br><br>
+
+
+
+
 ## Commandes utiles sur une uBlue
 
 ### Spécifique à uBlue
@@ -44,23 +44,11 @@ Installation d'un package sur la couche de base `rpm-ostree install <package>`
 Désinstallation d'un package sur la couche de base `rpm-ostree uninstall <package>`  
 <br>
 Suppression d'un package livré par défaut dans la couche de base `rpm-ostree override remove <package>`  
-<br>
-
-### Configuration de BASH
-Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/)  
-L'installation via wget fonctionne bien  
-Thème sélectionné: `powerline`  
-Corriger un problème d'autocompletion par ajout en fin de .bashrc de `complete -d cd`. [Source](https://github.com/ohmybash/oh-my-bash/issues/448)  
-<br>
-La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
-Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de $HOME  
-
-<br>
-
-
-
-
 <br><br><br>
+
+
+
+
 ## Setup du système
 
 ### Secure Boot
@@ -71,12 +59,23 @@ Suivre ce guide pour réinstaller le Secure Boot
 ### Configuration système
 Changement du nom du PC `hostnamectl set-hostname <hostname>`  
 Modification du menu sous KDE `kmenuedit`  
+<br>
 
-
-
-
-
+### Configuration de BASH
+Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
+<br>
+Dans le fichier `.bashrc`  
+1. Thème sélectionné: `powerline`  
+2. Corriger un problème d'autocompletion par ajout en fin de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)).  
+3. Prise en compte des modifications `source .bashrc`  
+<br>
+La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
+Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
 <br><br><br>
+
+
+
+
 ## Setup des applications
 
 ### Flatpak
@@ -101,20 +100,20 @@ A installer sur la session System pour éviter les doublons des packages de base
 - Bitwarden : l'extension web est suffisante dans la pratique  
 - SaveDesktop : Sauvegarde du bureau linux pour restoration (ne fonctionne pas sur une atomic)  
 - Apostrophe : Outil pour rédiger les fichiers ReadMe Github  
-
-
 <br><br>
+
+
 ### AppImage
 Autre service d'applications notament pour celles achetées.  
 Gestion à partir de l'application `Gear Level`  
 
 #### Applications intéressantes  
 - Cider (achetée via [itch.io](https://itch.io))  
-
-
-
-
 <br><br><br>
+
+
+
+
 ## Modding du système GNOME
 
 ### Extensions supplémentaires
@@ -230,7 +229,6 @@ A noter que mon processeur actuel ne permet pas un pci pass-through complet... d
 <br><br><br>
 ## Installation d'un environnement de développement conteneurisé
 Choix le plus simple et avisé !!  
-Utilisation d'une distrobox `NixOS` pour que cela soit plus simple à répliquer  
 
 ### Container Distrobox  
 Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.  
@@ -238,16 +236,53 @@ Exemple pour une image Arch-Toolbox (optimisée pour un container) avec impléme
 **Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
 
 Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)  
-Exemple (attention au répertoire pour le dossier $HOME du conteneur)  
+Exemple : attention au répertoire pour le dossier $HOME du conteneur  
 ```
 distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/$USER/.local/share/containers/home-folder/Arch-DevEnv
 ```
 <br>
 
-### Installation des outils
+### Installation de GoLang dans le container Arch
+Référence [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/)  
+
+#### Installation des paquets
+Installation des paquets essentiels nano git code et le langage go  
+```
+sudo pacman -Syu
+sudo pacman -S nano git code go
+```
+Les dépendances go iront se loger dans un répertoire `go` du dossier $USER.  
+Il est possible de créer un autre répertoire, exemple `go-projets` pour y stocker ses programmes.  
+Par projet, il est recommandé de créer ces trois sous-répertoires: `src, pkg, bin`.  
+<br>
+
+[Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
+```
+git config --global user.name  "Imasu"
+git config --global user.email "d2bouv@gmail.com"
+
+```
+<br>
+L'installation de Oh-My-Bash est possible en suivant le guide supra.  Pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`
+<br>
+
+#### Mise en oeuvre de code & git
+**Sous environnement GNOME**
+1. Installer en plus `gnome-keyring`
+2. Lancer VS-Code, sur l'écran d’accueil, sélectionner 'Clone Git Repository...' et suivre les instructions. Tout se met ensuite en place... 
+<br>
+
+**Sous KDE**
+Lors de l'utilisation de git sous VS-Code, si sous KDE, VS-Code affiche un message d'erreur sur la gestion du portefeuille de clé.
+> You're running in a KDE environment but the OS keyring is not available for encryption. Ensure you have kwallet running.  
+
+Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée suivante (raccourci depuis VS-Code `Ctrl+Shift+P` puis `Preferences : Configure Runtime Arguments`):
+```
+"password-store": "gnome-libsecret"
+```
+<br>
 
 
-### A écrire !!!!!
 
 
 
@@ -355,6 +390,7 @@ Pour **chacun des containers distrobox**
   }
 }
 ```
+
 2. Créer un répertoire pour les données VS-Code dans le container avec le code
 ```
 sudo mkdir /.vscode-server
@@ -365,65 +401,9 @@ sudo ln -sf /.vscode-server /root/.vscode-server
 ```
 
 
-<br><br>
-### Installation de GoLang dans le container Arch
-Référence : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/)  
-
-#### Installation des paquets
-1. Mise à jour du système:
-```
-sudo pacman -Syu
-```
-2. Installation de GoLang & Nano :
-```
-sudo pacman -S go nano
-```
-<br>
-
-#### Mise en place de l'environnement de travail:
-1. création d'un répertoire pour les projets :
-```
-mkdir -p $HOME/go-projets
-```
-2. ajouter la variable d'environnement GOPATH dans le fichier `.bashrc` qui se situe sous $HOME:
-```
-export GOPA TH=$HOME/go-projets
-```
-<br>
-
-#### Organisation des projets 
-Par projet, il est recommandé de créer ces trois sous-répertoires: `src, pkg, bin`  
-
-
-<br><br>
-### Utilisation de Github
-
-#### Première configuration de Github
-Initialisation de git sur le système (ici le container):
-```
-git config --global user.name  "Imasu"
-git config --global user.email "d2bouv@gmail.com"
-```
-<br>
-
-#### Clonage d'un repo
-Pour récupérer un projet maintenu sous Github, il suffit de ce mettre dans le répertoire parent et de lancer cette commande:
-```
-git clone https://github.com/imasu/mon_repo monrépertoirecible
-```
-Si pas de répertoire cible, le nom du repo sera utilisé.  
-<br>
-
-#### Paramétrage de Git sous VS-Code
-Sous KDE, si VS-Code affiche un message d'erreur sur la gestion du portefeuille de clé.
-> You're running in a KDE environment but the OS keyring is not available for encryption. Ensure you have kwallet running.
-
-Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée suivante (raccourci depuis VS-Code `Ctrl+Shift+P` puis `Preferences : Configure Runtime Arguments`):
-```
-"password-store": "gnome-libsecret"
-```
 
 
 
 
 fin  
+
