@@ -19,7 +19,7 @@ D.Bouvier
 |  /boot             |           1 Go     |        EXT4        |
 |  /systemfile       |        > 40 Go     |       BTRFS        |
 
-Détail pour un partitionnement manuel [Fedora Manual Partitioning](https://docs.fedoraproject.org/en-US/fedora-silverblue/installation/)  
+Détail pour un partitionnement manuel [Fedora Manual Partitioning](https://docs.fedoraproject.org/en-US/fedora-silverblue/installation/).  
 <br><br><br>
 
 
@@ -28,22 +28,22 @@ Détail pour un partitionnement manuel [Fedora Manual Partitioning](https://docs
 ## Commandes utiles sur une uBlue
 
 ### Spécifique à uBlue
-Update manuel `ujust update`  
-Affiche le contenu du script ujust `ujust --show <script>`  
+Update manuel `ujust update`.  
+Affiche le contenu du script ujust `ujust --show <script>`.  
 <br>
 
 ### Commandes rpm-ostree d'une Fedora Atomic
-Liste des environnements `rpm-ostree status -v`  
-Conservation de l'environnement actuel (<n>=0) `sudo ostree admin pin <n>`  
-Dé-conservation d'un environnement `sudo ostre admin pin --unpin <n>`  
+Liste des environnements `rpm-ostree status -v`.  
+Conservation de l'environnement actuel (<n>=0) `sudo ostree admin pin <n>`.  
+Dé-conservation d'un environnement `sudo ostre admin pin --unpin <n>`.  
 <br>
-Rollback vers le précédent environnement `rpm-ostree rollback`  
+Rollback vers le précédent environnement `rpm-ostree rollback`.  
 <br>
-Rechercher un package dans le dépôt ostree `rpm-ostree search <package>`  
-Installation d'un package sur la couche de base `rpm-ostree install <package>`  
-Désinstallation d'un package sur la couche de base `rpm-ostree uninstall <package>`  
+Rechercher un package dans le dépôt ostree `rpm-ostree search <package>`.  
+Installation d'un package sur la couche de base `rpm-ostree install <package>`.  
+Désinstallation d'un package sur la couche de base `rpm-ostree uninstall <package>`.  
 <br>
-Suppression d'un package livré par défaut dans la couche de base `rpm-ostree override remove <package>`  
+Suppression d'un package livré par défaut dans la couche de base `rpm-ostree override remove <package>`.  
 <br><br><br>
 
 
@@ -57,17 +57,18 @@ Suivre ce guide pour réinstaller le Secure Boot
 <br>
 
 ### Configuration système
-Changement du nom du PC `hostnamectl set-hostname <hostname>`  
-Modification du menu sous KDE `kmenuedit`  
+Changement du nom du PC `hostnamectl set-hostname <hostname>`.  
+Modification du menu sous KDE `kmenuedit`.  
 <br>
 
 ### Configuration de BASH
 Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
 <br>
-Dans le fichier `.bashrc`  
-1. Thème sélectionné: `powerline`  
-2. Corriger un problème d'autocompletion par ajout en fin de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)).  
-3. Prise en compte des modifications `source .bashrc`  
+Dans le fichier `.bashrc`:  
+1. Thème sélectionné: `powerline`,  
+2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
+3. Corriger un problème d'autocompletion par ajout en fin de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
+4. Prise en compte des modifications `source .bashrc`.  
 <br>
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
@@ -88,27 +89,27 @@ Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.
 <br>
 
 #### Paramétrage pour toutes les applications
-Ajouter pour toutes les applications les permissions suivantes
+Ajouter pour toutes les applications les permissions suivantes:  
 ```
 Accélaration GPU : enable
 ```
 <br>
 
 #### Applications intéressantes  
-A installer sur la session System pour éviter les doublons des packages de base et gagner de la place  
-- Betterbird : remplaçant de Thunderbird car intègre des correctifs que n'a pas la version originale  
-- Bitwarden : l'extension web est suffisante dans la pratique  
-- SaveDesktop : Sauvegarde du bureau linux pour restoration (ne fonctionne pas sur une atomic)  
-- Apostrophe : Outil pour rédiger les fichiers ReadMe Github  
+A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
+- Betterbird : remplaçant de Thunderbird car intègre des correctifs que n'a pas la version originale,  
+- Bitwarden : l'extension web est suffisante dans la pratique,  
+- SaveDesktop : Sauvegarde du bureau linux pour restoration (ne fonctionne pas sur une atomic),  
+- Apostrophe : Outil pour rédiger les fichiers ReadMe Github.  
 <br><br>
 
 
 ### AppImage
 Autre service d'applications notament pour celles achetées.  
-Gestion à partir de l'application `Gear Level`  
+Gestion à partir de l'application `Gear Level`.  
 
 #### Applications intéressantes  
-- Cider (achetée via [itch.io](https://itch.io))  
+- Cider (achetée via [itch.io](https://itch.io)).  
 <br><br><br>
 
 
@@ -117,24 +118,24 @@ Gestion à partir de l'application `Gear Level`
 ## Modding du système GNOME
 
 ### Extensions supplémentaires
-Liste d'extensions à installer  
-- Dash to Dock  
-- Extension List  
-- Media Label and Controls  
-- OpenWeather Refined
-- Hide Top Bar
+Liste d'extensions à installer:  
+- Dash to Dock,  
+- Extension List,  
+- Media Label and Controls,  
+- OpenWeather Refined,  
+- Hide Top Bar.  
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
-1. Créer une distrobox pour la compilation du theme avec un home folder distinct
+1. Créer une distrobox pour la compilation du theme avec un home folder distinct  
 `distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.local/share/containers/home-folder/sys-deskcustom"`
-2. Dans la distrobox, installer toutes les dépendances demandées : `sudo dnf install <packages>`
-3. Téléchager le thème dans un répertoire temporaire et l'installer avec les commandes
+2. Dans la distrobox, installer toutes les dépendances demandées : `sudo dnf install <packages>`  
+3. Téléchager le thème dans un répertoire temporaire et l'installer avec les commandes  
 ```
 ./install.sh -l
 ./tweaks.sh -F
 ```
-4. Copier le contenu des répertoires suivants dans leur homologue du système hôte
+4. Copier le contenu des répertoires suivants dans leur homologue du système hôte  
 ```
 $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0  ->  $HOME/.config/gtk-4.0
 $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes          ->  $HOME/.local/share/themes
@@ -154,7 +155,7 @@ Ajouter dans la section `Filesystem` pour toutes les applications les permission
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-7. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`
+7. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`  
 
 
 <br><br><br>
