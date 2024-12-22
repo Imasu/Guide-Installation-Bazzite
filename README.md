@@ -153,10 +153,6 @@ Ajouter pour toutes les applications les permissions suivantes
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-Il n'est pas certain qu'il faille jouer cette commande du fait des paramétrages précédents  
-```
-sudo flatpak override --filesystem=xdg-config/gtk-3.0 && sudo flatpak override --filesystem=xdg-config/gtk-4.0
-```
 7. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`
 
 
@@ -202,26 +198,15 @@ Icones : Nova7 (préféré), Nordzy, Fluent
 <br><br><br>
 ## Installation d'une machine virtuelle Windows avec copier/coller et taille de bureau ajustable
 Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.  
-- [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)
+- [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)  
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
 <br>
-
-En plus, il convient de vérifier que le CPU a le IOMMU activé:  
-Run the following command  
-
-```
-dmesg | grep -i -e DMAR -e IOMMU
-```
-  
-Si ce n'est pas le cas, lancer:
-```
-sudo rpm-ostree kargs \
-  --append-if-missing="intel_iommu=on" \
-  --append-if-missing="iommu=pt" \
-  --append-if-missing="rd.driver.pre=vfio_pci" \
-  --reboot
-```
-A noter que mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
+[Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.266-1/)  
+[Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
+<br>
+Il ne sert à rien d'activer le IOMMU, mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
+<br>
+La configuration des processeurs est incorrecte par défaut. Il faut définir manuellement la topologie avec Sockets 1, Coeurs = CPU logiques, Chaînes 1.  
 
 
 
@@ -406,4 +391,3 @@ sudo ln -sf /.vscode-server /root/.vscode-server
 
 
 fin  
-
