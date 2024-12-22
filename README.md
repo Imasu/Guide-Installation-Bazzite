@@ -122,6 +122,7 @@ Liste d'extensions à installer
 - Extension List  
 - Media Label and Controls  
 - OpenWeather Refined
+- Hide Top Bar
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
