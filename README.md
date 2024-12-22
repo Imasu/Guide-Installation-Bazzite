@@ -121,7 +121,7 @@ Liste d'extensions à installer
 - Dash to Dock  
 - Extension List  
 - Media Label and Controls  
-- Weather O'Clock  
+- OpenWeather Refined
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
