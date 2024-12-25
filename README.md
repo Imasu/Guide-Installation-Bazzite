@@ -125,7 +125,8 @@ Liste d'extensions à installer:
 - OpenWeather Refined,  
 - Hide Top Bar.  
 <br>
-En standard sur Bazzite:
+
+En standard sur Bazzite:  
 - AppIndicator and KStatusNotifierItem Support,  
 - Blur my shell,  
 - Caffeine,  
