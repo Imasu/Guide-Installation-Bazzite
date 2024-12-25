@@ -164,9 +164,9 @@ flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.
 7. Paramétrer les permissions Flatpak à partir de FlatSeal  
 Ajouter dans la section `Filesystem` pour toutes les applications les permissions suivantes  
 ```
-/var/home/dbouvier/.local/share/icons/*:ro
+/var/home/<user name>/.local/share/icons/*:ro
 /usr/share/icons/*:ro
-/var/home/dbouvier/.local/share/themes/*:ro
+/var/home/<user name>/.local/share/themes/*:ro
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
