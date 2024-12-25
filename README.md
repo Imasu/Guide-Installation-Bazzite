@@ -1,9 +1,9 @@
-# Guide d'installation uBlue
+# Guide d'installation Bazzite
 
 Synthèse de mon installation de Bazzite Gnome Nvidia 
 <br>
 [Documentation Bazzite](https://docs.bazzite.gg)  
-[Blog généraliste sur Linux avec des astuces](https://www.linuxtricks.fr/pages/bienvenue-sur-linuxtricks)  
+[Blog généraliste sur Linux avec astuces](https://www.linuxtricks.fr/pages/bienvenue-sur-linuxtricks)  
 <br><br><br>
 
 
