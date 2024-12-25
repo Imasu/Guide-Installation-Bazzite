@@ -170,7 +170,7 @@ Ajouter dans la section `Filesystem` pour toutes les applications les permission
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-8. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`
+8. Les icônes et curseurs [WhiteSur Gtk Theme](https://www.gnome-look.org/p/1403328/) sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`
 9. Le thème est à appliquer depuis Gnome Tweaks
 
 
