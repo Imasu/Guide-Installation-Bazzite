@@ -159,8 +159,8 @@ $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes          ->  $H
 ```
 5. Modifier les deux fichiers liens qui pointent vers le répertoire du container vers le répertoire du système principal
 ```
-gtk.css -> 
-gtk-dark.css -> 
+ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk.css
+ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk-dark.css
 ```
 7. Installer les Flatpaks générés par l'installation  
 Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme`.  
