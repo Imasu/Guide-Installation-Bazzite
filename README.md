@@ -1,6 +1,6 @@
 # Guide d'installation uBlue
 
-D.Bouvier  
+Synthèse de mon installation de Bazzite Gnome Nvidia 
 <br>
 [Documentation Bazzite](https://docs.bazzite.gg)  
 [Blog généraliste sur Linux avec des astuces](https://www.linuxtricks.fr/pages/bienvenue-sur-linuxtricks)  
@@ -105,7 +105,7 @@ A installer sur la session System pour éviter les doublons des packages de base
 - Brave
 - Betterbird : remplaçant de Thunderbird car intègre des correctifs que n'a pas la version originale,  
 - Bitwarden : l'extension web est suffisante dans la pratique,  
-- SaveDesktop : Sauvegarde du bureau linux pour restoration (ne fonctionne pas sur une atomic),  
+- SaveDesktop : Sauvegarde du bureau linux pour restoration ; ne fonctionne pas sur une atomic :(,  
 - Apostrophe : Outil pour rédiger les fichiers ReadMe Github.  
 <br><br>
 
@@ -127,27 +127,18 @@ Gestion à partir de l'application `Gear Level`.
 Liste d'extensions à installer:  
 - Dash to Dock,  
 - Extension List,  
-- Media Label and Controls,  
 - OpenWeather Refined,  
 - Hide Top Bar.  
 <br>
 
-En standard sur Bazzite:  
-- AppIndicator and KStatusNotifierItem Support,  
-- Blur my shell,  
-- Caffeine,  
-- Hot Edge,  
-- Just Perfection,  
-- Logo Menu,  
-- Tiling Shell,  
-- User Themes.
+En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my shell, Caffeine, Hot Edge, Just Perfection, Logo Menu, Tiling Shell, User Themes.  
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
 1. Créer une distrobox pour la compilation du theme avec un home folder distinct  
 `distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.local/share/containers/home-folder/sys-deskcustom"`
 2. Dans la distrobox, installer toutes les dépendances demandées : `sudo dnf install <packages>`  
-3. Téléchager le thème dans un répertoire temporaire et l'installer avec les commandes  
+3. Dans la distrobox, téléchager le thème et l'installer avec les commandes  
 ```
 ./install.sh -l
 ./tweaks.sh -F
@@ -157,15 +148,17 @@ En standard sur Bazzite:
 $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0  ->  $HOME/.config/gtk-4.0
 $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes          ->  $HOME/.local/share/themes
 ```
-5. Modifier les deux fichiers liens qui pointent vers le répertoire du container vers le répertoire du système principal
+5. Depuis la console du système hôte, modifier les deux fichiers liens qui pointent vers le répertoire du container  
 ```
 ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk.css
 ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk-dark.css
 ```
 7. Installer les Flatpaks générés par l'installation  
 Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme`.  
-Sur le système hôte, aller dans ce répertoire et pour chaque sous répertoire installer le flatpak en mode system avec par exemple la commande  
+Depuis la console du système hôte, aller dans ce répertoire et pour chaque sous répertoire installer le flatpak en mode system:  
 ```
+flatpak --system install WhiteSur-Dark/org.gtk.Gtk3theme.WhiteSur-Dark-x86_64.flatpak
+flatpak --system install WhiteSur-Dark-solid/org.gtk.Gtk3theme.WhiteSur-Dark-solid-x86_64.flatpak
 flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.flatpak
 ```
 7. Paramétrer les permissions Flatpak à partir de FlatSeal  
@@ -177,7 +170,8 @@ Ajouter dans la section `Filesystem` pour toutes les applications les permission
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-8. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`  
+8. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`
+9. Le thème est à appliquer depuis Gnome Tweaks
 
 
 <br><br><br>
