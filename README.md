@@ -126,14 +126,15 @@ Liste d'extensions à installer:
 - Hide Top Bar.  
 <br>
 En standard sur Bazzite:
-- AppIndicator and KStatusNotifierItem Support
-- Blur my shell
-- Caffeine
-- Hot Edge
-- Just Perfection
-- Logo Menu
-- Tiling Shell
-- User Themes
+- AppIndicator and KStatusNotifierItem Support,  
+- Blur my shell,  
+- Caffeine,  
+- Hot Edge,  
+- Just Perfection,  
+- Logo Menu,  
+- Tiling Shell,  
+- User Themes.
+<br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
 1. Créer une distrobox pour la compilation du theme avec un home folder distinct  
