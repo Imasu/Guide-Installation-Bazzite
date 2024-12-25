@@ -226,7 +226,8 @@ Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans
 
 Il ne sert à rien d'activer le IOMMU, mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
 <br>
-La configuration des processeurs est incorrecte par défaut. Il faut définir manuellement la topologie avec Sockets 1, Coeurs = CPU logiques, Chaînes 1.  
+
+[Configuration du fichier KVM pour la machine Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings)
 
 
 
