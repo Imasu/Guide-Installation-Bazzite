@@ -165,13 +165,13 @@ flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.
 Ajouter dans la section `Filesystem` pour toutes les applications les permissions suivantes  
 ```
 /var/home/<user name>/.local/share/icons/*:ro
-/usr/share/icons/*:ro
 /var/home/<user name>/.local/share/themes/*:ro
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-8. Les icônes et curseurs [WhiteSur Gtk Theme](https://www.gnome-look.org/p/1403328/) sont à déposer dans le répertoire `$HOME/.local/share/icons`
-9. Le thème est à appliquer depuis Gnome Tweaks
+8. Les icônes et curseurs [WhiteSur Gtk Theme](https://www.gnome-look.org/p/1403328/) sont à déposer dans le répertoire `$HOME/.local/share/icons`  
+9. Le thème est à appliquer depuis Gnome Tweaks  
+10. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
 <br><br><br>
