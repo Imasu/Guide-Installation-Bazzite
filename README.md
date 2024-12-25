@@ -268,7 +268,8 @@ git config --global user.email "d2bouv@gmail.com"
 ```
 <br>
 
-L'installation de Oh-My-Bash est possible en suivant le guide supra.  Pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`
+L'installation de Oh-My-Bash est possible en suivant le guide supra.  Si besoin, pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`  
+Thème à utiliser: `agnoster`
 <br>
 
 #### Mise en oeuvre de code & git
