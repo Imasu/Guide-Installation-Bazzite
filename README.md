@@ -95,8 +95,14 @@ Accélaration GPU : enable
 ```
 <br>
 
+#### Suppression des applications installées par défaut
+Certaines applications installées par défaut peuvent être supprimées. Quelques commentaires associés:
+- Firefox : le répertoire `$HOME/.mozilla` peut être supprimé.  
+<br>
+
 #### Applications intéressantes  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
+- Brave
 - Betterbird : remplaçant de Thunderbird car intègre des correctifs que n'a pas la version originale,  
 - Bitwarden : l'extension web est suffisante dans la pratique,  
 - SaveDesktop : Sauvegarde du bureau linux pour restoration (ne fonctionne pas sur une atomic),  
@@ -151,13 +157,18 @@ En standard sur Bazzite:
 $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0  ->  $HOME/.config/gtk-4.0
 $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes          ->  $HOME/.local/share/themes
 ```
-5. Installer les Flatpaks générés par l'installation  
+5. Modifier les deux fichiers liens qui pointent vers le répertoire du container vers le répertoire du système principal
+```
+gtk.css -> 
+gtk-dark.css -> 
+```
+7. Installer les Flatpaks générés par l'installation  
 Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme`.  
 Sur le système hôte, aller dans ce répertoire et pour chaque sous répertoire installer le flatpak en mode system avec par exemple la commande  
 ```
 flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.flatpak
 ```
-6. Paramétrer les permissions Flatpak à partir de FlatSeal  
+7. Paramétrer les permissions Flatpak à partir de FlatSeal  
 Ajouter dans la section `Filesystem` pour toutes les applications les permissions suivantes  
 ```
 /var/home/dbouvier/.local/share/icons/*:ro
@@ -166,7 +177,7 @@ Ajouter dans la section `Filesystem` pour toutes les applications les permission
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-7. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`  
+8. Les icônes et curseurs sont à déposer dans le répertoire `/home/dbouvier/.local/share/icons`  
 
 
 <br><br><br>
