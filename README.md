@@ -220,14 +220,12 @@ Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
 <br>
 
-[Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/virtio-win-0.1.266-1/)  
+[Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
 [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
 <br>
-
-Il ne sert à rien d'activer le IOMMU, mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
-<br>
-
-[Configuration du fichier KVM pour la machine Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings)
+Remarques:  
+- Il ne sert à rien d'activer le IOMMU, mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
+- La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings)
 
 
 
@@ -286,9 +284,6 @@ Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée s
 ```
 "password-store": "gnome-libsecret"
 ```
-<br>
-
-
 
 
 
@@ -297,7 +292,6 @@ Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée s
 ## Installation d'un environnement de développement sur le système hôte avec gestion de containers
 Pas le choix au final le plus avisé -> il est préférable d'installer l'environnement de dév (VS-Code, git, langage directement dans une distrobox  
 Installation de VS-Code par Flatpak puis utilisation de conteneurs pour les développements.  
-Puisque sous Bazzite, utilisation d'une distrobox car mise à jour automatique de celle-ci par l'intermédiaire des commmandes de mise à jour.  
 
 ### Container Distrobox  
 Cf supra.  
@@ -405,9 +399,6 @@ ln -sf /.vscode-server ${HOME}/.vscode-server
 sudo chmod 755 /root
 sudo ln -sf /.vscode-server /root/.vscode-server
 ```
-
-
-
 
 
 
