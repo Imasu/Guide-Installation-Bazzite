@@ -67,7 +67,7 @@ Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh
 Dans le fichier `.bashrc`:  
 1. Thème sélectionné: `powerline`,  
 2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
-3. Corriger un problème d'autocompletion par ajout en fin de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
+3. Corriger un problème d'autocompletion par ajout **en fin** de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
 4. Prise en compte des modifications `source .bashrc`.  
 <br>
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
