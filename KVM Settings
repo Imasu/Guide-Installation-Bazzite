@@ -1,6 +1,6 @@
 <domain type="kvm">
-  <name>win11</name>
-  <uuid>63866845-4361-472e-a24d-7af637653e0f</uuid>
+  <name>Window11Pro</name>
+  <uuid>ba689b81-3275-4683-ab35-f0a66bb5dea2</uuid>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
       <libosinfo:os id="http://microsoft.com/win/11"/>
@@ -8,12 +8,13 @@
   </metadata>
   <memory unit="KiB">8388608</memory>
   <currentMemory unit="KiB">8388608</currentMemory>
-  <vcpu placement="static">3</vcpu>
+  <vcpu placement="static">4</vcpu>
   <iothreads>1</iothreads>
   <cputune>
     <vcpupin vcpu="0" cpuset="0"/>
     <vcpupin vcpu="1" cpuset="1"/>
     <vcpupin vcpu="2" cpuset="2"/>
+    <vcpupin vcpu="3" cpuset="3"/>
     <emulatorpin cpuset="3"/>
     <iothreadpin iothread="1" cpuset="3"/>
   </cputune>
@@ -52,7 +53,7 @@
     <smm state="on"/>
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
-    <topology sockets="1" dies="1" clusters="1" cores="3" threads="1"/>
+    <topology sockets="1" dies="1" clusters="1" cores="4" threads="1"/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" present="no" tickpolicy="catchup"/>
