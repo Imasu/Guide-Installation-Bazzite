@@ -72,7 +72,7 @@ Dans le fichier `.bashrc`:
 <br>
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
-<br>
+<br>  
 
 ### Configuration de NANO
 Modification du fichier de configuration `/etc/nanorc` :  
