@@ -253,21 +253,17 @@ distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-
 ```
 <br>
 
-### Installation de GoLang dans le container Arch
-Référence [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/)  
+### Paramétrage du container Arch
 
 #### Installation des paquets
-Installation des paquets essentiels nano git code et le langage go  
+Installation des paquets essentiels
 ```
 sudo pacman -Syu
-sudo pacman -S nano git code go
-```
-Les dépendances go iront se loger dans un répertoire `go` du dossier $USER.  
-Il est possible de créer un autre répertoire, exemple `go-projets` pour y stocker ses programmes.  
-Par projet, il est recommandé de créer ces trois sous-répertoires: `src, pkg, bin`.  
+sudo pacman -S nano git code
+```  
 <br>
 
-[Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
+Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
 ```
 git config --global user.name  "Imasu"
 git config --global user.email "d2bouv@gmail.com"
@@ -275,8 +271,8 @@ git config --global user.email "d2bouv@gmail.com"
 ```
 <br>
 
-L'installation de Oh-My-Bash est possible en suivant le guide supra.  Si besoin, pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`  
-Thème à utiliser: `agnoster`
+Installation de `Oh-My-Bash` en suivant le guide supra. Thème à utiliser: `agnoster`. Si besoin, pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`.  
+Configuration de `nano` en suivant le guide supra.  
 <br>
 
 #### Mise en oeuvre de code & git
@@ -293,6 +289,13 @@ Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée s
 ```
 "password-store": "gnome-libsecret"
 ```
+<br>
+
+#### Installation des langages
+Suivre le wiki Arch:  
+- Rust : [install Rust in Arch (wiki Arch)](https://wiki.archlinux.org/title/Rust). Installer les packages `rustup` et `sccache`. Suivre le guide associé avec l'installation de la toolchain, l'optimisation de la compilation CPU et des temps de compilation par modification du fichier `~/.cargo/config`.  
+- Go : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/). Installation sans difficulté. Pas besoin de mettre à jour le GOPATH. Un répertoire go sera créé avec les packages et binaires associés nécessaires.
+- Julia : [install Julia in Arch (wiki Arch)](https://wiki.archlinux.org/title/Julia).  Installation sans difficulté. Il convient de paramétrer le chemin de l'exécutable dans l'extension VSCode [source](https://blog.glcs.io/install-julia-and-vscode#heading-installing-julia-2).  
 
 
 
