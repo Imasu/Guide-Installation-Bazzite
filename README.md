@@ -269,6 +269,7 @@ git config --global user.name  "Imasu"
 git config --global user.email "d2bouv@gmail.com"
 
 ```
+Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
 <br>
 
 Installation de `Oh-My-Bash` en suivant le guide supra. Thème à utiliser: `agnoster`. Si besoin, pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`.  
