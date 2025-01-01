@@ -131,7 +131,8 @@ Créer un répertoire `~/.AppImages` pour les stocker.
 Applications et services sans GUI. Permet l'installation d'applications utilisées dans les lignes de commande.   
 
 #### Applications intéressantes
-- OneDrive (couplé à une AppImage pour le GUI). /!\ Déppréciée : utiliser la fonctionnalité de comptes en lignes de Gnome avec Microsoft 365. Sinon, si elle bug, éventuellement rechercher une solution vers "onedriver"  
+- OneDrive (couplé à une AppImage pour le GUI).  
+**/!\ Moins intéressante que l'utilisation de la fonctionnalité de comptes en lignes de Gnome avec Microsoft 365 car elle télécharge tous les fichiers sous OneDrive.** En alternative, il y a également "onedriver" qui présente les mêmes fonctionnalités.
 [Processus d'installation One Drive en mode application](https://universal-blue.discourse.group/t/installing-onedrive-in-fedora-silverblue-bluefin-via-brew-gui-and-system-tray-icon/1071).  L'installation en mode service ne fonctionnera pas avec le GUI AppImage.  
 Fichier de config OneDrive, sélectionner ces options: `download_only = "false"`, `skip_symlinks = "true"`, `cleanup_local_files = "true"`  
 <br><br><br>
