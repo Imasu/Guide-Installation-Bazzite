@@ -120,10 +120,22 @@ A installer sur la session System pour éviter les doublons des packages de base
 ### AppImage
 Autre service d'applications notament pour celles achetées.  
 Gestion à partir de l'application `Gear Level`.  
+Créer un répertoire `~/.AppImages` pour les stocker.  
 
 #### Applications intéressantes  
 - Cider (achetée via [itch.io](https://itch.io)).  
+<br><br>
+
+
+### Brew
+Applications et services sans GUI. Permet l'installation d'applications utilisées dans les lignes de commande.   
+
+#### Applications intéressantes
+- OneDrive (couplé à une AppImage pour le GUI). [processus d'installation One Drive en mode application](https://universal-blue.discourse.group/t/installing-onedrive-in-fedora-silverblue-bluefin-via-brew-gui-and-system-tray-icon/1071).  L'installation en mode service ne fonctionnera pas avec le GUI AppImage.
+Fichier de config OneDrive, sélectionner ces options: `download_only = "false"`, `skip_symlinks = "true"`, `cleanup_local_files = "true"`  
 <br><br><br>
+
+
 
 
 
