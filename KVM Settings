@@ -8,15 +8,17 @@
   </metadata>
   <memory unit="KiB">8388608</memory>
   <currentMemory unit="KiB">8388608</currentMemory>
-  <vcpu placement="static">4</vcpu>
+  <vcpu placement="static">6</vcpu>
   <iothreads>1</iothreads>
   <cputune>
-    <vcpupin vcpu="0" cpuset="0"/>
-    <vcpupin vcpu="1" cpuset="1"/>
+    <vcpupin vcpu="0" cpuset="1"/>
+    <vcpupin vcpu="1" cpuset="5"/>
     <vcpupin vcpu="2" cpuset="2"/>
-    <vcpupin vcpu="3" cpuset="3"/>
-    <emulatorpin cpuset="3"/>
-    <iothreadpin iothread="1" cpuset="3"/>
+    <vcpupin vcpu="3" cpuset="6"/>
+    <vcpupin vcpu="4" cpuset="3"/>
+    <vcpupin vcpu="5" cpuset="7"/>
+    <emulatorpin cpuset="0,4"/>
+    <iothreadpin iothread="1" cpuset="1,5"/>
   </cputune>
   <os firmware="efi">
     <type arch="x86_64" machine="pc-q35-9.1">hvm</type>
@@ -53,7 +55,8 @@
     <smm state="on"/>
   </features>
   <cpu mode="host-passthrough" check="none" migratable="on">
-    <topology sockets="1" dies="1" clusters="1" cores="4" threads="1"/>
+    <topology sockets="1" dies="1" clusters="1" cores="3" threads="2"/>
+    <feature policy="require" name="vmx"/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" present="no" tickpolicy="catchup"/>
@@ -190,7 +193,9 @@
     </sound>
     <audio id="1" type="spice"/>
     <video>
-      <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes"/>
+      <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes">
+        <acceleration accel3d="no"/>
+      </model>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/>
     </video>
     <redirdev bus="usb" type="spicevmc">
