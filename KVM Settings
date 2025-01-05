@@ -18,7 +18,7 @@
     <vcpupin vcpu="4" cpuset="3"/>
     <vcpupin vcpu="5" cpuset="7"/>
     <emulatorpin cpuset="0,4"/>
-    <iothreadpin iothread="1" cpuset="1,5"/>
+    <iothreadpin iothread="1" cpuset="0,4"/>
   </cputune>
   <os firmware="efi">
     <type arch="x86_64" machine="pc-q35-9.1">hvm</type>
