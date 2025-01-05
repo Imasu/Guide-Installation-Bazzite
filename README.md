@@ -245,7 +245,7 @@ Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans
 [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
 <br>
 Remarques:  
-- Il ne sert à rien d'activer le IOMMU, mon processeur actuel ne permet pas un pci pass-through complet... donc pas de cristal glass...  
+- Il est nécessaire d'activer le IOMMU pour bénéficier de meilleures performances. Pas de CPU pass-through fonctionnel pour l'instant avec un iGPU... donc pas de cristal glass...  
 - La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings)
 
 
