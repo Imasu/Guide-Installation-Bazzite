@@ -68,10 +68,12 @@ Dans le fichier `.bashrc`:
 1. Thème sélectionné: `powerline`,  
 2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
 3. Corriger un problème d'autocompletion par ajout **en fin** de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
-4. Prise en compte des modifications `source .bashrc`.  
+4. Prise en compte des modifications par la commande `source .bashrc`.  
 <br>
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
+<br>
+La commande `gsettings set org.gnome.desktop.interface accent-color = 'blue'` permet de modifier la couleur d'affichage du menu BAZZITE dans le terminal.  
 <br><br>
 
 ### Configuration de NANO
@@ -153,6 +155,7 @@ Liste d'extensions à installer:
 <br>
 
 En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my shell, Caffeine, Hot Edge, Just Perfection, Logo Menu, Tiling Shell, User Themes.  
+L'application Hot Edge est à désactiver pour éviter de basculer sur les autres bureaux lorsque la souris se déplace rapidemment vers le bas de l'écran.  
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
