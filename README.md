@@ -80,7 +80,8 @@ La commande `gsettings set org.gnome.desktop.interface accent-color = 'blue'` pe
 Modification du fichier de configuration `/etc/nanorc` :  
 - Affichage du numéro de la ligne : `set linenumbers`  
 - Gestion de la souris: `set mouse`  
-- Thèmes: `include /usr/share/nano/*.nanorc` et `include /usr/share/nano/extra/*.nanorc`  
+- Thèmes: `include /usr/share/nano/*.nanorc` et `include /usr/share/nano/extra/*.nanorc`
+- Key bindings: décommenter les raccourcis nécessaires : `Crl+X, C, V, Q, S, F, G, Z, Y`
 <br><br><br>
 
 
@@ -198,43 +199,6 @@ xdg-config/gtk-3.0:ro
 10. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
-<br><br><br>
-## Modding du système KDE
-Le modding du bureau KDE est particulier sur les distribution uBlue. **Il ne faut pas installer les thèmes KDE à partir de l'installateur KDE de base mais les installer manuellement** dans son répertoire Home.  
-Sauvegarde du bureau après paramètrage disponible sous `One Drive`  
-
-[Documentation Bazzite - Customisation du bureau KDE](https://docs.bazzite.gg/General/Desktop_Environment_Tweaks/)  
-[Bonne ressource sur le modding KDE](https://itsfoss.com/properly-theme-kde-plasma/)
-
-### Installation des thèmes
-1. Sauvegarde du thème téléchargé depuis le [KDE Store](https://store.kde.org/browse/) dans le répertoire `~/.local/share/plasma/`  
-2. Ouvrir les paramètres système et sélectionner un par un les composants à appliquer  
-<br>
-
-### Localisation des composants KDE extraits
-- Thème Global: `~/.local/share/plasma/look-and-feel/`  
-- Thème Plasma: `~/.local/share/plasma/desktoptheme/`  
-- Icônes et curseurs: `~/.local/share/icons/` (différent de la doc)  
-Installation à partir d'une archive .tar.gz  
-
-#### Thème du Login Manager (SDDM)
-Utiliser `Discover` pour installer les thèmes SDDM.  
-Ces thèmes peuvent également être mis en sur-couche (/!\ risqué) s'ils sont disponibles sous forme de package RPM avec `rpm-ostree`  
-<br>
-
-#### Autorisation des Flatpaks à utiliser les thèmes
-Certains Flatpaks, ayant des problèmes avec les curseurs, nécessitent l'accès au filesystem. Leur octroyer individuellement ou globalement à partir de `Flatseal`  
-Exemple: `~/.icons/:ro` dans la catégorie "Filesystem"  
-<br>
-
-#### Thème requérant `kvantum`  
-Installer le composant en sur-couche `rpm-ostree install kvantum`  
-<br>
-
-#### Références pour les thèmes
-Icones : Nova7 (préféré), Nordzy, Fluent  
-
-
 
 
 <br><br><br>
@@ -288,9 +252,9 @@ git config --global user.email "d2bouv@gmail.com"
 Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
 <br>
 
-Installation de `Oh-My-Bash` en suivant le guide supra.  
-Thème à utiliser: `agnoster`. Ajouter la commande `cd ~\` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
-Si besoin, pour rendre le script exécutable si téléchargement seul, utiliser la commande `chmod u+x install.sh`.  
+#### Configuration du shell
+Installation de `Oh-My-Bash` en suivant le guide supra. Thème à utiliser: `agnoster`.  
+Ajouter la commande `cd ~\` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
 <br>
 Configuration de `nano` en suivant le guide supra.  
 <br>
