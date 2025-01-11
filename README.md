@@ -284,7 +284,6 @@ Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tut
 ```
 git config --global user.name  "Imasu"
 git config --global user.email "d2bouv@gmail.com"
-
 ```
 Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
 <br>
