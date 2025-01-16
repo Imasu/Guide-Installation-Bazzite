@@ -247,7 +247,7 @@ sudo pacman -S nano git code
 Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
 ```
 git config --global user.name  "Imasu"
-git config --global user.email "d2bouv@gmail.com"
+git config --global user.email "@gmail.com"
 ```
 Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
 <br>
