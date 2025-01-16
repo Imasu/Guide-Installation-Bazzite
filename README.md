@@ -58,7 +58,6 @@ Suivre ce guide pour réinstaller le Secure Boot
 
 ### Configuration système
 Changement du nom du PC `hostnamectl set-hostname <hostname>`.  
-Modification du menu sous KDE `kmenuedit`.  
 <br>
 
 ### Configuration de BASH
