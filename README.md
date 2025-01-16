@@ -134,7 +134,8 @@ Applications et services sans GUI. Permet l'installation d'applications utilisé
 
 #### Applications intéressantes
 - OneDrive (couplé à une AppImage pour le GUI).  
-**/!\ Finalement moins pratique que l'utilisation de la fonctionnalité de comptes en lignes de Gnome avec Microsoft 365 car cette application télécharge tous les fichiers sous OneDrive.** En alternative, il y a également "onedriver" qui présente les mêmes fonctionnalités.
+**/!\ Finalement moins pratique que l'utilisation de la fonctionnalité de comptes en lignes de Gnome avec Microsoft 365 car cette application télécharge tous les fichiers sous OneDrive.**
+En alternative, il y a également "onedriver" qui présente les mêmes fonctionnalités.
 [Processus d'installation One Drive en mode application](https://universal-blue.discourse.group/t/installing-onedrive-in-fedora-silverblue-bluefin-via-brew-gui-and-system-tray-icon/1071).  L'installation en mode service ne fonctionnera pas avec le GUI AppImage.  
 Fichier de config OneDrive, sélectionner ces options: `download_only = "false"`, `skip_symlinks = "true"`, `cleanup_local_files = "true"`  
 <br><br><br>
