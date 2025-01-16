@@ -64,7 +64,7 @@ Changement du nom du PC `hostnamectl set-hostname <hostname>`.
 Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
 <br>
 Dans le fichier `.bashrc`:  
-1. Thème sélectionné: `powerline-multiline`,  
+1. Thème sélectionné: `powerline-multiline`, avec la palette `VS Code`,  
 2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
 3. Corriger un problème d'autocompletion par ajout **en fin** de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
 4. Prise en compte des modifications par la commande `source .bashrc`.  
@@ -253,7 +253,7 @@ Dans les projets, pour éviter la synchronisation de certains fichiers ou réper
 <br>
 
 #### Configuration du shell
-Installation de `Oh-My-Bash` en suivant le guide supra. Thème à utiliser: `agnoster`.  
+Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster`. `powerline-multiline`, avec la palette `Tokyo Night Moon`
 Ajouter la commande `cd ~\` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
 <br>
 Configuration de `nano` en suivant le guide supra.  
