@@ -201,19 +201,24 @@ xdg-config/gtk-3.0:ro
 
 
 
+
 <br><br><br>
 ## Installation d'une machine virtuelle Windows avec copier/coller et taille de bureau ajustable
-Suivre les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.  
+Suivre dans les lignes les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.
 - [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)  
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
 <br>
+Remarques:  
+- L'image de Bazzite inclut maintenant nativement les packages de virtualisation (libvirt, qemu...), il n'y a plus rien à mettre en surcouche -> `ujust setup-virtualization`.  
+- Il est nécessaire d'activer VFIO /IOMMU pour bénéficier de meilleures performances. Pas de procédure fonctionnelle de CPU pass-through pour l'instant avec un iGPU... donc pas de cristal glass...  
+- Il est préférable de ne pas créer les services libvirtd individuels tant que Bazzite ne le propose pas nativement (le faire ne pose pas de problème cependant).  
+- La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings)  
 
+<br>
 [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
 [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
 <br>
-Remarques:  
-- Il est nécessaire d'activer le IOMMU pour bénéficier de meilleures performances. Pas de CPU pass-through fonctionnel pour l'instant avec un iGPU... donc pas de cristal glass...  
-- La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings)
+
 
 
 
@@ -276,8 +281,8 @@ Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée s
 <br>
 
 #### Installation des langages
-Suivre le wiki Arch:  
-- Odin : Installer simplement le package `odin`.  
+Suivre les wiki Arch:  
+- Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger.  
 - Rust : [install Rust in Arch (wiki Arch)](https://wiki.archlinux.org/title/Rust). Installer les packages `rustup` et `sccache`. Suivre le guide associé avec l'installation de la toolchain, l'optimisation de la compilation CPU et des temps de compilation par création du fichier `~/.cargo/config.toml`.  
 - Go : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/). Installation sans difficulté. Pas besoin de mettre à jour le GOPATH. Un répertoire go sera créé avec les packages et binaires associés nécessaires.
 - Julia : [install Julia in Arch (wiki Arch)](https://wiki.archlinux.org/title/Julia).  Installation sans difficulté. Il convient de paramétrer le chemin de l'exécutable dans l'extension VSCode [source](https://blog.glcs.io/install-julia-and-vscode#heading-installing-julia-2).  
@@ -400,4 +405,32 @@ sudo ln -sf /.vscode-server /root/.vscode-server
 
 
 
+
+
+<br><br><br>
+## Paramétrage de Steam pour le partage des jeux entre comptes
+Source: [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/)
+
+### Configuration de la bibliothèque
+Répertoire utilisé comme bibliothèque: /var/steam-library/.  
+```
+sudo mkdir /var/steam-library
+sudo groupadd gamers
+sudo chgrp gamers /var/steam-library/
+sudo chmod 770 /var/steam-library/
+sudo chmod g+s /var/steam-library/
+#don't forget to replace user1.users2,etc. with your Linux users
+sudo usermod -a -G gamers user1
+sudo usermod -a -G gamers user2
+```
+<br>
+
+### Configuration de Steam
+Modifier dans steam, pour tous les utilisateurs, le répertoire de stockage des jeux.  
+
+
+
+
+
+<br><br><br>
 fin  
