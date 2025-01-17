@@ -168,7 +168,7 @@ L'application Hot Edge est à désactiver pour éviter de basculer sur les autre
 ./install.sh -l
 ./tweaks.sh -F
 ```
-4. Copier le contenu des répertoires suivants dans leur homologue du système hôte  
+4. Depuis la console du système hôte, copier le contenu des répertoires suivants dans leur homologue du système hôte  
 ```
 cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0 $HOME/.config/gtk-4.0
 cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes  $HOME/.local/share/themes
