@@ -170,7 +170,7 @@ L'application Hot Edge est à désactiver pour éviter de basculer sur les autre
 ```
 4. Depuis la console du système hôte, copier le contenu des répertoires suivants dans leur homologue du système hôte  
 ```
-cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0 $HOME/.config/gtk-4.0
+cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0 $HOME/.config/
 cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes  $HOME/.local/share/themes
 ```
 5. Depuis la console du système hôte, modifier les deux fichiers liens qui pointent vers le répertoire du container  
