@@ -72,7 +72,7 @@ Dans le fichier `.bashrc`:
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
 <br>
-La commande `gsettings set org.gnome.desktop.interface accent-color = 'blue'` permet de modifier la couleur d'affichage du menu BAZZITE dans le terminal.  
+La commande `gsettings set org.gnome.desktop.interface accent-color 'blue'` permet de modifier la couleur d'affichage du menu BAZZITE dans le terminal.  
 <br><br>
 
 ### Configuration de NANO
@@ -162,7 +162,7 @@ L'application Hot Edge est à désactiver pour éviter de basculer sur les autre
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
 1. Créer une distrobox pour la compilation du theme avec un home folder distinct  
 `distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.local/share/containers/home-folder/sys-deskcustom"`
-2. Dans la distrobox, installer toutes les dépendances demandées : `sudo dnf install <packages>`  
+2. Dans la distrobox, installer `git` et toutes les dépendances demandées : `sudo dnf install git <packages>`  
 3. Dans la distrobox, téléchager le thème et l'installer avec les commandes  
 ```
 ./install.sh -l
