@@ -207,8 +207,8 @@ xdg-config/gtk-3.0:ro
 Suivre dans les lignes les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.
 - [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)  
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
-
 <br>
+
 Remarques:  
 - L'image de Bazzite inclut maintenant nativement les packages de virtualisation (libvirt, qemu...), il n'y a plus rien à mettre en surcouche -> `ujust setup-virtualization`.  
 - Il est nécessaire d'activer VFIO /IOMMU pour bénéficier de meilleures performances. Pas de procédure fonctionnelle de CPU pass-through pour l'instant avec un iGPU... donc pas de cristal glass...  
