@@ -35,7 +35,7 @@ Affiche le contenu du script ujust `ujust --show <script>`.
 ### Commandes rpm-ostree d'une Fedora Atomic
 Liste des environnements `rpm-ostree status -v`.  
 Conservation de l'environnement actuel (<n>=0) `sudo ostree admin pin <n>`.  
-Dé-conservation d'un environnement `sudo ostre admin pin --unpin <n>`.  
+Dé-conservation d'un environnement `sudo ostree admin pin --unpin <n>`.  
 <br>
 Rollback vers le précédent environnement `rpm-ostree rollback`.  
 <br>
