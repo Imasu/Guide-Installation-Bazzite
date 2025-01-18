@@ -272,7 +272,8 @@ Configuration de `nano` en suivant le guide supra.
 #### Mise en oeuvre de code & git
 **Sous environnement GNOME**
 1. Installer en plus `gnome-keyring`
-2. Lancer VS-Code, sur l'écran d’accueil, sélectionner 'Clone Git Repository...' et suivre les instructions. Tout se met ensuite en place... 
+2. Lancer VS-Code, sur l'écran d’accueil, sélectionner 'Clone Git Repository...' et suivre les instructions. Tout se met ensuite en place...
+3. Thèmes: `Tokyo Night Dark Enhanced` , `Atom One Dark Theme`
 <br>
 
 **Sous KDE**
@@ -287,7 +288,7 @@ Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée s
 
 #### Installation des langages
 Suivre les wiki Arch:  
-- Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger.  
+- Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
 - Rust : [install Rust in Arch (wiki Arch)](https://wiki.archlinux.org/title/Rust). Installer les packages `rustup` et `sccache`. Suivre le guide associé avec l'installation de la toolchain, l'optimisation de la compilation CPU et des temps de compilation par création du fichier `~/.cargo/config.toml`.  
 - Go : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/). Installation sans difficulté. Pas besoin de mettre à jour le GOPATH. Un répertoire go sera créé avec les packages et binaires associés nécessaires.
 - Julia : [install Julia in Arch (wiki Arch)](https://wiki.archlinux.org/title/Julia).  Installation sans difficulté. Il convient de paramétrer le chemin de l'exécutable dans l'extension VSCode [source](https://blog.glcs.io/install-julia-and-vscode#heading-installing-julia-2).  
