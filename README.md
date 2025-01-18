@@ -20,6 +20,8 @@ Synthèse de mon installation de Bazzite Gnome Nvidia
 |  /systemfile       |        > 40 Go     |       BTRFS        |
 
 Détail pour un partitionnement manuel [Fedora Manual Partitioning](https://docs.fedoraproject.org/en-US/fedora-silverblue/installation/).  
+Commande pour lister les partitions: `lsblk`  
+Article pour retrouver les commandes de changement de droits sur les répertoires: [linux file permissions](https://www.pluralsight.com/resources/blog/tech-operations/linux-file-permissions)  
 <br><br><br>
 
 
@@ -419,8 +421,8 @@ Répertoire utilisé comme bibliothèque: /var/steam-library/.
 sudo mkdir /var/steam-library
 sudo groupadd gamers
 sudo chgrp gamers /var/steam-library/
-sudo chmod 770 /var/steam-library/
-sudo chmod g+s /var/steam-library/
+sudo chmod -R 770 /var/steam-library/
+????  sudo chmod g+s /var/steam-library/
 #don't forget to replace user1.users2,etc. with your Linux users
 sudo usermod -a -G gamers user1
 sudo usermod -a -G gamers user2
