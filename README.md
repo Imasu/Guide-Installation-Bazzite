@@ -79,7 +79,8 @@ La commande `gsettings set org.gnome.desktop.interface accent-color 'blue'` perm
 
 ### Configuration de NANO
 Modification du fichier de configuration `/etc/nanorc` :  
-- Affichage du numéro de la ligne : `set linenumbers`  
+- Auto indentation: `set autoindent`
+- Affichage du numéro de la ligne: `set linenumbers`  
 - Gestion de la souris: `set mouse`  
 - Thèmes: `include /usr/share/nano/*.nanorc` et `include /usr/share/nano/extra/*.nanorc`
 - Key bindings: décommenter les raccourcis nécessaires : `Crl+X, C, V, Q, S, F, G, Z, Y`
