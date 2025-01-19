@@ -198,9 +198,11 @@ Ajouter dans la section `Filesystem` pour toutes les applications les permission
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-8. Les icônes et curseurs [WhiteSur Gtk Theme](https://www.gnome-look.org/p/1403328/) sont à déposer dans le répertoire `$HOME/.local/share/icons`  
-9. Le thème est à appliquer depuis Gnome Tweaks  
-10. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
+8. Les icônes [WhiteSur Icon Theme](https://www.pling.com/p/1405756/) sont à déposer dans le répertoire `$HOME/.local/share/icons`.  
+Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.  
+9. Les curseurs [Bibata Modern Ice](https://www.gnome-look.org/p/1197198) sont à déposer dans le même répertoire `$HOME/.local/share/icons`  
+10. Le thème est à appliquer depuis Gnome Tweaks  
+11. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
 
