@@ -243,8 +243,9 @@ Bons guides pour l'installation du VM Windows. Une version au 26/11/2024 est sau
 <br>
 
 Remarques:    
-- Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.
-- La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings).  
+- Concernant l'installation de KVM, seules les sections 9 et 10 restent pertinentes.  
+- Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.  
+- Concernant l'installation de la VM Windows, la configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings).  
 - [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
 - [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
 <br>
