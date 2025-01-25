@@ -222,7 +222,7 @@ Suivre dans les lignes les deux guides suivants. Une version au 26/11/2024 est s
 Remarques:  
 - L'image de Bazzite inclut maintenant nativement les packages de virtualisation (libvirt, qemu...), il n'y a plus rien à mettre en surcouche -> `ujust setup-virtualization`.  
 - Il est nécessaire d'activer VFIO /IOMMU pour bénéficier de meilleures performances. Pas de procédure fonctionnelle de CPU pass-through pour l'instant avec un iGPU... donc pas de cristal glass...  
-- Il est préférable de ne pas créer les services libvirtd individuels tant que Bazzite ne le propose pas nativement (le faire ne pose pas de problème cependant).  
+- Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.  
 - La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings).  
 
 <br>
