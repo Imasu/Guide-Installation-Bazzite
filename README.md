@@ -79,6 +79,7 @@ gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
 gsettings set org.gnome.desktop.interface text-scaling-factor 0,92
 gsettings set org.gnome.desktop.calendar show-weekdate true
 ```
+<br>
 
 ### Configuration de BASH
 Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
@@ -91,8 +92,7 @@ Dans le fichier `.bashrc`:
 <br>
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
-<br>
-<br><br>
+<br><br><br>
 
 ### Configuration de NANO
 Modification du fichier de configuration `/etc/nanorc` :  
@@ -101,7 +101,7 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Gestion de la souris: `set mouse`  
 - Thèmes: `include /usr/share/nano/*.nanorc` et `include /usr/share/nano/extra/*.nanorc`
 - Key bindings: décommenter les raccourcis nécessaires : `Crl+X, C, V, Q, S, F, G, Z, Y`
-<br><br><br>
+<br><br><br><br>
 
 
 
@@ -290,7 +290,7 @@ Dans les projets, pour éviter la synchronisation de certains fichiers ou réper
 
 #### Configuration du shell
 Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster`. `powerline-multiline`, avec la palette `Tokyo Night Moon`
-Ajouter la commande `cd ~\` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
+Ajouter la commande `cd ~/` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
 <br>
 Configuration de `nano` en suivant le guide supra.  
 <br>
