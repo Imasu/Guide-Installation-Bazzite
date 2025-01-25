@@ -226,7 +226,8 @@ Remarques:
 - La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings).  
 
 <br>
-Chemin des images sous libvirt: `/var/lib/libvirt/images`
+Chemin des images sous libvirt: `/var/lib/libvirt/images`  
+<br>
 [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
 [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
 <br>
