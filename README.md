@@ -77,13 +77,14 @@ gsettings set org.gnome.desktop.interface font-antialiasing 'rgba'
 gsettings set org.gnome.desktop.interface font-hinting 'full'
 gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
 gsettings set org.gnome.desktop.interface text-scaling-factor 0,92
+gsettings set org.gnome.desktop.calendar show-weekdate true
 ```
 
 ### Configuration de BASH
 Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
 <br>
 Dans le fichier `.bashrc`:  
-1. Thème sélectionné: `powerline-multiline`, avec la palette `VS Code`,  
+1. Thème sélectionné: `powerline-multiline`, avec la palette `GNOME`,  
 2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
 3. Corriger un problème d'autocompletion par ajout **en fin** de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
 4. Prise en compte des modifications par la commande `source .bashrc`.  
@@ -186,6 +187,7 @@ En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my s
 2. Dans la distrobox, installer `git` et toutes les dépendances demandées : `sudo dnf install git <packages>`  
 3. Dans la distrobox, téléchager le thème et l'installer avec les commandes  
 ```
+git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
 ./install.sh -l
 ./tweaks.sh -F
 ```
@@ -227,22 +229,21 @@ Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.
 
 <br><br><br>
 ## Installation d'une machine virtuelle Windows avec copier/coller et taille de bureau ajustable
-Suivre dans les lignes les deux guides suivants. Une version au 26/11/2024 est sauvegardée dans le github.
+Bazzite offre une configuration fonctionnelle par utilisation du script `ujust setup-virtualization`.  /!\ Il y a souvent des bugs dans le script d'origine -> reprendre les instructions erronées manuellement (ujust --show ...).  
+Il est nécessaire d'activer VFIO /IOMMU pour bénéficier de meilleures performances. Pas de procédure fonctionnelle de CPU pass-through pour l'instant avec un iGPU... donc pas de cristal glass...  
+<br>
+Chemin des images sous libvirt: `/var/lib/libvirt/images`  
+<br>
+Bons guides pour l'installation du VM Windows. Une version au 26/11/2024 est sauvegardée dans le github.  
 - [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)  
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
 <br>
 
-Remarques:  
-- L'image de Bazzite inclut maintenant nativement les packages de virtualisation (libvirt, qemu...), il n'y a plus rien à mettre en surcouche -> `ujust setup-virtualization`.  
-- Il est nécessaire d'activer VFIO /IOMMU pour bénéficier de meilleures performances. Pas de procédure fonctionnelle de CPU pass-through pour l'instant avec un iGPU... donc pas de cristal glass...  
-- Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.  
+Remarques:    
+- Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.
 - La configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings).  
-
-<br>
-Chemin des images sous libvirt: `/var/lib/libvirt/images`  
-<br>
-[Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
-[Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
+- [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
+- [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
 <br>
 
 
@@ -255,11 +256,11 @@ Choix le plus simple et avisé !!
 
 ### Container Distrobox  
 Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la version GUI BOXES qui ne propose pas toutes les options.  
-Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init).  
 **Il est important de spécifier un chemin HOME dédié pour éviter que les fichiers de l'hôte soient modifiés par ceux du conteneur.**  
 
 Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)  
-Exemple : attention au répertoire pour le dossier $HOME du conteneur  
+
+Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
 ```
 distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/$USER/.local/share/containers/home-folder/Arch-DevEnv
 ```
