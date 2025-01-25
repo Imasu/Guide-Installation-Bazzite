@@ -156,15 +156,15 @@ Fichier de config OneDrive, sélectionner ces options: `download_only = "false"`
 
 ### Extensions supplémentaires
 Liste d'extensions à installer:  
-- Dash to Dock,  
-- Extension List,  
-- OpenWeather Refined,  
-- Hide Top Bar : activer l'option Sensitivity -> `Show panel when mouse approaches...`; désactiver les options Sensitivity -> `In the above case, also show panel when fullscreen`, Intellihide -> `only when the active window takes the space`.  
+- Dash to Dock: Position et taille -> `taille des icônes: 40`, Apparence -> `réduire les marges`, `utiliser le thème par défaut`  
+- Extension List  
+- OpenWeather Refined  
+- Hide Top Bar: activer l'option Sensitivity -> `Show panel when mouse approaches...`; désactiver les options Sensitivity -> `In the above case, also show panel when fullscreen`, Intellihide -> `only when the active window takes the space`.  
 <br>
 
 En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my shell, Caffeine, Hot Edge, Just Perfection, Logo Menu, Tiling Shell, User Themes.  
 - Just Perfection: dans comportement sélectionner `Bureau` pour l'option `Etat de démarrage`  
-- L'application Hot Edge est à désactiver pour éviter de basculer sur les autres bureaux lorsque la souris se déplace rapidemment vers le bas de l'écran.  
+- L'extension Hot Edge est à désactiver pour éviter de basculer sur les autres bureaux lorsque la souris se déplace rapidemment vers le bas de l'écran.  
 <br>
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
