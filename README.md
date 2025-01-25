@@ -159,7 +159,7 @@ Liste d'extensions à installer:
 - Dash to Dock,  
 - Extension List,  
 - OpenWeather Refined,  
-- Hide Top Bar (désactiver les options Sensitivity -> `In the above case, also show panel when fullscreen`, Intellihide -> `only when the active window takes the space`).  
+- Hide Top Bar : activer l'option Sensitivity -> `Show panel when mouse approaches...`; désactiver les options Sensitivity -> `In the above case, also show panel when fullscreen`, Intellihide -> `only when the active window takes the space`.  
 <br>
 
 En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my shell, Caffeine, Hot Edge, Just Perfection, Logo Menu, Tiling Shell, User Themes.  
