@@ -59,7 +59,10 @@ Suivre ce guide pour réinstaller le Secure Boot
 <br>
 
 ### Configuration système
-Changement du nom du PC `hostnamectl set-hostname <hostname>`.  
+Changement du nom du PC  
+```
+hostnamectl set-hostname <hostname>
+```
 <br>
 
 ### Configuration de BASH
@@ -74,7 +77,7 @@ Dans le fichier `.bashrc`:
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
 <br>
-La commande `gsettings set org.gnome.desktop.interface accent-color 'blue'` permet de modifier la couleur d'affichage du menu BAZZITE dans le terminal.  
+La commande `gsettings set org.gnome.desktop.interface accent-color 'blue'` permet de modifier la couleur d'affichage du texte Welcome to Bazzite dans le terminal.  
 <br><br>
 
 ### Configuration de NANO
@@ -108,17 +111,18 @@ Accélaration GPU : enable
 <br>
 
 #### Suppression des applications installées par défaut
-Certaines applications installées par défaut peuvent être supprimées. Quelques commentaires associés:
-- Firefox : le répertoire `$HOME/.mozilla` peut être supprimé.  
+Suppression d'applications installées par défaut:
+```
+flatpak uninstall system firefox
+```
+- Le répertoire `$HOME/.mozilla` peut être supprimé.
 <br>
 
 #### Applications intéressantes  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
-- Brave
-- Betterbird : remplaçant de Thunderbird car intègre des correctifs que n'a pas la version originale,  
-- Bitwarden : l'extension web est suffisante dans la pratique,  
-- SaveDesktop : Sauvegarde du bureau linux pour restoration ; ne fonctionne pas sur une atomic :(,  
-- Apostrophe : Outil pour rédiger les fichiers ReadMe Github.  
+```
+flatpak install system brave gedit betterbird
+```
 <br><br>
 
 
