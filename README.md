@@ -289,10 +289,12 @@ Dans les projets, pour éviter la synchronisation de certains fichiers ou réper
 <br>
 
 #### Configuration du shell
-Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster`. `powerline-multiline`, avec la palette `Tokyo Night Moon`
+Définir un profil pour le Bash avec la palette `Tokyo Night Moon`  
 Ajouter la commande `cd ~/` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
 <br>
-Configuration de `nano` en suivant le guide supra.  
+Optionnel:
+- Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
+- Configuration de `nano` en suivant le guide supra.  
 <br>
 
 #### Mise en oeuvre de code & git
