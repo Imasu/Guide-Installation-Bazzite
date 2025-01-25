@@ -65,6 +65,20 @@ hostnamectl set-hostname <hostname>
 ```
 <br>
 
+### Configuration Gnome
+Taille des polices, couleurs, etc
+```
+gsettings set org.gnome.desktop.interface accent-color 'slate'
+gsettings set org.gnome.desktop.interface clock-show-date true
+gsettings set org.gnome.desktop.interface clock-show-seconds true
+gsettings set org.gnome.desktop.interface clock-show-weekday true
+gsettings set org.gnome.desktop.interface enable-hot-corners false
+gsettings set org.gnome.desktop.interface font-antialiasing 'rgba'
+gsettings set org.gnome.desktop.interface font-hinting 'full'
+gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
+gsettings set org.gnome.desktop.interface text-scaling-factor 0,92
+```
+
 ### Configuration de BASH
 Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
 <br>
@@ -77,7 +91,6 @@ Dans le fichier `.bashrc`:
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
 <br>
-La commande `gsettings set org.gnome.desktop.interface accent-color 'blue'` permet de modifier la couleur d'affichage du texte Welcome to Bazzite dans le terminal.  
 <br><br>
 
 ### Configuration de NANO
