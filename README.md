@@ -187,7 +187,9 @@ En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my s
 2. Dans la distrobox, installer `git` et toutes les dépendances demandées : `sudo dnf install git <packages>`  
 3. Dans la distrobox, téléchager le thème et l'installer avec les commandes  
 ```
+cd
 git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
+cd WhiteSur-gtk-theme
 ./install.sh -l
 ./tweaks.sh -F
 ```
