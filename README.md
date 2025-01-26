@@ -183,9 +183,11 @@ En standard sur Bazzite: AppIndicator and KStatusNotifierItem Support, Blur my s
 
 ### Application du thème [WhiteSur](https://github.com/vinceliuice/WhiteSur-gtk-theme) 
 1. Créer une distrobox pour la compilation du theme avec un home folder distinct  
-`distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.local/share/containers/home-folder/sys-deskcustom"`
-2. Dans la distrobox, installer `git` et toutes les dépendances demandées : `sudo dnf install git <packages>`  
-3. Dans la distrobox, téléchager le thème et l'installer avec les commandes  
+```
+distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.containers-home/sys-deskcustom"
+```
+3. Dans la distrobox, installer `git` et toutes les dépendances demandées : `sudo dnf install git <packages>`  
+4. Dans la distrobox, téléchager le thème et l'installer avec les commandes  
 ```
 cd
 git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
@@ -195,8 +197,8 @@ cd WhiteSur-gtk-theme
 ```
 4. Depuis la console du système hôte, copier le contenu des répertoires suivants dans leur homologue du système hôte  
 ```
-cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.config/gtk-4.0 $HOME/.config/
-cp -r $HOME/.local/share/containers/home-folder/sys-deskcustom/.themes  $HOME/.local/share/themes
+cp -r $HOME/.containers-home/sys-deskcustom/.config/gtk-4.0 $HOME/.config/
+cp -r $HOME/.containers-home/sys-deskcustom/.themes  $HOME/.local/share/themes
 ```
 5. Depuis la console du système hôte, modifier les deux fichiers liens qui pointent vers le répertoire du container  
 ```
@@ -207,7 +209,7 @@ ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk-dark.css
 Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme`.  
 Depuis la console du système hôte, aller dans ce répertoire et pour chaque sous répertoire installer le flatpak en mode system:  
 ```
-cd $HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme
+cd $HOME/.containers-home/sys-deskcustom/.cache/pakitheme
 flatpak --system install WhiteSur-Dark/org.gtk.Gtk3theme.WhiteSur-Dark-x86_64.flatpak
 flatpak --system install WhiteSur-Dark-solid/org.gtk.Gtk3theme.WhiteSur-Dark-solid-x86_64.flatpak
 flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.flatpak
@@ -224,7 +226,7 @@ xdg-config/gtk-3.0:ro
 Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.  
 9. Les curseurs [Bibata Modern Ice](https://www.gnome-look.org/p/1197198) sont à déposer dans le même répertoire `$HOME/.local/share/icons`  
 10. Le thème est à appliquer depuis Gnome Tweaks  
-11. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
+11. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.containers-home/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
 
@@ -266,7 +268,7 @@ Liste de containers [distrobox containers distros](https://github.com/89luca89/d
 
 Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
 ```
-distrobox create --image archlinux:latest --name Arch-DevEnv --nvidia --unshare-all --init --home /home/$USER/.local/share/containers/home-folder/Arch-DevEnv
+distrobox create --image archlinux:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
 ```
 <br>
 
