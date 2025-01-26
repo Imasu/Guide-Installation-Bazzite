@@ -325,6 +325,32 @@ Suivre les wiki Arch:
 
 
 <br><br><br>
+## Paramétrage de Steam pour le partage des jeux entre comptes
+Solution dérivée de [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/) et du paramétrage de KVM.  
+
+### Configuration de la bibliothèque
+Répertoire utilisé comme bibliothèque: /var/steam-library/.  
+```
+sudo groupadd gamers
+#Ajout des utilisateurs au nouveau groupe
+sudo usermod -a -G gamers user1
+sudo usermod -a -G gamers user2
+sudo mkdir /var/steam-library
+sudo chgrp gamers /var/steam-library/
+sudo setfacl -R -b /var/steam-library/
+sudo setfacl -R -m g:gamers:rwX /var/steam-library/
+sudo setfacl -m d:g:gamers:rwx /var/steam-library/
+```
+<br>
+
+### Configuration de Steam
+Modifier dans steam, pour tous les utilisateurs, le répertoire de stockage des jeux.  
+
+
+
+
+
+<br><br><br>
 ## Installation d'un environnement de développement sur le système hôte avec gestion de containers
 Installation de VS-Code par Flatpak puis utilisation de conteneurs pour les développements.  
 Au final pas le choix le plus avisé -> il est préférable d'installer l'environnement de dév (VS-Code, git, langage directement dans une distrobox)  
@@ -437,30 +463,6 @@ sudo chmod 755 /root
 sudo ln -sf /.vscode-server /root/.vscode-server
 ```
 
-
-
-
-
-<br><br><br>
-## Paramétrage de Steam pour le partage des jeux entre comptes
-Source: [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/)
-
-### Configuration de la bibliothèque
-Répertoire utilisé comme bibliothèque: /var/steam-library/.  
-```
-sudo mkdir /var/steam-library
-sudo groupadd gamers
-sudo chgrp gamers /var/steam-library/
-sudo chmod -R 770 /var/steam-library/
-????  sudo chmod g+s /var/steam-library/
-#don't forget to replace user1.users2,etc. with your Linux users
-sudo usermod -a -G gamers user1
-sudo usermod -a -G gamers user2
-```
-<br>
-
-### Configuration de Steam
-Modifier dans steam, pour tous les utilisateurs, le répertoire de stockage des jeux.  
 
 
 
