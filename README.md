@@ -368,16 +368,13 @@ Installation de l'environnement en suivant ce guide [VSCode + Dev Containers and
 #### Installation de VS-Code par flatpak
 Installation  
 ```
-flatpak search com.visualstudio.code  
-flatpak --user install flathub com.visualstudio.code
+flatpak --system install flathub com.visualstudio.code
 ```
 
 Configuration du flatpak  
 A partir d'une configuration standard (flatseal)  
 ```
-flatpak --user override --env HOST_DISPLAY="$DISPLAY" --env HOST_SHELL="$SHELL" --env HOST_SSH_AUTH_SOCK="$SSH_AUTH_SOCK" com.visualsudio.code
-??? flatpak override --user --filesystem=xdg-run/podman com.visualstudio.code ???
-flatpak override --user --filesystem=/tmp com.visualstudio.code
+flatpak --system override --env HOST_DISPLAY="$DISPLAY" --env HOST_SHELL="$SHELL" --env HOST_SSH_AUTH_SOCK="$SSH_AUTH_SOCK" com.visualsudio.code
 ```
 <br>
 
@@ -395,16 +392,6 @@ ln -sf /app/bin/host-spawn ${HOME}/.var/app/com.visualstudio.code/data/node_modu
 4. Rechercher `docker path` et remplacer la valeur par `podman`
 <br>
 
-#### Configuration de l'extension Dev Containers
-Créer un fichier de configuration dans le répertoire `${HOME}/.config/containers/containers.conf`  
-```
-[containers]
-env = ["BUILDAH_FORMAT=docker"]
-label = false
-userns = "keep-id"
-```
-<br>
-
 #### Configuration des containers distrobox (pour VS Code sous flatpak)
 Pour **chacun des containers distrobox**  
 1. Créer un fichier json dans le répertoire `${HOME}/.var/app/com.visualstudio.code/config/Code/User/globalStorage/ms-vscode-remote.remote-containers/nameConfigs/${YOUR_DISTROBOX_CONTAINER_NAME}.json`
@@ -415,6 +402,7 @@ Pour **chacun des containers distrobox**
     "dev.containers.copyGitConfig": false,
     "dev.containers.gitCredentialHelperConfigLocation": "none"
   },
+
   "terminal.integrated.profiles.linux": {
     "distrobox": {
       "path": "${localEnv:SHELL}",
@@ -422,6 +410,7 @@ Pour **chacun des containers distrobox**
         "-l"
       ]
     },
+
     "toolbx": {
       "path": "/usr/sbin/capsh",
       "args": [
@@ -435,7 +424,9 @@ Pour **chacun des containers distrobox**
       ]
     }
   },
+
   "terminal.integrated.defaultProfile.linux": "distrobox",
+
   "remoteEnv": {
     "COLORTERM": "${localEnv:COLORTERM}",
     "DBUS_SESSION_BUS_ADDRESS": "${localEnv:DBUS_SESSION_BUS_ADDRESS}",
