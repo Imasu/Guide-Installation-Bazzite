@@ -1,6 +1,6 @@
 <domain type="kvm">
-  <name>Window11Pro</name>
-  <uuid>ba689b81-3275-4683-ab35-f0a66bb5dea2</uuid>
+  <name>Windows_11</name>
+  <uuid>c941d258-0ad0-4788-879e-d955a205841e</uuid>
   <metadata>
     <libosinfo:libosinfo xmlns:libosinfo="http://libosinfo.org/xmlns/libvirt/domain/1.0">
       <libosinfo:os id="http://microsoft.com/win/11"/>
@@ -8,6 +8,9 @@
   </metadata>
   <memory unit="KiB">8388608</memory>
   <currentMemory unit="KiB">8388608</currentMemory>
+  <memoryBacking>
+    <hugepages/>
+  </memoryBacking>
   <vcpu placement="static">6</vcpu>
   <iothreads>1</iothreads>
   <cputune>
@@ -54,8 +57,9 @@
     <vmport state="off"/>
     <smm state="on"/>
   </features>
-  <cpu mode="host-passthrough" check="none" migratable="on">
+  <cpu mode="host-passthrough" check="partial" migratable="on">
     <topology sockets="1" dies="1" clusters="1" cores="3" threads="2"/>
+    <cache mode="passthrough"/>
     <feature policy="require" name="vmx"/>
   </cpu>
   <clock offset="localtime">
@@ -205,8 +209,7 @@
       <address type="usb" bus="0" port="2"/>
     </redirdev>
     <watchdog model="itco" action="reset"/>
-    <memballoon model="virtio">
-      <address type="pci" domain="0x0000" bus="0x05" slot="0x00" function="0x0"/>
-    </memballoon>
+    <memballoon model="none"/>
   </devices>
 </domain>
+

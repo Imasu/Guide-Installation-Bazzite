@@ -1,0 +1,1588 @@
+<!DOCTYPE html>
+<!-- saved from url=(0062)https://asus-linux.org/guides/vfio-guide/#performance-tweaking -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="./Linux for ROG Notebooks_files/style.css">
+  <link rel="stylesheet" href="./Linux for ROG Notebooks_files/objktv.css">
+  <title>Linux for ROG Notebooks</title>
+<link href="./Linux for ROG Notebooks_files/floating-chat-wrapper.css" rel="stylesheet" type="text/css"><link href="./Linux for ROG Notebooks_files/css" rel="stylesheet" type="text/css"></head>
+  
+
+<body>
+  
+    <header id="site-header" class="active">
+  <div class="container">
+    <div class="row align-center justify-between">
+      <div class="nav-logo">
+        <img src="./Linux for ROG Notebooks_files/rog-logo.svg">
+        <div class="logo-text">
+          <p>Linux for ROG</p>
+          <p>Notebooks</p>
+        </div>
+      </div>
+      <div class="nav-burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+      <nav class="nav-links">
+        
+          <ul class="nav-menu">
+            
+              <li><a href="https://asus-linux.org/">Home</a></li>
+            
+              <li><a href="https://asus-linux.org/blog">Blog</a></li>
+            
+              <li><a href="https://asus-linux.org/manual">Manual</a></li>
+            
+              <li><a href="https://asus-linux.org/guides">Guides</a></li>
+            
+              <li><a href="https://asus-linux.org/faq">FAQ</a></li>
+            
+              <li><a href="https://asus-linux.org/third-party">3rd Party</a></li>
+            
+          </ul>
+        
+      </nav>
+    </div>
+  </div>
+</header>
+  
+  <main>
+
+    
+
+    
+<section class="hero page">
+  <div class="hero-bg"></div>
+  <div class="hero-content page">
+    <h1>VFIO dGPU Passthrough Guide</h1>
+    <h2>An A-Z guide on getting up and running with VFIO</h2>
+  </div>
+</section>
+<section class="section-index">
+  <div class="container">
+  <article class="article-content">
+    
+    <div class="article-info">
+        <span class="author">By Kyle McGrath</span><span class="date">June  2, 2021</span>
+    </div>
+    
+    <p><strong>Throughout this guide you'll see <code>user</code> referred to in various commands/file. Ensure to replace it with YOUR USERNAME in these!</strong></p>
+<p><strong>I also assume that your VM uses the default name assigned by libvirt - <code>win10</code>. If you give your VM a different name, you will need to ensure the same as above, and replace any occurrences of <code>win10</code> in commands/files with the name of YOUR VM!</strong></p>
+<p><strong>Finally, the guide assumes that you have supergfxctl installed and configured correctly and are currently on integrated graphics mode as the starting point:</strong></p>
+<pre><code>supergfxctl -m integrated
+</code></pre>
+<p>** Note for Asus Rog Flow X13 users - The dGPU on the Flow X13 is not wired to any external port, so you will have to use <a href="https://asus-linux.org/guides/vfio-guide/#using-looking-glass-with-a-virtual-display-driver">Using Looking Glass with a Virtual Display Driver</a> to have a working dGPU pass-through.  You will also need Supergfxctl v5.0.0 or newer for vfio mode switching support.**</p>
+<h2 id="contents">Contents</h2>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#introduction">Introduction</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#why-a-windows-vm">Why Use A Windows VM?</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#selinux-considerations">SELinux Considerations</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#xml-editing">XML Editing</a></li>
+</ul>
+</li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#vm-creation-walkthrough">VM Creation Walkthrough</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#chapter-1-prerequisites">Chapter 1: Prerequisites</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#chapter-2-libvirt-hooks">Chapter 2: Libvirt Hooks</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#chapter-3-creating-our-vm">Chapter 3: Creating Our VM</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#chapter-4-configuring-input-devices">Chapter 4: Configuring Input Devices</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#option-1-direct-usb-passthrough">Option 1: Direct USB Passthrough</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#option-2-evdev-input">Option 2: EvDev Input</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#option-3-using-spice-looking-glass-only">Option 3: Using Spice (Looking Glass Only)</a></li>
+</ul>
+</li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#chapter-5-configuring-audio">Chapter 5: Configuring Audio</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#option-1-qemu-jack-backend-with-pipewire">Option 1: QEMU JACK Backend with Pipewire</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#option-2-direct-usb-passthrough">Option 2: Direct USB Passthrough</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#option-3-looking-glass-setup">Looking Glass Setup</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#adding-the-ivshmem-device-to-the-vm">Adding The IVSHMEM Device To The VM</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#creating-the-ivshmem-block-on-the-host">Creating The IVSHMEM Block On The Host</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#installing-the-ivshmem-windows-driver">Installing The IVSHMEM Windows Driver</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#installing-the-host-application-windows">Installing The Host Application (Windows)</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#building-the-looking-glass-client-linux">Building The Looking Glass Client (Linux)</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#using-looking-glass-with-a-dummy-display-plug">Using Looking Glass with a Dummy Display Plug</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#using-looking-glass-with-a-virtual-display-driver">Using Looking Glass with a Virtual Display Driver</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#disable-gnome-screen-dimming-evdev-only">Disable GNOME Screen Dimming (EvDev Only)</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#looking-glass-kill-script-optional">Looking Glass Kill Script (Optional)</a></li>
+</ul>
+</li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#performance-tweaking">Performance Tweaking</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#general-tips">General Tips</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#memory-hugepages">Memory Hugepages</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#setting-cpu-governors">Setting CPU Governors</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#pinning-cpus">Pinning CPUs</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#cpu-cache-passthrough">CPU Cache Passthrough</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#isolating-cpus">Isolating CPUs</a></li>
+</ul>
+</li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#looking-glass-performance-tweaks">Looking Glass Performance Tweaks</a>
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#using-nvfbc-instead-of-dxgi">Using NvFBC Instead of DXGI</a></li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#direct-dma-upload-dmabuf">Direct DMA Upload (DMABUF)</a></li>
+</ul>
+</li>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#one-click-launcher">One-Click Launcher</a></li>
+</ul>
+<!-- * [Benchmarks (Coming Soon!)](#benchmarks) -->
+<ul>
+<li><a href="https://asus-linux.org/guides/vfio-guide/#conclusion">Conclusion</a></li>
+</ul>
+<h2 id="introduction">Introduction</h2>
+<p>In this guide, I'll take you through the steps needed to have a working VM with GPU Passthrough. We'll also go over tweaks/settings to get the best performance possible, and I'll explain the reasons behind these chocies. This will give you a proper understanding of why I've made these choices, as well as whether something different might work better for you.</p>
+<p>We'll also go over Looking Glass! Our notebooks all have extremely capable iGPU's, so we can make the experience even better by using our notebook's built-in display for our VM.</p>
+<p>Plus, I'll show you how to wrap it all up with a pretty bow. That is to say, I'll walk you through setting up libvirt hooks, so we can automatically apply our performance tweaks, as well as start our VM and related tools - all with a single click.</p>
+<p>I've provided some example files below for you. You can refer to these when you are creating the files and going through the steps:</p>
+<ul>
+<li><a href="https://asus-linux.org/files/vfio/hooks-example.zip">Complete Hook Directory Structure</a></li>
+<li><a href="https://asus-linux.org/files/vfio/example.xml">Example VM XML File</a></li>
+</ul>
+<p>If at any point you get stuck or have any questions, don't hesitate to visit the <code>#virtualisation</code> channel on Discord and ping me! I'm always happy to help if I can!</p>
+<p>Cheers!<br>Bloodlvst</p>
+<h3 id="why-a-windows-vm">Why A Windows VM?</h3>
+<p>The main reason for using this type of setup is simply because I was tired of dual-booting. In my group of friends, I'm the only daily Linux user, and I was getting bored of constantly having to hope a new game worked properly with Wine/Proton and if not, make my friends wait even longer while I redownloaded and installed it after booting into windows. I also make occasional use of software such as Adobe CC which currently is a huge hassle to get functioning properly on Linux.</p>
+<p>With the ROG Zephyrus line of notebooks, we have a powerful dGPU, as well as tons of CPU cores to make GPU passthrough on a VM a very attractive option. Couple that with Fluke's incredible work with <code>supergfxctl</code>, and we have a recipe for VFIO success!</p>
+<p>Using a VM like this isn't for everyone, but if you're sick of dual-booting solely in order to play a couple of specific games, giving this a try may be worth it for you!</p>
+<h3 id="selinux-considerations">SELinux Considerations</h3>
+<p>If you're on Fedora, then your system uses SELinux. This improves security, but some of the steps in this guide will give you errors. Open the file <code>/etc/libvirt/qemu.conf</code> and find this line:</p>
+<pre><code>#security_default_confined = 1
+</code></pre>
+<p>Uncomment the line and change the value to <code>0</code>. Note that while this <em>does</em> technically lower security, as long as this is your only VM and you aren't doing risky or otherwise sketchy things with it, you should be fine. To further ease your concern, keep in mind that Arch users do not have SELinux and run VM's with no issues.</p>
+<h3 id="xml-editing">XML Editing</h3>
+<p>You will often need to edit your VM's XML configuration file. I prefer to simply use the virt-manager GUI for this. To enable XML editing in the GUI, go to the main virt-manager window, and click <code>Edit &gt; Preferences</code>. In this window, ensure the "Enable XML Editing" is selected:</p>
+<p><img src="./Linux for ROG Notebooks_files/libvirt-enable-xml.png" alt="Enabling XML Editing"></p>
+<h2 id="vm-creation-walkthrough">VM Creation Walkthrough</h2>
+<h3 id="chapter-1-prerequisites">Chapter 1: Prerequisites</h3>
+<p>Let's make sure we have everything we need.</p>
+<h4 id="packages">Packages</h4>
+<p>First, install the necessary packages required to create a VM with a UEFI BIOS:</p>
+<p>NOTE: You only need to install the supporting <code>qemu-kvm-core</code> as we're mostly using <code>libvirt</code>.</p>
+<pre><code># Fedora
+sudo dnf install qemu-kvm-core libvirt virt-manager
+
+# Arch
+sudo pacman -S qemu libvirt edk2-ovmf virt-manager ebtables dnsmasq
+</code></pre>
+<p><em><strong>After installation of the packages, it is strongly recommended to reboot to avoid any issues.</strong></em></p>
+<h4 id="confirm-iommu-status">Confirm IOMMU Status</h4>
+<p>Now, we need to ensure IOMMU is enabled. It <em>should</em> be enabled by default in Fedora and Arch kernels. You can check this with the following command:</p>
+<pre><code>dmesg | grep -i -e DMAR -e IOMMU
+</code></pre>
+<p>If the command returns any results at all, then IOMMU is enabled in your system. If no results are returned, then you may need to enable IOMMU. Refer to your distribution's documentation on how to do this.</p>
+<h4 id="enable-supergfxctl-vfio-mode">Enable Supergfxctl VFIO Mode</h4>
+<p>By default, supergfxctl doesn't allow us to set VFIO mode. It's easy to enable though! Open <code>/etc/supergfxd.conf</code> and find this line:</p>
+<pre><code>  "gfx_vfio_enable": false,
+</code></pre>
+<p>Edit the file and change <code>false</code> to <code>true</code> and save the file. Then, restart the asusd service:</p>
+<pre><code>sudo systemctl restart supergfxd
+</code></pre>
+<p>You can now use supergfxctl's VFIO graphics mode!</p>
+<h4 id="iommu-groups-device-ids">IOMMU Groups &amp; Device IDs</h4>
+<p>This part can really be done later on. However, if we just do it now, we'll already have a proper understanding of what we're looking for when the time comes to add the dGPU to our VM.</p>
+<p>Go ahead and enable VFIO mode:</p>
+<pre><code>supergfxctl -m vfio
+</code></pre>
+<p>Now, copy and paste the below bash script into a terminal (if you're not using bash, save it into an executable script file and run it):</p>
+<pre><code>#!/bin/env bash
+shopt -s nullglob
+for g in `find /sys/kernel/iommu_groups/* -maxdepth 0 -type d | sort -V`; do
+    echo "IOMMU Group ${g##*/}:"
+    for d in $g/devices/*; do
+        echo -e "\t$(lspci -nns ${d##*/})"
+    done;
+done;
+</code></pre>
+<p>After running this, the terminal will display a list of all your PCI devices, listed by their IOMMU group. Skim through the list until you find the IOMMU group that contains your dGPU. Here's what mine looks like:</p>
+<pre><code>IOMMU Group 10:
+	01:00.0 VGA compatible controller [0300]: NVIDIA Corporation TU116M [GeForce GTX 1660 Ti Mobile] [10de:2191] (rev a1)
+	01:00.1 Audio device [0403]: NVIDIA Corporation TU116 High Definition Audio Controller [10de:1aeb] (rev a1)
+	01:00.2 USB controller [0c03]: NVIDIA Corporation TU116 USB 3.1 Host Controller [10de:1aec] (rev a1)
+	01:00.3 Serial bus controller [0c80]: NVIDIA Corporation TU116 USB Type-C UCSI Controller [10de:1aed] (rev a1)
+</code></pre>
+<p>Don't worry if you see more or fewer devices in your group than what I've shown! We simply need to know which group our dGPU is in (and take note of the address IDs 01:00.0, 01:00.1, etc.).</p>
+<p>The important part is to ensure that the IOMMU group containg our GPU contains <em><strong>only our GPU devices</strong></em>. This is because in order to pass through a PCI device to our VM, we need to pass through <em><strong>every</strong></em> device from the same group. In essence, the entire IOMMU group needs to be passed through.</p>
+<p>To my knowledge, all ROG laptops version 2020 and newer should be configured with the dGPU in its own IOMMU group. If for any reason yours is not, don't worry, passthrough is still possible. <em><strong>However, it will require an ACS Override kernel patch, which is out of the scope of this guide.</strong></em> Come reach out on the Discord if this is the case for you, and we'll do our best to help!</p>
+<h4 id="download-required-iso-files">Download Required ISO Files</h4>
+<p>You can't install Windows 10 without a Windows 10 ISO, so you'll need one of those. I will assume you know how to get your hands on one!</p>
+<p><strong>NOTE: This guide was written for Windows 10, so use Windows 10 for the most tested VM, however as of Feb 2023 Windows 11 appears to be working correctly also (though not tested it as thoroughly yet).</strong></p>
+<p>We will also need the VirtIO driver binaries. Fedora conveniently provides an ISO containing the drivers. You can download the drivers at either of the below links:</p>
+<ul>
+<li><a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/latest-virtio/virtio-win.iso">VirtIO Latest Driver ISO</a></li>
+<li><a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso">VirtIO Stable Driver ISO</a></li>
+</ul>
+<p>I recommend using the latest version of the driver ISO. In my experience they're just as stable, and they will contain all the latest improvements.</p>
+<h4 id="required-hardware">Required Hardware</h4>
+<ul>
+<li>Your ROG laptop (duh)</li>
+<li>Either of the following (if you're not using the Virtual Display Driver):
+<ul>
+<li>An external monitor with DisplayPort capability (along with a compatible USB-C DisplayPort cable)</li>
+<li>A USB-C dummy display adapter</li>
+</ul>
+</li>
+<li>An 2nd installed M.2 NVMe drive (optional)</li>
+</ul>
+<p>The dummy adapater is a requirement <em><strong>only</strong></em> if you want to set up and use Looking Glass without using the Virtual Display Driver. If you need to purchase one, I use <a href="https://www.amazon.com/gp/product/B086MKR9WH">this one</a> and it works great.</p>
+<h3 id="chapter-2-libvirt-hooks">Chapter 2: Libvirt Hooks</h3>
+<p>Libvirt hooks are probably the single most useful thing I've learned in my VM journey. Seriously! In my prior experience with GPU passthrough, I needed to permanently reserve things for the VM - even CPU cores! This isn't very convenient if we aren't using the VM and want use our machines to their full potential for other tasks.</p>
+<p>If you want to learn more about libvirt hooks, The Passthrough Post <a href="https://passthroughpo.st/simple-per-vm-libvirt-hooks-with-the-vfio-tools-hook-helper/">has a fantastic article</a> which explains it all. You can also check out libvirt's offical <a href="https://libvirt.org/hooks.html">hook documentation</a>. Don't worry, I'll still give you a high level overview of it!</p>
+<p>It's possible to dynamically do things like reserve memory for hugepages, or isolate our CPU's after the system boots. The problem is if you're like me, you don't always remember to enter the commands to do it beforehand. Or more likely, you forget to set everything back to normal after you shutdown the VM.</p>
+<p>So what are hooks? Hooks give us the capability to run commands/scripts when starting or shutting down our VM. No more needing to remember commands or running scripts that start the VM for you! With hooks, the scripts you assign to your VM will automatically get run every time you start or stop the VM.</p>
+<h4 id="installing-hooks">Installing Hooks</h4>
+<p>The previously mentionied artiicle has a great hook helper tool, complete with instructions on how to install. We will be using slightly different instructions that are more relevant to my setup. I'm also hosting the hook helper tool on our site, just in case theirs happens to go down for whatever reason.</p>
+<p>To install the hook helper, enter the below chained command:</p>
+<pre><code>sudo mkdir -p /etc/libvirt/hooks/qemu.d &amp;&amp; sudo wget 'https://asus-linux.org/files/vfio/libvirt_hooks/qemu' -O /etc/libvirt/hooks/qemu &amp;&amp; sudo chmod +x /etc/libvirt/hooks/qemu
+</code></pre>
+<p>This command does the following: creates the basic folders required to use hooks, downloads the hook helper to the correct folder, and marks the helper executable.</p>
+<p><em><strong>If you've already set up hooks, be aware that the above will overwrite them, so ensure you've backed them up if necessary!</strong></em></p>
+<p>The hook helper won't take effect until we restart the libvirt service, so let's do that now:</p>
+<pre><code>sudo systemctl restart libvirtd
+</code></pre>
+<p>From the Passthrough Post article, here are the hooks we're going to be using:</p>
+<pre><code># Before a VM is started, before resources are allocated:
+/etc/libvirt/hooks/qemu.d/$vmname/prepare/begin/*
+
+# After a VM has shut down, before releasing its resources:
+/etc/libvirt/hooks/qemu.d/$vmname/stopped/end/*
+
+# After a VM has shut down, after resources are released:
+/etc/libvirt/hooks/qemu.d/$vmname/release/end/*
+</code></pre>
+<p>When we put an executable script or file in any of these folders, the hook manager will take care of the rest. If we're using the default <code>win10</code> (or <code>win11</code>) name for our VM, the directory structure should look like this (you can use command <code>sudo tree /etc/libvirt/hooks/</code> if you want to check the directory's structure):</p>
+<pre><code>/etc/libvirt/hooks
+├── qemu
+└── qemu.d
+    └── win10
+        ├── prepare
+        │&nbsp;&nbsp; └── begin
+        └── release
+         &nbsp;&nbsp; └── end
+</code></pre>
+<p>Enter the below chained command to create the required directory structure. Ensure to replace <code>win10</code> with what you plan to name your VM if required:</p>
+<pre><code>sudo mkdir /etc/libvirt/hooks/qemu.d/win10 &amp;&amp; sudo mkdir -p /etc/libvirt/hooks/qemu.d/win10/prepare/begin &amp;&amp; sudo mkdir -p /etc/libvirt/hooks/qemu.d/win10/release/end
+</code></pre>
+<h4 id="creating-your-first-hook-scripts">Creating Your First Hook Scripts</h4>
+<p>With these folders created, we can now make our first scripts. The first script will actually just be a configuration file where we will store variables for our scripts when the time comes.</p>
+<p>Create a file <code>/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf</code>, and add the following content and save it:</p>
+<pre><code>## Win10 VM Script Parameters
+
+# To modify GNOME settings to disable the screensaver, we 
+# need to specify the username and ID. As well, when the 
+# VM is turned off, we need to restore the amount of idle 
+# time until the screen is turned off (in seconds)
+LOGGED_IN_USERNAME=kyle
+LOGGED_IN_USERID=1000
+GNOME_IDLE_DELAY=900
+
+# How much memory we've assigned to the VM, in kibibytes 
+VM_MEMORY=8388608
+
+# Set the governor to use when the VM is on, and which 
+# one we should return to once the VM is shut down
+VM_ON_GOVERNOR=performance
+VM_OFF_GOVERNOR=schedutil
+
+# Set the powerprofiles ctl profile to performance when 
+# the VM is on, and power-saver when the VM is shut down
+VM_ON_PWRPROFILE=performance
+VM_OFF_PWRPROFILE=power-saver
+
+# Set which CPU's to isolate, and your system's total
+# CPU's. For example, an 8-core, 16-thread processor has 
+# 16 CPU's to the system, numbered 0-15. For a 6-core,
+# 12-thread processor, 0-11. The SYS_TOTAL_CPUS variable 
+# should always reflect this.
+#
+# You can define these as a range, a list, or both. I've 
+# included some examples:
+#
+# EXAMPLE=0-3,8-11
+# EXAMPLE=0,4,8,12
+# EXAMPLE=0-3,8,11,12-15
+VM_ISOLATED_CPUS=0-1
+SYS_TOTAL_CPUS=0-15
+</code></pre>
+<p>That's it for this file for the time being. We'll revisit it later on.</p>
+<p>The first scripts we will be creating are actually both the most simple, and most important scripts, as they'll set the <code>supergfxctl</code> graphics mode when we start and stop the VM. Create and save the two following files:</p>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/prepare/begin/10-asusd-vfio.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Use supergfxctl to set graphics mode to vfio
+echo "Setting graphics mode to VFIO..."
+supergfxctl -m vfio
+
+echo "Graphics mode set!"
+sleep 1
+</code></pre>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/release/end/40-asusd-integrated.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Use supergfxctl to set graphics mode to vfio
+echo "Resetting graphics mode back to integrated..."
+supergfxctl -m integrated
+
+echo "Graphics mode reset!"
+sleep 1
+</code></pre>
+<p>Remember to make both of these files executable:</p>
+<pre><code>sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/prepare/begin/10-asusd-vfio.sh
+sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/40-asusd-integrated.sh
+</code></pre>
+<p>Your hook directory should now look like this:</p>
+<pre><code>/etc/libvirt/hooks
+├── qemu
+└── qemu.d
+    └── win10
+        ├── prepare
+        │&nbsp;&nbsp; └── begin
+        │&nbsp;&nbsp;     └── 10-asusd-vfio.sh
+        ├── release
+        │&nbsp;&nbsp; └── end
+        │&nbsp;&nbsp;     └── 40-asusd-integrated.sh
+        └── vm-vars.conf
+</code></pre>
+<p>Congrats! You've created your first two hook scripts. Whenever we start our VM, libvirt will automatically use <code>supergfxctl</code> to set our graphics mode to VFIO before starting the VM, then restore it to integrated after we shut it down.</p>
+<p>We'll create more hooks later on when we optimise our VM's performance.</p>
+<h3 id="chapter-3-creating-our-vm">Chapter 3: Creating Our VM</h3>
+<p>Before we get started, we should add our user account to the <code>libvirt</code> group. If we don't do this, then every time we open virt-manager we will be prompted for authorisation. This, in my opinion, is annoying (plus, it ruins our final goal of a single-click solution).</p>
+<p>We'll also take this opportunity to add ourselves to the <code>kvm</code> group, as it will be required for future steps.</p>
+<p>To add ourselves to these groups:</p>
+<pre><code>sudo usermod -aG libvirt,kvm user
+</code></pre>
+<p>Additionally, ensure that <code>supergfxctl</code> is set to <code>vfio</code> mode before we begin creating the VM, or else we won't be able to add our dGPU:</p>
+<pre><code>supergfxctl -m vfio
+</code></pre>
+<p>Alright, I know you're excited, so let's stop teasing and jump into it!</p>
+<h4 id="step-1">Step 1</h4>
+<p>Open up virt-manager and click the icon in the top left of the window to create a new VM:</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-1.png" alt="Step 1 Example"></p>
+<h4 id="step-2">Step 2</h4>
+<p>Choose the <code>Local install media</code> option, then click "Browse" on the next window. You'll get a pop-up. Click "Browse Local" and navigate to the location of your Windows install ISO.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-2.png" alt="Step 2 Example-a"></p>
+<p>If you get the below warning, just click "Yes".</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-3.png" alt="Step 2 Example-b"></p>
+<h4 id="step-3">Step 3</h4>
+<p>Next, configure some RAM and CPUs for your VM. On an 8-core multithreaded CPU with 16 GiB of RAM, I recommend choosing at least 8 CPU's and 8 GiB of RAM, but feel free to modify this to your needs.</p>
+<p>Note that on this screen 8 CPUs means 8 threads.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-4.png" alt="Step 3 Example"></p>
+<h4 id="step-4">Step 4</h4>
+<p>You'll now be asked to set up storage for your VM. Set a size that will accomodate the games or software you plan to use with your Windows install.</p>
+<p>By default, the .qcow2 image created by libvirt will be stored in <code>/var/lib/libvirt/images/win10.qcow2</code>. If you have an existing disk or want to use a different format, choose the <code>Select or create custom storage</code> option.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-5.png" alt="Step 4 Example"></p>
+<h5 id="alternate-process">Alternate Process</h5>
+<p>If your laptop model supports installation of an additional NVMe drive, you may wish to pass through the entire drive itself instead of using a virtual disk, for increased performance. My G15 has this, and it's what I've preferred in the past. However, note that I am currently using a virtual disk on my VM and I've noticed no real-world performance difference (of course, YMMV).</p>
+<p>Before proceeding with this, install the NVMe drive into your system and ensure that it is in its own IOMMU group. (Refer to <a href="https://asus-linux.org/guides/vfio-guide/#chapter-1-prerequisites">Chapter 1</a> if you forget how). Most ROG boards are similar, and I can confirm on my GA502IU the NVMe devices have their own IOMMU groups as shown below:</p>
+<pre><code>IOMMU - Group 13:
+	04:00.0 Non-Volatile memory controller [0108]: Samsung Electronics Co Ltd Device [144d:a809]
+IOMMU - Group 14:
+	05:00.0 Non-Volatile memory controller [0108]: Micron Technology Inc Device [1344:5410] (rev 01)
+</code></pre>
+<p>If your NVMe device is in its own IOMMU group, you're all set! Untick the <code>Enable storage for this virtual machine</code> checkbox, and continue through the rest of the guide steps as normal. There will be a note for those of you doing this once we reach that section!</p>
+<h4 id="step-5">Step 5</h4>
+<p>In the final step, review your selected settings, and ensure you have selected the <code>Customize configuration before installation</code> checkbox, then click "Finish".</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-6.png" alt="Step 5 Example"></p>
+<p>You'll now see a new window with some more advanced configuration options. You can edit the libvirt XML file, or you can use the GUI to modify these settings. For now, we only need to change some basic things, so we'll use the GUI.</p>
+<h4 id="step-6">Step 6</h4>
+<p>In the "Overview" section, ensure the firmware dropdown is set to <code>UEFI x86_64: /usr/share/OVMF/OVMF_CODE.fd</code> and click Apply.</p>
+<p>If you are installing Windows 11, select <code>UEFI x86_64: /usr/share/OVMF/OVMF_CODE.secboot.fd</code> instead.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-7.png" alt="Step 6 Example"></p>
+<h4 id="step-7">Step 7</h4>
+<p>Next, in the CPUs section, remove the checkmark next to <code>Copy host CPU configuration</code>, and select <code>host-passthrough</code> from the Model dropdown.</p>
+<p>Also ensure <code>Enable available CPU security flaw mitigations</code> is checked to ensure your VM is still protected from any Spectre/Meltdown CPU vulnerabilities and then click Apply. You'll notice that the checkmark goes away - don't worry about this, it's a known issue with libvirt.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-8.png" alt="Step 7 Example"></p>
+<h4 id="step-8">Step 8</h4>
+<p><em><strong>If you are passing through an NVMe drive, skip this step and refer to the "Alternate Version" of Step 8.</strong></em></p>
+<p>In SATA Disk 1, we will want to change it to a VirtIO disk for improved performance. Change Disk Bus to <code>VirtIO</code>, then click Apply.</p>
+<p><strong>Note: You may research the various cache, discard, and detect zeroes modes on your own and choose the that best suits your needs. <em>I will not make any recommendation, as this is a contentious topic at best.</em></strong></p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-9.png" alt="Step 8 Example"></p>
+<p>Next, select Boot Options from the menu and ensure you've set your NVMe device as a boot device (the Windows ISO should still be the first priority device):</p>
+<p><img src="./Linux for ROG Notebooks_files/nvme-passthrough-2.png" alt="img"></p>
+<p>Make sure to click Apply, and that's it! You can now continue with the rest of the steps.</p>
+<h4 id="step-8-alternate-version">Step 8 (Alternate Version)</h4>
+<p><em><strong>If you aren't passing through an entire NVMe SSD to your VM and already completed Step 8, skip ahead to Step 9.</strong></em></p>
+<p>If your laptop model comes with an open M.2 slot to install a 2nd NVMe drive, this is one of the simplest and easiest performance improvements you can make.</p>
+<p>Virtual hard disks have some extra overhead, and they're shared with the host. While virtual drive performance should still be acceptable, by passing through an entire NVMe drive, we can get native drive performance, and not need to install any extra drivers.</p>
+<p>To pass through our NVMe device, click "Add Hardware" in the bottom left, then select "PCI Host Device". In the list of devices that appears, find the NVMe device you wish to pass through:</p>
+<p><img src="./Linux for ROG Notebooks_files/nvme-passthrough-1.png" alt="img"></p>
+<p>In my case, the Samsung drive is my boot drive, so I'll select the Micron drive and then click Finish.</p>
+<p>Next, select Boot Options from the menu and ensure you've set your NVMe device as a boot device (the Windows ISO should still be the first priority device):</p>
+<p><img src="./Linux for ROG Notebooks_files/nvme-passthrough-2.png" alt="img"></p>
+<p>Make sure to click Apply, and that's it! You can now continue with the rest of the steps.</p>
+<h4 id="step-9">Step 9</h4>
+<p><em><strong>If you've passed through an NVMe device, this step still applies to you, as we will need these drivers for our VM's network card!</strong></em></p>
+<p>Because Windows does not include drivers for any VirtIO devices, the Windows installation wizard won't detect your VirtIO disk. We'll need to mount a 2nd virtual CDROM device with the VirtIO driver ISO.</p>
+<p>Click the "Add Hardware" button in the bottom left, choose "Storage" from the list, and set "Device type" to <code>CDROM device</code>. Then click "Manage" and browse to your driver ISO.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-10.png" alt="Step 9 Example"></p>
+<h4 id="step-10">Step 10</h4>
+<p>We also want to set our NIC device to use the VirtIO drivers for improved performance and less overhead. Click the "Device model" dropdown and change it to <code>virtio</code>, and click Apply.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-11.png" alt="Step 10 Example"></p>
+<h4 id="step-11">Step 11</h4>
+<p>It's time to add our dGPU to the VM! Click the <code>Add Hardware</code> button in the bottom left, and then select <code>PCI Host Device</code>. You'll be shown a list of devices. Select the first device belonging to our dGPU and click Finish.</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-12.png" alt="Step 11 Example"></p>
+<p>Repeat this process for all the devices in your dGPU's IOMMU group.</p>
+<p>You might've noticed that in my case, even though I had 4 devices in my dGPU's IOMMU group, only the first 2 show up in the list of devices to choose from. If you don't have this issue and all of your devices are available to select, finish adding them all and skip ahead to Step 12.</p>
+<p>However, if you do have this issue the fix is pretty simple. For whatever reason, in older versions of libvirt, I've noticed that if the supergfxctl graphics mode is changed to <code>vfio</code> without restarting the libvirt service, some of the devices in the dGPU's IOMMU group will be missing on this screen.</p>
+<p>Cancel the creation of the VM, and restart the libvirt service:</p>
+<pre><code>sudo systemctl restart libvirtd
+</code></pre>
+<p>After doing this, you'll need to restart the VM creation process from Step 1. When you get back to this step, you should see all of the devices present from your dGPU's IOMMU group. Add them all and proceed to the next step.</p>
+<h4 id="step-12">Step 12</h4>
+<p>At this point, we can go ahead and remove all the extra devices libvirt adds which we won't be using. The devices I remove are:</p>
+<ul>
+<li>Sound ich9</li>
+<li>Console 1</li>
+<li>Channel Spice (if you are planning to use Looking Glass, leave this installed)</li>
+<li>Both USB Redirectors</li>
+</ul>
+<p>One you're done, it should look like the image below:</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-13.png" alt="Step 12 Example"></p>
+<h4 id="step-13">Step 13</h4>
+<p>At this point, we can finally click "Begin Installation" to begin installing our VM! The Windows install is just your normal Windows install...with a couple of caveats.</p>
+<p>If you are using a VirtIO disk, you'll be greeted with the below screen, instead of the expected list of drives to install onto. Remember, Windows doesn't include drivers for VirtIO devices, so we need to load the drivers before we can install Windows. Click the "Load driver" link in the bottom left.</p>
+<p><em><strong>Note: If you passed through an NVMe drive, your drive will show up normally on this screen. There's no need for you to install the VirtIO disk driver, just ensure to read the rest of this step and install the VirtIO network driver!</strong></em></p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-14.png" alt="Step 13 - Example A"></p>
+<p>Your drive letter may be different, but based on the below screenshot, navigate to <code>E:\viostor\w10\amd64\</code>, and click OK to install the disk driver. You'll see you now have a disk to install Windows onto:</p>
+<p><img src="./Linux for ROG Notebooks_files/create-vm-15.png" alt="Step 13 - Example B"></p>
+<p>While we're here, we can also load the driver for our Virtio network adapter. We won't be able to access the Internet without this. Repeat "Load driver" process, and select the <code>E:\NetKVM\w10\amd64\</code> folder.</p>
+<p>From this point, continue installing Windows as normal with your preferred settings, though I do recommend to use an <code>Offline account</code> if your version of Windows allows this.</p>
+<p>NOTE: If you are installing Windows 11 there is no option to select <code>Offline account</code>, however you can still use one. At the <em>Select keyboard</em> screen, press Shift + F10 and a Command Prompt will appear, and you will be in the <code>C:\Windows\System32\</code> folder. Type <code>oobe\bypassnro</code> (this is referring to a command in the <code>C:\Windows\System32\oobe\</code> folder, and is not a mistyped command switch). The VM will restart, and once it has you will have the option to select an offline account.</p>
+<p>Once installation is finished, boot the VM into Windows install any needed Windows updates. Unless you actually need it for something, I also recommend uninstalling <code>OneDrive</code>.</p>
+<p>After you've installed your Windows updates, from inside your VM go to the Nvidia site and download the <a href="https://www.nvidia.com/Download/index.aspx">latest Windows  drivers</a> for your card. Nvidia recently <a href="https://www.nvidia.com/en-us/geforce/news/outriders-game-ready-driver/">released an update</a> to their Windows drivers, which fixes a bug that caused the GPU to trigger the infamous <code>Code 43 Error</code> when the GPU was running inside of a VM.</p>
+<p>There are several guides out there on workarounds for this, but don't bother with them. They're 100% obsolete as long as you are using current drivers!</p>
+<h4 id="we-re-special-so-we-still-get-to-experience-code-43">We're Special, So We Still Get To Experience Code 43</h4>
+<p>Unfortunately, some of you will <em><strong>still</strong></em> get a Code 43 error after you update the drivers and reboot, especially those of you with Max-Q cards. The reason for this is because your dGPU knows it's a mobile GPU, so it looks for the existence of a battery in the system. If it doesn't find one, it doesn't load the driver.</p>
+<p>Thankfully, we can correct this by adding a fake battery to the VM. Open your VM's XML config. You should see the following in the first line of your XML:</p>
+<pre><code>&lt;domain type="kvm"&gt;
+</code></pre>
+<p>Replace that line with the below:</p>
+<pre><code>&lt;domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm"&gt;
+</code></pre>
+<p>Now, scroll to the bottom of the XML. Right before <code>&lt;/domain&gt;</code>, paste the following above it so it looks like the below:</p>
+<pre><code>&lt;domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm"&gt;
+...
+  &lt;qemu:commandline&gt;
+    &lt;qemu:arg value="-acpitable"/&gt;
+    &lt;qemu:arg value="file=/var/lib/libvirt/images/acpitable.bin"/&gt;
+  &lt;/qemu:commandline&gt;
+&lt;/domain&gt;
+</code></pre>
+<p>Next, we need to actually copy the fake battery table file to the above folder. Download the fake battery file <a href="https://asus-linux.org/files/vfio/acpitable.bin">here</a>. Open a terminal in the folder you saved it to, and enter the following command to copy it to the correct location:</p>
+<pre><code>sudo cp acpitable.bin /var/lib/libvirt/images/
+</code></pre>
+<p>Lastly, we can insert the motherboard SMBIOS data which will hopefully prevent having to reactivate Windows. Extract hardware UUID and serial from the BIOS by typing:</p>
+<pre data-lang="bash" class="language-bash "><code class="language-bash" data-lang="bash">sudo dmidecode -t 0
+sudo dmidecode -t 1
+</code></pre>
+<p>And add the details into the bottom of the XML under acpitable.</p>
+<p>NOTE: If your BIOS strings contain a comma (",") leave it out, as it will mess up the comma separated values in the XML. E.g. <code>American Megatrends International, LLC.</code> will become <code>American Megatrends International LLC.</code></p>
+<pre><code>&lt;domain xmlns:qemu="http://libvirt.org/schemas/domain/qemu/1.0" type="kvm"&gt;
+...
+  &lt;qemu:commandline&gt;
+    ...
+    &lt;qemu:arg value="-smbios"/&gt;
+    &lt;qemu:arg value="type=0,vendor=American Megatrends International LLC.,version=GA402RJ.315,date=09/21/2022,release=5.24"/&gt;
+    &lt;qemu:arg value="-smbios"/&gt;
+    &lt;qemu:arg value="type=1,manufacturer=ASUSTeK COMPUTER INC.,product=ROG Zephyrus G14 GA402RJ_GA402RJ,serial=insertyours,uuid=insertyours,family=ROG Zephyrus G14"/&gt;
+  &lt;/qemu:commandline&gt;
+&lt;/domain&gt;
+</code></pre>
+<p>Click Apply, and restart the VM. The code 43 error should now be gone, and your dGPU fully functional! Congrats, you have a basic VM working with GPU passthrough!</p>
+<p>Before we get into Looking Glass or performance tweaking, make sure you read the next section regarding input devices, we'll of course need working input to actually use our VM!</p>
+<h3 id="chapter-4-configuring-input-devices">Chapter 4: Configuring Input Devices</h3>
+<p>Before we go any further, we should talk about input devices. There are many options we have available for this. I'm going to go over the only 3 I would personally recommend if you plan on using the VM for gaming.</p>
+<h4 id="touchpads-eugh">Touchpads...Eugh.</h4>
+<p>I wish I had good news here, but it seems there is no way to use the laptop's built-in touchpad with the first two options below. I'll spare the technical details, but one simply isn't possible, and one stops working shortly after the VM is booted.</p>
+<p>If you really need your touchpad inside the VM, using Spice will be the only option that I cover in this guide. There are other solutions like <a href="https://github.com/debauchee/barrier">Barrier</a> or <a href="https://symless.com/synergy">Synergy</a>, but I won't be covering those in the guide. However, feel free to ask us in the <code>#virtualisation</code> channel on Discord and we will help as best we can!</p>
+<h4 id="option-1-direct-usb-passthrough">Option 1: Direct USB Passthrough</h4>
+<p><em><strong>PSA: You cannot directly pass through the built-in laptop keyboard. I've tried. No bueno. Bad times were had by all. Complain to me about this on Discord and I'll bitchslap you back to last Tuesday. So please, just don't. <strong>:)</strong></strong></em></p>
+<p>This is the simplest option of all. Plug a USB mouse and keyboard into your laptop. Add the USB devices to your VM. Done.</p>
+<p>Yes, it's really that easy. Just plug them in, then open your VM's configuration and click the "Add Hardware" button in the bottom left. On the next screen, select your keyboard, and click Finish. Then repeat the process for your mouse. That's it! Once you start your VM, it will take control of your passed through mouse/keyboard to be used inside the VM.</p>
+<p><em><strong>Note: Any devices you add MUST be connected before you start the VM, otherwise it will not start.</strong></em></p>
+<h4 id="option-2-evdev-input">Option 2: EvDev Input</h4>
+<p>This one is actually my preferred method. It takes more effort to set up, but once you have it set up it's super convenient. Plus it works with both Looking Glass or an external display, so you don't need to drag a keyboard around to use your VM on the go!</p>
+<p>First, you'll want to find the ID's for your input devices. Enter the following command into a terminal:</p>
+<pre><code>ls /dev/input/by-id/
+</code></pre>
+<p>You should get output similar to the below:</p>
+<pre><code>usb-ASUSTeK_Computer_Inc._N-KEY_Device-event-if02
+usb-ASUSTeK_Computer_Inc._N-KEY_Device-event-kbd
+usb-ASUSTeK_Computer_Inc._N-KEY_Device-if01-event-kbd
+usb-Logitech_USB_Receiver-if02-event-mouse
+usb-Logitech_USB_Receiver-if02-mouse
+</code></pre>
+<p>To figure out which ones to pass through, use the following command for each device:</p>
+<pre><code>cat /dev/input/by-id/DEVICE_NAME
+</code></pre>
+<p>After you enter the command, type some stuff or move the mouse around. If you get a bunch of weird gibberish when typing/moving the mouse, you know you've got the right one.</p>
+<p>Now, open your VM's config XML, and scroll down to <code>&lt;/qemu:commandline&gt;</code>. You should see where we entered the fake battery stuff. Edit this section so it looks like this:</p>
+<pre><code>  ...
+  &lt;qemu:commandline&gt;
+    &lt;qemu:arg value="-acpitable"/&gt;
+    &lt;qemu:arg value="file=/var/lib/libvirt/images/acpitable.bin"/&gt;
+    &lt;qemu:arg value="-object"/&gt;
+    &lt;qemu:arg value="input-linux,id=mouse1,evdev=/dev/input/by-id/MOUSE_NAME"/&gt;
+    &lt;qemu:arg value="-object"/&gt;
+    &lt;qemu:arg value="input-linux,id=kbd1,evdev=/dev/input/by-id/KEYBOARD_NAME,grab_all=on,repeat=on"/&gt;
+  &lt;/qemu:commandline&gt;
+&lt;/domain&gt;
+</code></pre>
+<p>Replace the MOUSE_NAME and KEYBOARD_NAME with whatever yours are. You'll notice each device has a pair of lines associated with it - one contains <code>-object</code>, then a second one with <code>input-linux</code>. If you're like me, and like to pass through your USB mouse directly to the VM, you can remove the pair of lines for your mouse. When you do this, only your keyboard will be attached to EvDev.</p>
+<p>Using EvDev also requires our user to be a member of the <code>input</code> group or the VM will error out on start, so let's add that now:</p>
+<pre><code>sudo usermod -aG input user
+</code></pre>
+<p>Before we start the VM, we next need to edit <code>/etc/libvirt/qemu.conf</code>. Open the file, and find the following two lines.</p>
+<pre><code>#user = "root"
+...
+#group = "root"
+</code></pre>
+<p>Uncomment each line. For the user line, change <code>root</code> to your username. For the group line, change <code>root</code> to <code>kvm</code>.</p>
+<p>Scroll down a little further, until you find the below block of text:</p>
+<pre><code>#cgroup_device_acl = [
+#    "/dev/null", "/dev/full", "/dev/zero",
+#    "/dev/random", "/dev/urandom",
+#    "/dev/ptmx", "/dev/kvm"
+#]
+</code></pre>
+<p>Uncomment it and replace with the following:</p>
+<pre><code>cgroup_device_acl = [
+    "/dev/input/by-id/KEYBOARD_NAME",
+    "/dev/input/by-id/MOUSE_NAME",
+    "/dev/null", "/dev/full", "/dev/zero",
+    "/dev/random", "/dev/urandom", "/dev/ptmx",
+    "/dev/kvm", "/dev/rtc", "/dev/hpet"
+]
+</code></pre>
+<p>Replace <code>KEYBOARD_NAME</code> and <code>MOUSE_NAME</code> with your devices. Remove the entry containing <code>MOUSE_NAME</code> from the array if you want to use only the keyboard with EvDev.</p>
+<p>Once this is done, restart the libvirtd service:</p>
+<pre><code>sudo systemctl restart libvirtd
+</code></pre>
+<p>Start your VM. Control of your mouse/keyboard will be given directly to the VM. You can toggle control back and forth between the host and the VM by pressing both <code>L-Ctrl</code> and <code>R-Ctrl</code> at the same time. Once you shutdown the VM, control will be permanently given back to the host.</p>
+<p>A few users have reported some strange issues when using EvDev, but thankfully these are corrected by using VirtIO keyboard/mouse drivers. To use these, we first need to edit our XML. Open your VM's configuration and find these two lines:</p>
+<pre><code>    &lt;input type="keyboard" bus="ps2"/&gt;
+    &lt;input type="mouse" bus="ps2"/&gt;
+</code></pre>
+<p>In both of them, replace <code>ps2</code> with <code>virtio</code>, and click Apply. You should see additional entries for keyboard and mouse in the device list on the left. Start your VM back up. Once you log into Windows, click the Start menu and open <code>Device Manager</code>. You'll see the two VirtIO input devices as <code>PCI Keyboard/Mouse Controller</code>. For each of them, right-click the device and select <code>Update driver</code>:</p>
+<p><img src="./Linux for ROG Notebooks_files/evdev-virtio-driver-1.png" alt="img"></p>
+<p>On the next screen, choose <code>Browse my computer for drivers</code>:</p>
+<p><img src="./Linux for ROG Notebooks_files/evdev-virtio-driver-2.png" alt="img"></p>
+<p>Ensure the <code>Include subfolders</code> checkbox is ticked, and click the Broswse button and select the drive where your VirtIO ISO is mounted. Once selected, click OK, and then Next:</p>
+<p><img src="./Linux for ROG Notebooks_files/evdev-virtio-driver-3.png" alt="img"></p>
+<p>You will see the message below if the driver has installed correctly:</p>
+<p><img src="./Linux for ROG Notebooks_files/evdev-virtio-driver-4.png" alt="img"></p>
+<p>Ensure you repeat the process for the other input device!</p>
+<h4 id="option-3-using-spice-looking-glass-only">Option 3: Using Spice (Looking Glass Only)</h4>
+<p>If you are planning on using Looking Glass, you can skip straight to Chapter 5 Option 3.</p>
+<p>Because this method requires using a Spice client on your system, I only recommend it when using Looking Glass. Looking Glass includes a Spice client which we can use for keyboard/mouse input if you do not want to use either of the previous 2 options.</p>
+<p>If you're going to use this option, there's no other changes to make right now (even for you touchpad users). Any specific changes will be covered in the Looking Glass section.</p>
+<h3 id="chapter-5-configuring-audio">Chapter 5: Configuring Audio</h3>
+<h4 id="option-1-qemu-jack-backend-with-pipewire">Option 1: QEMU JACK Backend with Pipewire</h4>
+<p>Until recently, a popular method was to use solutions such as Scream to use audio inside your VM. However, in my expierence there were sometimes delay and/or quality issues. And most importantly, it was playback only - I couldn't use my microphone to chat with my friends! The good news is that QEMU now has JACK backend support! In layman's terms, this means that we can use Pipewire to emulate JACK and share audio devices (both output AND input) with our VM. This solution may not be for everyone, depending on your specific configuration. I find I get some static/distortion when I first start the VM, especially if the Linux host has a high load. But for the most part after a minute or two my audio sounds great, and my friends have not noticed any issues hearing me on voice chat.</p>
+<p>The first thing to do is to ensure you are running the VM under your user account. If you already <a href="https://asus-linux.org/guides/vfio-guide/#option-2-evdev-input">set up EvDev</a> then you won't need to do this step. However, if you didn't do this, it's simple to change. Open <code>/etc/libvirt/qemu.conf</code> in your text editor, and find the following two lines:</p>
+<pre><code>#user = "root"
+...
+#group = "root"
+</code></pre>
+<p>Uncomment each line. For the user line, change <code>root</code> to your username. For the group line, change <code>root</code> to <code>kvm</code>. Then, save the file.</p>
+<p>Next, select <code>Overview</code> in the device list, and click the XML tab. Scroll down until you find the line that says <code>&lt;/devices&gt;</code> and edit it so you have the following:</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">  &lt;devices&gt;
+    ...
+    &lt;audio id="1" type="jack"&gt;
+      &lt;input clientName="win10" connectPorts="input-name"/&gt;
+      &lt;output clientName="win10" connectPorts="output-name"/&gt;
+    &lt;/audio&gt;
+    &lt;sound model="ich9"&gt;
+      &lt;alias name="sound0"/&gt;
+    &lt;/sound&gt;
+  &lt;/devices&gt;
+</code></pre>
+<p>The value of <code>clientName</code> should reflect the name of your VM. If you used something other than the default <code>win10</code> name, ensure to use it here as well. The values <code>input-name</code> and <code>output-name</code> should be replaced with a regular expression that matches the name of the input and output ports as they're listed in JACK. On Fedora, the utility to list devices isn't installed by default, so install it with the following command:</p>
+<pre><code>sudo dnf install jack-audio-connection-kit-example-clients
+</code></pre>
+<p>Now, you can use the command <code>jack_lsp</code> to list your JACK devices. You'll get an output similar to this:</p>
+<pre><code>G430 Surround Sound Gaming Headset Mono:capture_MONO
+Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo:capture_FL
+Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo:capture_FR
+G430 Surround Sound Gaming Headset Digital Stereo (IEC958):playback_FL
+G430 Surround Sound Gaming Headset Digital Stereo (IEC958) Monitor:monitor_FL
+G430 Surround Sound Gaming Headset Digital Stereo (IEC958):playback_FR
+G430 Surround Sound Gaming Headset Digital Stereo (IEC958) Monitor:monitor_FR
+Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo:playback_FL
+Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo Monitor:monitor_FL
+Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo:playback_FR
+Family 17h (Models 10h-1fh) HD Audio Controller Analog Stereo Monitor:monitor_FR
+Renoir Radeon High Definition Audio Controller Digital Stereo (HDMI):playback_FL
+Renoir Radeon High Definition Audio Controller Digital Stereo (HDMI) Monitor:monitor_FL
+Renoir Radeon High Definition Audio Controller Digital Stereo (HDMI):playback_FR
+Renoir Radeon High Definition Audio Controller Digital Stereo (HDMI) Monitor:monitor_FR
+Midi-Bridge:Midi Through:(capture_0) Midi Through Port-0
+Midi-Bridge:Midi Through:(playback_0) Midi Through Port-0
+</code></pre>
+<p>So for example, if I wanted to use my Logitech G430 Gaming Headset as my audio device, I would change the values to:<br>
+input-name - <code>G430.*capture_MONO</code><br>
+output-name - <code>G430.*playback_F[LR]</code></p>
+<p>If you're unfamiliar with regex, you can use the site <a href="https://regex101.com/">https://regex101.com/</a> to help. Paste your <code>jack_lsp</code> output into the test string area, and play around with various expressions until you get the matches you need. If you get stuck on this step, you can reach out to us in the <code>#virtualisation</code> channel on Discord!</p>
+<p>Using the above example then, your XML would look like this:</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">  &lt;devices&gt;
+    ...
+    &lt;audio id="1" type="jack"&gt;
+      &lt;input clientName="win10" connectPorts="G430.*capture_MONO"/&gt;
+      &lt;output clientName="win10" connectPorts="G430.*playback_F[LR]"/&gt;
+    &lt;/audio&gt;
+    &lt;sound model="ich9"&gt;
+      &lt;alias name="sound0"/&gt;
+    &lt;/sound&gt;
+  &lt;/devices&gt;
+</code></pre>
+<p>The last step is to set the runtime directory and latency for Pipewire. Scroll down to <code>&lt;/qemu:commandline&gt;</code>. You should see where we entered the fake battery stuff, along with other possible entries. Edit this section so it looks like this:</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">  ...
+  &lt;qemu:commandline&gt;
+    &lt;qemu:arg value="-acpitable"/&gt;
+    &lt;qemu:arg value="file=/var/lib/libvirt/images/acpitable.bin"/&gt;
+    ...
+    &lt;qemu:env name="PIPEWIRE_RUNTIME_DIR" value="/run/user/1000"/&gt;
+    &lt;qemu:env name="PIPEWIRE_LATENCY" value="512/48000"/&gt;
+  &lt;/qemu:commandline&gt;
+&lt;/domain&gt;
+</code></pre>
+<p>Ensure that <code>1000</code> is the same as your actual user ID. This should be true for the majority of users, but if you're unsure, you can use the command <code>id -u user</code>, replacing <code>user</code> with your login. The value <code>512/48000</code> represents the latency and sample rate, respectively. These defaults should be fine for most people, but feel free to test other values to see if they work better for you.</p>
+<p>That's it! Shutdown your VM and restart it and you should hear your VM's audio through the configured device.</p>
+<h4 id="option-2-direct-usb-passthrough">Option 2: Direct USB Passthrough</h4>
+<p>If you don't want to spend any time configuring Option 1, you can always simply connect a USB sound device and pass it through to the VM. This is the simplest and quickest way to get reliable audio in your VM.</p>
+<p>However, in my experience I've noticed a few issues. The first is, at least on my system, every so often, the sound will cut out for a second or two. Nothing major, but it can be frustrating in certain situations. The other issue is that with this configuration, your VM will not start unless the USB audio device is connected, which can be inconvenient.</p>
+<p>Compare this to using JACK with Pipewire with the laptop's built-in audio device. If nothing is connected, you'll have audio through the speakers. If you have a headset or headset/mic combo device plugged into the jack, you can plug and unplug on the fly without needing to restart.</p>
+<p>The choice is up to you!</p>
+<h2 id="option-3-looking-glass-setup">Option 3: Looking Glass Setup</h2>
+<p>Looking Glass is an amazing application which allows us to pass through our VM's display to the internal laptop display, while still keeping full image quality and extremely low latency. It does this by sharing the dGPU framebuffer over a block of shared memory between the VM and the host.</p>
+<h3 id="adding-the-ivshmem-device-to-the-vm">Adding The IVSHMEM Device To The VM</h3>
+<p>The first thing we need to do is add a shared memory block to the VM's configuration and create it on our host machine.</p>
+<p>Ensure your host is shut down. Then, open your VM's XML and find the line that says <code>&lt;/devices&gt;</code>, and edit it, so that it looks like the below:</p>
+<pre><code>  &lt;devices&gt;
+    ...
+    &lt;shmem name="looking-glass"&gt;
+      &lt;model type="ivshmem-plain"/&gt;
+      &lt;size unit="M"&gt;32&lt;/size&gt;
+    &lt;/shmem&gt;
+  &lt;/devices&gt;
+</code></pre>
+<p>It's important to ensure that you set size of the shmem block accordingly. My device has a 1080p screen, which is why I chose <code>32 MiB</code>. You can reference the below formula to determine your needs:</p>
+<pre><code>w * h * 4 * 2 = total bytes
+total bytes / 1024 / 1024 = total MiB + 10
+</code></pre>
+<p>So for a 1080p screen it would look like this:</p>
+<pre><code>1920 * 1080 * 4 * 2 = 16,588,800 
+16,588,800 / 1024 / 1024 = 15.82 MiB + 10 = 25.82 MiB
+</code></pre>
+<p>In my case I get 25.82 MiB. The size of the block must be rounded up to the nearest power of 2, which would be 32.</p>
+<h3 id="creating-the-ivshmem-block-on-the-host">Creating The IVSHMEM Block On The Host</h3>
+<p>With the above configuration, the VM will create the IVSHMEM block when we start the VM. However, the issue with this is that it doesn't create it with the right permissions so that we can use it with Looking Glass.</p>
+<p>To correct this, we will use <code>systemd-tmpfiles</code> which will create the file at host boot with the proper permissions. Create the below file and save (remember to replace <code>user</code> with your username:</p>
+<p><code>/etc/tmpfiles.d/10-looking-glass.conf</code>:</p>
+<pre><code>#Type Path               Mode UID  GID Age Argument
+
+f /dev/shm/looking-glass 0660 user kvm -
+</code></pre>
+<p>On reboot, systemd will create the file for you with the correct permissions. If you don't want to wait until next reboot, you can use this command to create the tmpfile instantly:</p>
+<pre><code>sudo systemd-tmpfiles --create /etc/tmpfiles.d/10-looking-glass.conf
+</code></pre>
+<h3 id="installing-the-ivshmem-windows-driver">Installing The IVSHMEM Windows Driver</h3>
+<p>Start your VM, and from inside it, go to the below address to download the IVSHMEM driver:</p>
+<p><a href="https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/upstream-virtio/">https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/upstream-virtio/</a></p>
+<p>On this page, ensure you download version 0.1-161 or later, earlier versions <em><strong>will not work</strong></em>. Extract the contents to a folder (at the time of writing <code>virtio-win-08032022.zip</code> is actually the most current version).</p>
+<p>Click the Start menu and open <code>Device Manager</code>. Double-click <code>System Devices</code>, and scroll until you find <code>PCI standard RAM Controller</code>. Right-click this device and select <code>Update driver</code>:</p>
+<p><img src="./Linux for ROG Notebooks_files/looking-glass-1.png" alt="Device Manager Example"></p>
+<p>On the next screen, choose <code>Browse my computer for drivers</code>. Then, ensure the <code>Include subfolders</code> checkbox is ticked, and click Browse. Navigate to the folder you extracted the VirtIO upstream drivers to, select the <code>Win10</code> folder shown below, click OK, and then Next.</p>
+<p><img src="./Linux for ROG Notebooks_files/looking-glass-2.png" alt="Browsing For Drivers"></p>
+<p>Windows should find a driver with the name <code>Red Hat, Inc. System devices</code>. Once it does, click "Install" to install it.</p>
+<p><img src="./Linux for ROG Notebooks_files/looking-glass-3.png" alt="IVSHMEM Driver Installation"></p>
+<p>Windows should advise you that the IVSHMEM Device was installed. Close the window and device manager and proceed to the next step.</p>
+<h3 id="installing-the-host-application-windows">Installing The Host Application (Windows)</h3>
+<p>Now we can install the Windows part of Looking Glass, also known as the host application. Don't be confused by the name. Because the Windows VM is serving the frames to our Linux installation, it technically <em><strong>is</strong></em> the host in this case! Still from inside your VM, go to the <a href="https://looking-glass.io/downloads">Looking Glass downloads</a> page.</p>
+<p>NOTE: Despite the warnings, the <code>B6</code> version of Looking Glass seem to be working well for people.</p>
+<p>Now is a good time to note that you <strong>*must*</strong> use identical versions of the Windows Host Binary and the Linux Client. As of the writing of this guide, the stable version is version B5.0.1. You may use the bleeding edge build if you wish, but you'll be on your own and will need to reach out to the Looking Glass for support for any issues.</p>
+<p>On the downloads page, click the link for <code>Windows Host Binary</code> and save the zip file to your VM, then extract the folder to your desired location. You may get an error when Windows tries to extract the <code>build.log</code> file. This is fine, just skip this file as it isn't needed. When you open the <code>looking-glass-host-setup.exe</code> file, you'll get a warning from Microsoft Defender:</p>
+<p><img src="./Linux for ROG Notebooks_files/looking-glass-5.png" alt="Microsoft Defender Prompt"></p>
+<p>Simply click the "More Info" link, and then the "Run anyway" button. Follow the Looking Glass install wizard, and once it completes, close it and shut down the VM.</p>
+<h3 id="building-the-looking-glass-client-linux">Building The Looking Glass Client (Linux)</h3>
+<p><em>Note: If you are using Arch, I highly recommend using the AUR packages for ease of installation. Due to this, the build dependencies listed below are specifically for Fedora users.</em></p>
+<p>The final step now is to install the Looking Glass client on your Linux host. Fedora does not have any pre-built binary packages available for Looking Glass, so we will need to build our own client. Thankfully it's a fairly simple process!</p>
+<p>First, ensure you have the appropriate build dependencies installed:</p>
+<pre><code>sudo dnf install binutils-devel cmake texlive-gnu-freefont fontconfig-devel SDL2-devel SDL2_ttf-devel spice-protocol libX11-devel nettle-devel wayland-protocols-devel gcc libXScrnSaver-devel libXfixes-devel libXi-devel wayland-devel libXinerama-devel libpng-static libxml2-devel libxkbcommon-devel libXcursor-devel libXpresent-devel pipewire-devel libsamplerate-devel libXrandr-devel
+</code></pre>
+<p><em>NOTE: If you've already set up Wine and various Wine dependencies on your system, you may get a warning saying libxml2-devel is already installed. This is because many guides for Wine install the 32-bit version of this by default. Looking Glass needs the 64-bit version and will give build errors if it's not installed. If this is the case for you, ensure you also install the 64-bit version by performing <code>sudo dnf install libxml2-devel.x86_64</code>.</em></p>
+<p>Next, go to the <a href="https://looking-glass.io/downloads">Looking Glass Downloads</a> page. This time, click the link for "Source" for your version of Looking Glass, ensuring it's the same as the Windows host binary you just downloaded. Extract the zip file to your desired location. In our case, we'll be simply extracting it to <code>~/looking-glass-source</code>.</p>
+<p>Open a terminal in your home folder, and enter the below command. This is a chained command that will navigate to your looking-glass-source folder, create the client build folder, enter it, run cmake, and then build Looking Glass for you:</p>
+<pre><code>cd ~/looking-glass-source &amp;&amp; mkdir client/build &amp;&amp; cd client/build &amp;&amp; cmake ../ &amp;&amp; make -j$(nproc)
+</code></pre>
+<p>While you're still in the <code>build</code> directory, type <code>ls</code> and you should see there is an executable file named <code>looking-glass-client</code>. For reference the full path to this file is <code>~/looking-glass-source/client/build/looking-glass-client</code>.</p>
+<p>You can run this file directly from the build folder, or you can move it to the <code>/usr/local/bin/</code> directory in order to use the command globally from anywhere:</p>
+<pre><code>sudo cp ~/looking-glass-source/client/build/looking-glass-client /usr/local/bin/
+</code></pre>
+<p>_NOTE: If you do copy your <code>looking-glass-client</code> executable to <code>/usr/local/bin/</code>, ensure that any time you decide to update Looking Glass to a new version, that you also replace the version in <code>/usr/local/bin/</code> with the newly built one. Also remember that if you update the Linux client, you will also need to update the Windows host application with the same version or Looking Glass will no longer work.</p>
+<p>To avoid inconvenience, I recommend updating the Windows host version first. You'll lose your display, but Looking Glass will restart the service with the new version. The Looking Glass client builds very quickly, so once this is done, build the matching client version, then run the Looking Glass client. The newly started Looking Glass instance should show your VM's display._</p>
+<h3 id="using-looking-glass-with-a-dummy-display-plug">Using Looking Glass with a Dummy Display Plug</h3>
+<p>If you don't have or don't want a Dummy Display Plug, you can skip straight to the next section "Using Looking Glass with a Virtual Display Driver".</p>
+<p>Finally, the moment of truth! Attach your USB-C dummy display, and start your VM. Once started simply enter the below into a terminal:</p>
+<pre><code>looking-glass-client
+</code></pre>
+<p>You'll get a window with the purple Looking Glass logo, but once Windows has loaded you should be presented with the Windows logon screen! Congratulations, you have your VM fully installed and working with Looking Glass!</p>
+<p>There are some various flags/options you can run with Looking Glass. Here's what I use:</p>
+<pre><code>looking-glass-client -F -S -s
+</code></pre>
+<p>A breakdown of the flags:</p>
+<ul>
+<li><code>-F</code> - Makes the LG window fullscreen, you'll probably want this</li>
+<li><code>-S</code> - Disables the screensaver (Not currently working in GNOME)</li>
+<li><code>-s</code> - Disables LG's Spice client (If you're using Spice for your keyboard/mouse, don't use this flag or you'll have no way to interact with your VM!)</li>
+</ul>
+<p>If you want to explore the various options available to you, use Looking Glass' <code>--help</code> flag to see them all.</p>
+<h3 id="using-looking-glass-with-a-virtual-display-driver">Using Looking Glass with a Virtual Display Driver</h3>
+<p>The alternative to using a dummy plug is to use a Virtual Display by using IddSampleDriver made by <a href="https://github.com/roshkins/IddSampleDriver">roshkins</a> on github.
+In this guide we are going to be using a fork from <a href="https://github.com/ge9/IddSampleDriver">g9</a> since it has a convenient config file (options.txt) already included.</p>
+<p>We can download the latest release from <a href="https://github.com/ge9/IddSampleDriver/releases/tag/0.0.1.2">here</a>.</p>
+<p>After downloading it on our Windows Guest we are going to extract the zip in our C:/ directory. Next we are going to open the Command Prompt as an Administrator (right-click Command Prompt &gt; "Run as Administrator") and move into the extracted folder by running this command:</p>
+<pre><code>cd \IddSampleDriver
+</code></pre>
+<p>Now we can go and install the driver by issuing this command:</p>
+<pre><code>.\certmgr /add .\IddSampleDriver.cer /s /r localMachine root
+</code></pre>
+<p>After that's done we can continue by opening the Device Manager.</p>
+<p>From there click on any device --&gt; click "Action" in the top panel --&gt; "Add legacy hardware" --&gt; click "Next" --&gt; choose "Install hardware that I manually select from a list (Advanced)" --&gt; click "Next" while "Show all devices" is selected --&gt; Click on "Have disk" --&gt; Click on "Browse" --&gt; find "C:/IddSampleDriver/IddSampleDriver.inf" --&gt; select it and click "ok" --&gt; "Next" --&gt; "Next" --&gt; On the prompt click "Install"</p>
+<p>And that's it! You should now have a virtual display in your display settings. If you want 120 or 240 or whatever refresh rate then create an <code>options.txt</code> file in <code>C:\IddSampleDriver</code> and add:</p>
+<pre><code>1920, 1080, 120
+</code></pre>
+<p>to the end of the text file. You can add as many resolutions and refresh rates in there as you like.</p>
+<p>Now you just have to reboot your Windows Guest VM and you should now have 1080p 120Hz in the Display settings!</p>
+<p>Also big thanks goes to the user <a href="https://www.reddit.com/user/ImaginationLatter523/">ImaginationLatter523</a> from reddit <a href="https://www.reddit.com/r/VFIO/comments/wj6zhz/gpu_passthrough_looking_glass_no_external/">(post)</a> for making it known that it is possible to use Looking Glass without a dummy display plug!</p>
+<h3 id="disable-gnome-screen-dimming-evdev-only">Disable GNOME Screen Dimming (EvDev Only)</h3>
+<p>Unfortunately, due to the way GNOME handles things, the "disable screensaver" flag has no effect in GNOME. This means that if we're using EvDev for our VM input, no user input is sent to the host, and as a result GNOME will dim the screen and then blank it after the configured amont of time. This can be pretty annoying, but if you're like me, you're lazy and find it equally annoying to have to toggle these settings off and on every time you use your VM. Thankfully, we can use hook scripts to write to dconf as our user ID, so that we can disable these settings when we start the VM, then restore them to our preferred values!</p>
+<p>First, create and save the following two files:</p>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/prepare/begin/50-dconf-settings.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Set dconf keys to disable screensaver and screen blanking. This is
+## needed as looking-glass disable screensaver doesn't work with Gnome
+export LOGGED_IN_USERID
+su $LOGGED_IN_USERNAME -c 'export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$LOGGED_IN_USERID/bus \
+&amp;&amp; dconf write /org/gnome/settings-daemon/plugins/power/idle-dim false \
+&amp;&amp; dconf write /org/gnome/desktop/session/idle-delay "uint32 0"'
+
+sleep 1
+</code></pre>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/release/end/50-dconf-settings.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Set dconf keys to re-enable screensaver and screen blanking. This is
+## needed as looking-glass disable screensaver doesn't work with Gnome
+export LOGGED_IN_USERID
+export GNOME_IDLE_DELAY
+su $LOGGED_IN_USERNAME -c 'export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/$LOGGED_IN_USERID/bus \
+&amp;&amp; dconf write /org/gnome/settings-daemon/plugins/power/idle-dim true \
+&amp;&amp; dconf write /org/gnome/desktop/session/idle-delay "uint32 $GNOME_IDLE_DELAY"'
+
+sleep 1
+</code></pre>
+<p>Remember to make both of these files executable:</p>
+<pre><code>sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/prepare/begin/50-dconf-settings.sh
+sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/50-dconf-settings.sh
+</code></pre>
+<p>Finally, we'll need to set our variable values. Open <code>/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf</code> and find this section:</p>
+<pre><code># To modify GNOME settings to disable the screensaver, we 
+# need to specify the username and ID. As well, when the  
+# VM is turned off, we need to restore the amount of idle 
+# time until the screen is turned off (in seconds)
+LOGGED_IN_USERNAME=user
+LOGGED_IN_USERID=1000
+GNOME_IDLE_DELAY=900
+</code></pre>
+<p>Replace <code>LOGGED_IN_USERNAME</code> with your username, and <code>LOGGED_IN_USERID</code> with your user ID (this is almost always 1000). The <code>GNOME_IDLE_DELAY</code> is in seconds, so for the above example of 900, this means 15 minutes. After you've made these changes, save the file.</p>
+<p>And there you have it! Now your screensaver/screen dimming settings will automatically turn off and on when you start/shutdown your VM!</p>
+<h3 id="looking-glass-kill-script-optional">Looking Glass Kill Script (Optional)</h3>
+<p>We can leverage our libvirt hooks to add a script that will automatically kill the Looking Glass client once we shut down the VM. This isn't required, but it's nice to have for our end goal of a single-click to use the VM. As a bonus, if you restart Windows, it won't kill Looking Glass, so you won't need to manually run Looking Glass again.</p>
+<p>Create and save the following file:</p>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/release/end/60-kill-looking-glass.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Kill Looking Glass
+echo "Killing Looking Glass..."
+killall looking-glass-client
+
+sleep 1
+</code></pre>
+<p>Remember to make the file executable:</p>
+<pre><code>sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/60-kill-looking-glass.sh
+</code></pre>
+<p>Your <code>/etc/libvirt/hooks</code> folder should look like this:</p>
+<pre><code>/etc/libvirt/hooks/
+├── qemu
+└── qemu.d
+    └── win10
+        ├── prepare
+        │&nbsp;&nbsp; └── begin
+        │&nbsp;&nbsp;     └── 10-asusd-vfio.sh
+        ├── release
+        │&nbsp;&nbsp; └── end
+        │&nbsp;&nbsp;     ├── 40-asusd-integrated.sh
+        │&nbsp;&nbsp;     └── 60-kill-looking-glass.sh
+        └── vm-vars.conf
+</code></pre>
+<p>Now your Looking Glass client will automatically close once your VM shuts down.</p>
+<h2 id="performance-tweaking">Performance Tweaking</h2>
+<p>So far, we've gotten the basics of our VM working. Our dGPU is passed through, and Looking Glass is set up. Now it's time to really get our hands dirty and squeeze all the performance we can out of our VM. Let's dive in!</p>
+<h3 id="general-tips">General Tips</h3>
+<h4 id="disable-memballoon">Disable Memballoon</h4>
+<p>VFIO doesn't actually use <code>memballoon</code>. The XML won't let us remove the entry, but we can still remove the device from the machine by setting it to none.</p>
+<p>Open your VM's XML config and find this line:</p>
+<pre><code>&lt;memballoon model="virtio"&gt;
+</code></pre>
+<p>Replace it with the below line, then click Apply:</p>
+<pre><code>&lt;memballoon model="none"&gt;
+</code></pre>
+<h4 id="more-device-cleanup">More Device Cleanup</h4>
+<p>While extra devices shouldn't normally cause issues, it's still something the VM needs to track, so we should remove any other devices we don't need.</p>
+<p><img src="./Linux for ROG Notebooks_files/device-cleanup-1.png" alt="VM Config After EvDev and Looking Glass"></p>
+<p>Referencing the above image, here's what we should remove:</p>
+<ul>
+<li><code>SATA CDROM 1</code> - We already installed Windows so we don't need this anymore</li>
+<li><code>SATA CDROM 2</code> - We also already installed all needed VirtIO drivers</li>
+<li><code>Tablet</code> - We already have our input devices, and this will actually cause issues if you're using Spice with Looking Glass</li>
+</ul>
+<p>If you are not using Spice at all (Chapter 4 - Options 1-2), then you may remove both <code>Display Spice</code> and <code>Video QXL</code>.</p>
+<p>However, if you are using Spice input with Looking Glass (Chapter 4 - Option 3), then you must keep <code>Display Spice</code>. Then, select <code>Video QXL</code> and click the XML tab. You'll see this:</p>
+<pre><code>&lt;video&gt;
+  &lt;model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes"/&gt;
+  &lt;address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/&gt;
+&lt;/video&gt;
+</code></pre>
+<p>Replace it with this and click Apply:</p>
+<pre><code>&lt;video&gt;
+  &lt;model type="none"/&gt;
+&lt;/video&gt;
+</code></pre>
+<p>This will remove the QXL video device, but still allow you to use Looking Glass' Spice client for your keyboard and mouse.</p>
+<h4 id="adding-usb-devices">Adding USB Devices</h4>
+<p>If you have a USB device, such as a headset, flash drive, etc., that you want to pass directly through to the VM, this is extremely easy to do.</p>
+<p>Ensure your VM is shut down, and open your VM's configuration. Now click <code>Add Hardware</code> like you did when adding your dGPU. This time, choose <code>USB Host Device</code> instead of PCI Host Device. From here, select the device you want to pass through:</p>
+<p><img src="./Linux for ROG Notebooks_files/adding-usb-devices.png" alt="img"></p>
+<p>Once you click "Finish" you should see the USB device's ID listed with the other devices in your VM.</p>
+<p><em><strong>Note that any USB devices you pass through will need to be connected when you start that VM or it will not start! You can always remove and re-add USB devices from your configuration as your needs adapt.</strong></em></p>
+<h4 id="hyper-v-enlightenments">Hyper-V Enlightenments</h4>
+<p>Regardless of what anyone tells you, Windows always knows whether or not it's running inside a VM. This is <strong>*not*</strong> a bad thing! We can leverage this to squeeze some extra performance out of our VM with certain enhancements that will help Windows run more efficiently within the VM by making Windows think it's running on a Hyper-V compatible hypervisor. This allows it to use Hyper-V specific features.</p>
+<p>Go to your VM's XML and find this section:</p>
+<pre><code>    &lt;hyperv&gt;
+      &lt;relaxed state="on"/&gt;
+      &lt;vapic state="on"/&gt;
+      &lt;spinlocks state="on" retries="8191"/&gt;
+    &lt;/hyperv&gt;
+</code></pre>
+<p>These are enhancements that libvirt enabled already for us based on the fact that we installed windows 10, but there are a few more we can add. Here they are along with explanations I've dumbed down from the QEMU documentation:</p>
+<ul>
+<li><code>hv-vpindex</code> - Provides an CPU index register for the VM, which is required for some of the other enlightenments</li>
+<li><code>hv-synic</code> - Enables Hyper-V Synthetic interrupt controller. This is required to enable Hyper-V synthetic timers. These times allow the VM to more efficiently perform tasks <code>[Requires hv-vpindex]</code></li>
+<li><code>hv-stimer</code> - Enables Hyper-V synthetic timers. Some Windows versions will revert to using HPET 106 or RTC clocks if this enlightenment isn't enabled, potentially causing excessive CPU consumption <code>[Requires hv-synic]</code></li>
+<li><code>hv-reset</code> - Allows the VM to reset itself by writing to a specific register</li>
+<li><code>hv-frequencies</code> - Allows the guest to obtain its frequencies without performing any measurements</li>
+</ul>
+<p>To add the above enlightenments to your VM, the Hyper-V entry of your XML should look like this:</p>
+<pre><code>    &lt;hyperv&gt;
+      &lt;relaxed state="on"/&gt;
+      &lt;vapic state="on"/&gt;
+      &lt;spinlocks state="on" retries="8191"/&gt;
+      &lt;vpindex state="on"/&gt;
+      &lt;synic state="on"/&gt;
+      &lt;stimer state="on"/&gt;
+      &lt;reset state="on"/&gt;
+      &lt;frequencies state="on"/&gt;
+    &lt;/hyperv&gt;
+</code></pre>
+<h4 id="guest-cpu-power-management">Guest CPU Power Management</h4>
+<p>One issue with VM's is that they aren't able to manage the power state of the host CPU. Since we've isolated our host cores so that only the VM can use them, we can gain even more performance by allowing the VM to manage the power state.</p>
+<p>This means that the Windows kernel in your VM can actually control the power state of the CPU's. To put in very simple terms, what it does is ensures the cores are always "powered on" for the VM. This means no time is wasted getting the host to "wake up" the cores for the VM.</p>
+<p>We can add the following lines to our VM's XML in the <code>&lt;qemu:commandline&gt;</code> section:</p>
+<pre><code>   &lt;qemu:arg value='-overcommit'/&gt;
+   &lt;qemu:arg value='cpu-pm=on'/&gt;
+</code></pre>
+<p>Once added, the entite <code>&lt;qemu:commandline&gt;</code> section should look like this (if you used EvDev for input, or JACK audio, you'll have those entries as well):</p>
+<pre><code>  &lt;qemu:commandline&gt;
+    &lt;qemu:arg value="-acpitable"/&gt;
+    &lt;qemu:arg value="file=/home/user/vfio/acpitable.bin"/&gt;
+    &lt;qemu:arg value='-overcommit'/&gt;
+    &lt;qemu:arg value='cpu-pm=on'/&gt;    
+  &lt;/qemu:commandline&gt;
+</code></pre>
+<h3 id="memory-hugepages">Memory Hugepages</h3>
+<p>By default, the Linux kernel deals with memory in blocks of 4 KiB. This can often be too slow, since modern hardware is able to quickly move around much larger blocks of memory. We can reserve a block of huge memory pages for our VM. While active, the host won't use these memory pages, and they'll be bigger, meaning they can be addressed faster.</p>
+<p>You may have read on the Arch wiki that the VM automatically uses transparent hugepages. However, it does also state that when using PCI passthrough, they can't be used. IOMMU requires us to allocate and pin the VM's memory as soon as it starts, so it's required to statically allocate the hugepages in order to benefit from them.</p>
+<p>Normally this needs to be done at boot via a kernel parameter, but we can allocate static hugepages on the fly as well.</p>
+<h4 id="setup-hugepages-on-the-vm">Setup Hugepages On The VM</h4>
+<p>Configuring your VM to use hugepages is simple. Open your VM's XML and find this line (your number may be different depending on the amount you allocated):</p>
+<pre><code>  &lt;currentMemory unit="KiB"&gt;8388608&lt;/currentMemory&gt;
+</code></pre>
+<p>Directly underneath it, paste the following:</p>
+<pre><code>  &lt;memoryBacking&gt;
+    &lt;hugepages/&gt;
+  &lt;/memoryBacking&gt;
+</code></pre>
+<p>Click Apply, and that's it!</p>
+<h4 id="allocating-hugepages">Allocating Hugepages</h4>
+<p>When using hugepages, you <strong>MUST</strong> allocate them before starting your VM, or the VM will not start. You should first see what size hugepages are enabled in your system. Most distros use 2 MiB hugepages by default. There is also an option of 1GiB pages, however I don't recommend using this. The performance gain isn't really that much, and it's difficult to have enough contiguous blocks of memory free to use them.</p>
+<p>Enter this command to check your hugepages:</p>
+<pre><code>cat /proc/meminfo | grep -i huge
+</code></pre>
+<p>You'll get an output like the below:</p>
+<pre><code>AnonHugePages:         0 kB
+ShmemHugePages:        0 kB
+FileHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+Hugetlb:         1048576 kB
+</code></pre>
+<p>You can see the <code>Hugepagesize</code> is 2048kB meaning we have 2 MiB hugepages. To figure out how many hugepages we need for our VM, we take the amount of our VM's memory in KiB, divided by the hugepage size, also in KiB.</p>
+<p>A VM with 8 GiB of memory would be 8388608 KiB, so <code>8388608 / 2048 = 4096</code>. To allocate them enter this command:</p>
+<pre><code>echo 4096 | sudo tee /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+</code></pre>
+<p>After doing this, check your hugepages again, and you should see <code>HugePages_Total</code> change from zero to your value. Sometimes, you'll see it's no longer zero, but all of your pages didn't allocate. This is because your RAM is too fragmented.</p>
+<p>Thankfully, this can be corrected. The following commands can certainly be entered individually, but even a second or two between commands can cause you to still be unable to allocate all your hugepages, especially if you have a lot of memory currently in use. I've chained them here, so if you copy and paste the below they'll all process immediately after another:</p>
+<pre><code>echo 3 | sudo tee /proc/sys/vm/drop_caches &amp;&amp; echo 1 | sudo tee /proc/sys/vm/compact_memory &amp;&amp; echo 4096 | sudo tee /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+</code></pre>
+<p>First we drop memory caches to clear up as much memory as possible. Then we compact/defragment the remaining memory. Finally, we allocate the hugepages again. If you check your hugepages again, you should have all of the pages allocated.</p>
+<p>If you still don't, that's okay. You could keep trying the command again. But thanksfully libvirt hooks can help us here! The next two scripts will allocate our hugepages before the VM starts, and then remove them after the VM is shut down.</p>
+<p>Even better, the allocation script will keep trying to compact memory and allocate hugepages up to 1000 times and if it can't, it will reverse everything and quit. As long as you have enough free memory though, this approach should work. Create and save the two following files:</p>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/prepare/begin/20-reserve-hugepages.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Calculate number of hugepages to allocate from memory (in MB)
+HUGEPAGES="$(($VM_MEMORY/$(($(grep Hugepagesize /proc/meminfo | awk '{print $2}')))))"
+
+echo "Allocating hugepages at 2048 KiB per page..."
+echo $HUGEPAGES &gt; /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+ALLOC_PAGES=$(cat /proc/sys/vm/nr_hugepages)
+
+
+## If successful, notify user
+if [ "$ALLOC_PAGES" -eq "$HUGEPAGES" ]
+then
+    echo "Succesfully allocated $ALLOC_PAGES / $HUGEPAGES pages!"
+fi
+
+
+## Drop caches to free up memory for hugepages if not successful
+if [ "$ALLOC_PAGES" -ne "$HUGEPAGES" ]
+then
+    echo 3 &gt; /proc/sys/vm/drop_caches
+fi
+
+## If not successful, try up to 10000 times to allocate
+TRIES=0
+while (( $ALLOC_PAGES != $HUGEPAGES &amp;&amp; $TRIES &lt; 1000 ))
+do
+    ## Defrag RAM then try to allocate pages again
+    echo 1 &gt; /proc/sys/vm/compact_memory
+    echo $HUGEPAGES &gt; /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+    ALLOC_PAGES=$(cat /proc/sys/vm/nr_hugepages)
+    ## If successful, notify user
+    echo "Succesfully allocated $ALLOC_PAGES / $HUGEPAGES pages!"
+    let TRIES+=1
+done
+
+## If still unable to allocate all requested pages, revert hugepages and quit
+if [ "$ALLOC_PAGES" -ne "$HUGEPAGES" ]
+then
+    echo "Not able to allocate all hugepages. Reverting..."
+    echo 0 &gt; /proc/sys/vm/nr_hugepages
+    exit 1
+fi
+
+sleep 1
+</code></pre>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/release/end/10-release-hugepages.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Remove Hugepages
+echo "Releasing hugepage memory back to the host..."
+echo 0 &gt; /sys/kernel/mm/hugepages/hugepages-2048kB/nr_hugepages
+
+## Advise if successful
+ALLOC_PAGES=$(cat /proc/sys/vm/nr_hugepages)
+
+if [ "$ALLOC_PAGES" -eq 0 ]
+then
+    echo "Memory successfully released!"
+fi
+
+sleep 1
+</code></pre>
+<p>Remember to make them both executable:</p>
+<pre><code>sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/prepare/begin/20-reserve-hugepages.sh
+sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/10-release-hugepages.sh
+</code></pre>
+<p>Once you're done, your <code>/etc/libvirt/hooks/</code> folder should look like this:</p>
+<pre><code>/etc/libvirt/hooks/
+├── qemu
+└── qemu.d
+    └── win10
+        ├── prepare
+        │&nbsp;&nbsp; └── begin
+        │&nbsp;&nbsp;     ├── 10-asusd-vfio.sh
+        │&nbsp;&nbsp;     └── 20-reserve-hugepages.sh
+        ├── release
+        │&nbsp;&nbsp; └── end
+        │&nbsp;&nbsp;     ├── 10-release-hugepages.sh
+        │&nbsp;&nbsp;     └── 40-asusd-integrated.sh
+        ├── stopped
+        │&nbsp;&nbsp; └── end
+        │&nbsp;&nbsp;     └── 10-kill-looking-glass.sh
+        └── vm-vars.conf
+</code></pre>
+<p>Now, we'll set our memory amount. Open <code>/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf</code> and find this section:</p>
+<pre><code># How much memory we've assigned to the VM, in kibibytes 
+
+VM_MEMORY=8388608
+</code></pre>
+<p>Change the value of <code>VM_MEMORY</code> to same value you have stored in your VM's XML like we looked at in the start of this section, and save the file. Remember, if you change the amount of memory allocated to your VM in the future, you will need to update this variable in the hook config file as well.</p>
+<p>That's it, your VM will now automatically allocate the hugepages before starting!</p>
+<h3 id="setting-cpu-governors">Setting CPU Governors</h3>
+<p>By default, most modern systems run the <code>schedutil</code> governor. However, to ensure the best performance possible, we should set our governor to <code>performance</code> when running our VM. This will keep the CPU locked to its maximum frequency. Not something we want for general usage or while on battery obviously, but for our VM it's extremely useful.</p>
+<p>We can set the governor to performance with the following command before starting the VM:</p>
+<pre><code>echo "performance" | sudo tee /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+</code></pre>
+<p>Now, repeat this for each CPU in your system.</p>
+<p>Relax, I'm kidding! No one wants to do that, and we don't have to - libvirt hooks to the rescue! We'll also use our hook scripts to set which power profile our system uses with <code>power-profiles-daemon</code>.</p>
+<p>Create and save the two following files:</p>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/prepare/begin/30-set-governor.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Set CPU governor to mode indicated by variable
+CPU_COUNT=0
+for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+do
+    echo $VM_ON_GOVERNOR &gt; $file;
+    echo "CPU $CPU_COUNT governor: $VM_ON_GOVERNOR";
+    let CPU_COUNT+=1
+done
+
+## Set system power profile to performance
+powerprofilesctl set $VM_ON_PWRPROFILE
+
+sleep 1
+</code></pre>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/release/end/30-restore-governor.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Reset CPU governor to mode indicated by variable
+CPU_COUNT=0
+for file in /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+do
+    echo $VM_OFF_GOVERNOR &gt; $file;
+    echo "CPU $CPU_COUNT governor: $VM_OFF_GOVERNOR";
+    let CPU_COUNT+=1
+done
+
+## Set system power profile back to powersave
+powerprofilesctl set $VM_OFF_PWRPROFILE
+
+sleep 1
+</code></pre>
+<p>As always, remember to make them both executable:</p>
+<pre><code>sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/prepare/begin/30-set-governor.sh
+sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/30-restore-governor.sh
+</code></pre>
+<p>When you're done, your <code>/etc/libvirt/hooks/</code> directory structure should look like this:</p>
+<pre><code>/etc/libvirt/hooks/
+├── qemu
+└── qemu.d
+    └── win10
+        ├── prepare
+        │&nbsp;&nbsp; └── begin
+        │&nbsp;&nbsp;     ├── 10-asusd-vfio.sh
+        │&nbsp;&nbsp;     ├── 20-reserve-hugepages.sh
+        │&nbsp;&nbsp;     └── 30-set-governor.sh
+        ├── release
+        │&nbsp;&nbsp; └── end
+        │&nbsp;&nbsp;     ├── 10-release-hugepages.sh
+        │&nbsp;&nbsp;     ├── 30-restore-governor.sh
+        │&nbsp;&nbsp;     └── 40-asusd-integrated.sh
+        │&nbsp;&nbsp;     └── 60-kill-looking-glass.sh
+        └── vm-vars.conf
+</code></pre>
+<p>Now, open <code>/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf</code> and find this section:</p>
+<pre><code># Set the governor to use when the VM is on, and which 
+# one we should return to once the VM is shut down
+VM_ON_GOVERNOR=performance
+VM_OFF_GOVERNOR=schedutil
+
+# Set the powerprofiles ctl profile to performance when 
+# the VM is on, and power-saver when the VM is shut down
+VM_ON_PWRPROFILE=performance
+VM_OFF_PWRPROFILE=power-saver
+</code></pre>
+<p>The defaults here should be fine for 99% of people, but if you normally use some other governor or power profile you can set it here. Your system will now automatically set the governor and power profile when you start/stop the VM.</p>
+<h3 id="pinning-cpus">Pinning CPUs</h3>
+<p>This is probably the single most impactful tweak you can make for performance when using a multithreaded CPU.</p>
+<h4 id="some-background-on-cpu-topology">Some Background On CPU Topology</h4>
+<p>Consider that a Ryzen 7 4800HS has 8 physical cores, and 16 threads. 16 threads are also referred to as logical cores.</p>
+<p>VM's can't tell the difference between physical and logical cores. Libvirt sees the 16 logical cores as 16 virtual CPU cores, or vCPUs. Meanwhile, the host knows that two vCPUs are siblings which map to one physical CPU core.</p>
+<p>This is where CPU topology comes into play. Due to this guest limitation, it is <em><strong>extremely important</strong></em> that for every logical core we assign to our VM, we also assign its physical core sibling.</p>
+<p>Most of us don't keep our CPU's topology memorised, but thankfully it's super easy to check using this command:</p>
+<pre><code>lscpu -e
+</code></pre>
+<p>This will output some data similar to the below. What we're interested in is which logical cores (CPU column) belong to which physical cores (CORE column). For example, we can see below that CPUs 0-1 belong to CORE 0, CPUs 2-3 to CORE 1, so on and so forth:</p>
+<pre><code>CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE    MAXMHZ    MINMHZ
+  0    0      0    0 0:0:0:0          yes 2900.0000 1400.0000
+  1    0      0    0 0:0:0:0          yes 2900.0000 1400.0000
+  2    0      0    1 1:1:1:0          yes 2900.0000 1400.0000
+  3    0      0    1 1:1:1:0          yes 2900.0000 1400.0000
+  4    0      0    2 2:2:2:0          yes 2900.0000 1400.0000
+  5    0      0    2 2:2:2:0          yes 2900.0000 1400.0000
+  6    0      0    3 3:3:3:0          yes 2900.0000 1400.0000
+  7    0      0    3 3:3:3:0          yes 2900.0000 1400.0000
+  8    0      0    4 4:4:4:1          yes 2900.0000 1400.0000
+  9    0      0    4 4:4:4:1          yes 2900.0000 1400.0000
+ 10    0      0    5 5:5:5:1          yes 2900.0000 1400.0000
+ 11    0      0    5 5:5:5:1          yes 2900.0000 1400.0000
+ 12    0      0    6 6:6:6:1          yes 2900.0000 1400.0000
+ 13    0      0    6 6:6:6:1          yes 2900.0000 1400.0000
+ 14    0      0    7 7:7:7:1          yes 2900.0000 1400.0000
+ 15    0      0    7 7:7:7:1          yes 2900.0000 1400.0000
+</code></pre>
+<p>My preferred method however is a more visual approach. You can use the command <code>lstopo</code> after installing the <code>hwloc-gui</code> package:</p>
+<pre><code>sudo dnf install hwloc-gui
+</code></pre>
+<p>Once completed, enter this command:</p>
+<pre><code>lstopo -p
+</code></pre>
+<p>This gives you a visual diagram of your CPU's physical topology. If you're like me, this is much easier to interpret, and also gives you some extra information which you might be interested in. Here's the output of my Ryzen 7 4800HS:</p>
+<p><img src="./Linux for ROG Notebooks_files/cpu-pinning-1.png" alt="img"></p>
+<h4 id="understanding-which-cores-to-pin">Understanding Which Cores To Pin</h4>
+<p><em>Note: I will be reworking this section often, as I learn more about the topic and perform testing to see what truly works better.</em></p>
+<p>With Ryzen CPU's, utilities like <code>lstopo</code> are actually very helpful. Many Ryzen chips have multiple Core Complexes, or CCX. Each of these have their own set of cores with its own L3 cache.</p>
+<p>Understanding this can be important in helping with low-latency applications in our VM's such as gaming and audio. Your VM won't typically respect the CCX boundary limits of the L3 cache. The VM's vCPU's will be trying to access L3 cache that actually belongs to another CCX instead of its own. This can cause L3 "cache thrashing", which can affect latency.</p>
+<!-- If you're interested in seeing some benchmarks demonstrating these differences, check out the [Benchmarks Section](#benchmarks). -->
+<p>It is always best practice to only give entire CCXs to the guest whenever possible so that the entire L3 cache is shared along with it. Based on my <code>lstopo</code> output above, this is the "last half" of our cores (cores 4-7/CPUs 8-15), which should be plenty for most use cases.</p>
+<p>If you require more power in your VM and need to give your VM additional cores, it's important to ensure that you are fully populating one CCX, and then assigning the remainder to other one. Referring again to the <code>lstopo</code> example above, if we wanted to give 6c/12t of our 8c/16t processor, then we'd want to pin our VM's CPUs in a way where we give physical cores 4-7, and then 2-3, or CPUs 8-15 and 4-7. This ensures the L3 cache is properly mapped/seen by the VM.</p>
+<p>Intel CPUs don't use this manufacturing method, so this isn't a concern on them. There are also many AMD CPUs which only have one CCX. In both of these cases, since every core on the CPU uses the same L3 cache, this means you can pass through as many or as few cores as you like from these topologies without worrying about which ones to pass through. Just ensure that for any logical cores you use, that you are also using its physical core sibling as well!</p>
+<p>This all assumes that your processor has only one NUMA node. If your CPU has multiple NUMA nodes, there is other optmisation required in order to get the best performance, but that is outside the scope of this guide (to my knowledge, none of our ROG laptops even have multiple NUMA nodes anyway).</p>
+<h4 id="how-to-pin-your-cpu-s">How To Pin Your CPU's</h4>
+<p>Now that we've covered the why, it's time to cover the how and actually pin our CPU's. Open your VM's configuration and select CPU from the list. Then click Topology, and select the "Manually set CPU topology" checkbox</p>
+<p><img src="./Linux for ROG Notebooks_files/cpu-pinning-2.png" alt="Setting CPU Topology"></p>
+<p>From here, ensure you choose 1 socket and 2 threads. Cores will be however many physical cores you will be giving to the VM. In the above example, I'm passing through 4 physical cores with 2 threads each, which gives me 8 vCPUs to allocate. Once you've made your selections, click Apply, and then click the XML tab.</p>
+<p>Now, find the line in your XML which begins with the following:</p>
+<pre><code>&lt;vcpu placement="static"&gt;
+</code></pre>
+<p>Directly below it we will add our XML to pin our CPU's. Let's say I want to pin all the physical cores on my 2nd CCX, or my "last" 4 cores. I'd add the following:</p>
+<pre><code>  &lt;iothreads&gt;1&lt;/iothreads&gt;
+  &lt;cputune&gt;
+    &lt;vcpupin vcpu="0" cpuset="8"/&gt;
+    &lt;vcpupin vcpu="1" cpuset="9"/&gt;
+    &lt;vcpupin vcpu="2" cpuset="10"/&gt;
+    &lt;vcpupin vcpu="3" cpuset="11"/&gt;
+    &lt;vcpupin vcpu="4" cpuset="12"/&gt;
+    &lt;vcpupin vcpu="5" cpuset="13"/&gt;
+    &lt;vcpupin vcpu="6" cpuset="14"/&gt;
+    &lt;vcpupin vcpu="7" cpuset="15"/&gt;
+    &lt;emulatorpin cpuset="0-7"/&gt;
+    &lt;iothreadpin iothread="1" cpuset="0-7"/&gt;
+  &lt;/cputune&gt;
+</code></pre>
+<p>Let's break this down. The <code>&lt;iothreads&gt;</code> entry defines how many threads for our VirtIO disk we'll be using. You can only use one iothread per VirtIO storage controller, so we've specified one thread. Adding more threads will not achieve anything.</p>
+<p>Next, you'll notice we've mapped the vCPUs to the physical cores. vCPU 0 corresponds to logical core 8, 1 to 9, so on and so forth. This is based on your CPU's topology, so your entries will likely differ.</p>
+<p>The one thing to ensure is that you are pairing your vCPUs with physical core siblings. Look at my XML example above and compare it to the <code>lstopo</code> screenshot. You'll notice how, for example, CPUs 8-9 on my system are mapped together on the VM as vCPUs 0-1, CPUs 10-11 mapped together to vCPUs 2-3 - you get the picture.</p>
+<p>The emulator and iothreads should be pinned to the available host CPUs, not the VM ones. This should improve performance as these threads won't be competing with the VM's for scheduling.</p>
+<p>In the above example, I've pinned the emulator to the first 4 host CPUs, then the remaining 4 to the iothread. The iothreads are dedicated threads for processing disk events. Play around with how many CPUs to use for your emulator to find what works best for you, but I find this to be a good balance.</p>
+<p><em><strong>Note: If you passed through an NVMe device, remove both the <code>&lt;iothreads&gt;</code> and <code>&lt;iothreadpin&gt;</code> entries as these won't do anything for you.</strong></em></p>
+<h3 id="cpu-cache-passthrough">CPU Cache Passthrough</h3>
+<p>We should also be passing through our CPU cache to the VM, so the VM can properly use the L3 cache.</p>
+<p>Find this section in your XML (your "cores" number may be different depending on what you've configured):</p>
+<pre><code>  &lt;cpu mode="host-passthrough" check="partial" migratable="on"&gt;
+    &lt;topology sockets="1" dies="1" cores="4" threads="2"/&gt;
+  &lt;/cpu&gt;
+</code></pre>
+<p>Edit the entry so it looks like the below, with added lines for <code>cache</code> and <code>feature</code>:</p>
+<pre><code>  &lt;cpu mode="host-passthrough" check="partial" migratable="on"&gt;
+    &lt;topology sockets="1" dies="1" cores="4" threads="2"/&gt;
+    &lt;cache mode="passthrough"/&gt;
+    &lt;feature policy="require" name="topoext"/&gt;    
+  &lt;/cpu&gt;
+</code></pre>
+<p>Ensuring you add this is important for increased performance, especially on Ryzen CPU's!</p>
+<p><em>Note: If you're using and Intel CPU, you can remove the line containing <code>&lt;feature policy="require" name="topoext"/&gt; </code>.</em></p>
+<h3 id="isolating-cpus">Isolating CPUs</h3>
+<p>While CPU pinning increases performance, there's still more we can do. Pinning our CPU ensures that the VM only uses the cores/threads we assign to it, but this doesn't stop the host from using these cores for other tasks.</p>
+<p>We can isolate these cores and force the host to only use the cores we allow it to. This allows the cores assigned to the VM to <em><strong>only</strong></em> be used with the VM, which greatly improves performance, as the VM isn't competing with other running tasks for CPU cycles.</p>
+<p>For example, I previously pinned my VM's vCPUs to CPUs 8-15 of the host (the last 4 cores). This means we would want to isolate the host to CPU's 0-7 (the first 4 cores).</p>
+<p>Normally, this is done via a kernel parameter. However, doing it this way means that the cores are <strong>always</strong> isolated, even when the VM is not in use. This isn't very useful, as our machine would essentially be handicapped to half its full power, all of the time!</p>
+<p>Thanks to systemd, we can easily isolate cores on the fly, and then return them to the host when the VM is not in use. Before we start the VM, we can enter the following commands:</p>
+<pre><code>sudo systemctl set-property --runtime -- user.slice AllowedCPUs=0-7
+sudo systemctl set-property --runtime -- system.slice AllowedCPUs=0-7
+sudo systemctl set-property --runtime -- init.scope AllowedCPUs=0-7
+</code></pre>
+<p>Each of these commands instructs the host to <em><strong>only</strong></em> use cores 0-7 for its tasks. If you want to see this working in real-time, pull up <code>htop</code> and enter the above commands. You'll notice that cores 8-15 will drop to 0% CPU usage.</p>
+<p>After we shut down the VM, we can then return the cores to the host. The below commands will allow the VM to use all of the cores once again:</p>
+<pre><code>sudo systemctl set-property --runtime -- user.slice AllowedCPUs=0-15
+sudo systemctl set-property --runtime -- system.slice AllowedCPUs=0-15
+sudo systemctl set-property --runtime -- init.scope AllowedCPUs=0-15
+</code></pre>
+<p>Of course, you should know by now that I don't expect you to actually do that manually every time, I'm not that cruel! Time for more hook scripts!</p>
+<p>These last two scripts will run the commands above to isolate our CPUs before starting the VM, and then return them to the host after the VM shuts down. Create and save the two following files:</p>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/prepare/begin/40-isolate-cpus.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Isolate CPU cores as per set variable
+systemctl set-property --runtime -- user.slice AllowedCPUs=$VM_ISOLATED_CPUS
+systemctl set-property --runtime -- system.slice AllowedCPUs=$VM_ISOLATED_CPUS
+systemctl set-property --runtime -- init.scope AllowedCPUs=$VM_ISOLATED_CPUS
+
+sleep 1
+</code></pre>
+<p><code>/etc/libvirt/hooks/qemu.d/win10/release/end/20-return-cpus.sh</code>:</p>
+<pre><code>#!/bin/bash
+
+## Load VM variables
+source "/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf"
+
+## Return CPU cores as per set variable
+systemctl set-property --runtime -- user.slice AllowedCPUs=$SYS_TOTAL_CPUS
+systemctl set-property --runtime -- system.slice AllowedCPUs=$SYS_TOTAL_CPUS
+systemctl set-property --runtime -- init.scope AllowedCPUs=$SYS_TOTAL_CPUS
+
+sleep 1
+</code></pre>
+<p>As before, remember to make them both executable:</p>
+<pre><code>sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/prepare/begin/40-isolate-cpus.sh
+sudo chmod +x /etc/libvirt/hooks/qemu.d/win10/release/end/20-return-cpus.sh
+</code></pre>
+<p>Your completed <code>/etc/libvirt/hooks/</code> folder should now look like this:</p>
+<pre><code>/etc/libvirt/hooks/
+├── qemu
+└── qemu.d
+    └── win10
+        ├── prepare
+        │&nbsp;&nbsp; └── begin
+        │&nbsp;&nbsp;     ├── 10-asusd-vfio.sh
+        │&nbsp;&nbsp;     ├── 20-reserve-hugepages.sh
+        │&nbsp;&nbsp;     ├── 30-set-governor.sh
+        │&nbsp;&nbsp;     └── 40-isolate-cpus.sh
+        ├── release
+        │&nbsp;&nbsp; └── end
+        │&nbsp;&nbsp;     ├── 10-release-hugepages.sh
+        │&nbsp;&nbsp;     ├── 20-return-cpus.sh
+        │&nbsp;&nbsp;     ├── 30-restore-governor.sh
+        │&nbsp;&nbsp;     └── 40-asusd-integrated.sh
+        │&nbsp;&nbsp;     └── 60-kill-looking-glass.sh
+        └── vm-vars.conf
+</code></pre>
+<p>Finally, open <code>/etc/libvirt/hooks/qemu.d/win10/vm-vars.conf</code> and find this section:</p>
+<pre><code># Set which CPU's to isolate, and your system's total
+# CPU's. For example, an 8-core, 16-thread processor has 
+# 16 CPU's to the system, numbered 0-15. For a 6-core,
+# 12-thread processor, 0-11. The SYS_TOTAL_CPUS variable 
+# should always reflect this.
+#
+# You can define these as a range, a list, or both. I've 
+# included some examples:
+#
+# EXAMPLE=0-3,8-11
+# EXAMPLE=0,4,8,12
+# EXAMPLE=0-3,8,11,12-15
+VM_ISOLATED_CPUS=0-7
+SYS_TOTAL_CPUS=0-15
+</code></pre>
+<p>As the comments indicate, change the values of the two variables to match your configuration, then save the file. Going forward, every time you start the VM, the scripts will run and isolate/release your CPUs. If you make any changes to your VM's CPU configuration, you'll only need to edit the <code>VM_ISOLATED_CPUS</code> variable, as your total CPUs always be the same.</p>
+<h2 id="looking-glass-performance-tweaks">Looking Glass Performance Tweaks</h2>
+<p>Looking Glass already works extremely well, but we can get even more performance out of it!</p>
+<h3 id="using-nvfbc-instead-of-dxgi">Using NvFBC Instead of DXGI</h3>
+<p>** Note that NvFBC won't work together with the <a href="https://asus-linux.org/guides/vfio-guide/#using-looking-glass-with-a-virtual-display-driver">Virtual Display Driver</a>! You will have to either use a dummy plug or an external monitor for NvFBC to work. **</p>
+<p>By default, Looking Glass uses DirectX Graphics Infrastructure (DXGI) to stream framebuffers to the Linux host. However, it <em><strong>is</strong></em> capable of using Nvidia's Framebuffer Capture (NvFBC). Using this can reduce CPU usage on your VM. In fact, in testing from myself and some others in our community, we've seen up to 10% better performance!</p>
+<p>The issue is that it's also only available on Quadro tier cards and higher. It <strong>*is*</strong> possible to get it working on GeForce cards with a workaround. Ping me on Discord if this is something you'd like to try!</p>
+<p>If you do use this method, you may need to increase the size of the IVSHMEM block. I know for myself at 1080p resolution, using a 32 MiB block no longer worked. After remoting into my VM the Looking Glass logs indicated the memory block wasn't big enough.</p>
+<p>If you encounter issues after enabling NvFBC, simply go to your VM's XML after shutting it down, and find your IVSHMEM section:</p>
+<pre><code>    &lt;shmem name="looking-glass"&gt;
+      &lt;model type="ivshmem-plain"/&gt;
+      &lt;size unit="M"&gt;32&lt;/size&gt;
+      &lt;address type="pci" domain="0x0000" bus="0x0b" slot="0x12" function="0x0"/&gt;
+    &lt;/shmem&gt;
+</code></pre>
+<p>Whatever size you're using, change it to the next power of 2. So in my case, I'd go from 32 to 64. If you were using 64, go to 128, and so on. After doing this, you'll need to either reboot, or delete the memory block and recreate it. This is easy thanks to our systemd-tmpfile method.</p>
+<p>To delete it:</p>
+<pre><code>sudo rm /dev/shm/looking-glass
+</code></pre>
+<p>To re-create it:</p>
+<pre><code>sudo systemd-tmpfiles --create /etc/tmpfiles.d/10-looking-glass.conf
+</code></pre>
+<p>The Looking Glass Windows host application disables NvFBC by default, and requires you to set a flag to enable it. In order to do this, you'll need to create and save a file, <code>looking-glass-host.ini</code>, with the below contents:</p>
+<pre><code>[app]
+capture=NVFBC
+</code></pre>
+<p>Then, move the file to <code>C:\Program Files\Looking Glass (host)</code>. Once you do this, restart the VM (or restart the Looking Glass service if you're familiar with Windows services).</p>
+<p>You should now be able to start the VM and use Looking Glass with increased performance. You can check the Looking Glass logs to confirm if you are indeed using NvFBC.</p>
+<h3 id="direct-dma-upload-dmabuf">Direct DMA Upload (DMABUF)</h3>
+<p>We can still take things a step further. This improvement works whether you've enabled NvFBC or not! DMABUF is a feature that removes an intermediate CPU memory copy of the framebuffer by allowing the GPU to access the buffer directly from the shared memory block. The developer of Looking Glass, gnif, has advised that this module is targeted to laptop users (like our community), so it's highly recommended to use this to ensure we are getting all the performance possible out of our VM!</p>
+<p>We can enable this with a kernel module which comes with Looking Glass. I prefer to install the module into DKMS so that it survives across kernel upgrades.</p>
+<p>If you don't have DKMS installed already, install it:</p>
+<pre><code>sudo dnf install dkms
+</code></pre>
+<p>Next, if you still have your Looking Glass source files (if not, just re-download and extract the source for the version you're using), navigate to it, and <code>cd</code> into the <code>module</code> folder. Once inside the folder, enter the following command to install the DKMS module:</p>
+<pre><code>sudo dkms install .
+</code></pre>
+<p>Now, modprobe the module with the <code>static_size_mb</code> parameter, which should be equal to the size of your current IVSHMEM block(64 MiB in my case):</p>
+<pre><code>sudo modprobe kvmfr static_size_mb=64
+</code></pre>
+<p>This will create a device <code>/dev/kvmfr0</code> which represents the KVMFR interface. To actually use it, you'll need to modify the ownership on this file:</p>
+<pre><code>sudo chown user:kvm /dev/kvmfr0
+</code></pre>
+<p>Next, we need to modify our VM's XML. Find our entry with <code>&lt;qemu:commandline&gt;</code>, and add the new KVMFR interface as shown below, changing the <code>size=64M</code> to match what you require:</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">  &lt;qemu:commandline&gt;
+    ...
+    &lt;qemu:arg value='-device'/&gt;
+    &lt;qemu:arg value='ivshmem-plain,id=shmem0,memdev=looking-glass'/&gt;
+    &lt;qemu:arg value='-object'/&gt;
+    &lt;qemu:arg value='memory-backend-file,id=looking-glass,mem-path=/dev/kvmfr0,size=64M,share=yes'/&gt;
+  &lt;/qemu:commandline&gt;
+</code></pre>
+<p>After doing this, you'll also need to remove the entire IVSHMEM section from your your XML:</p>
+<pre data-lang="xml" class="language-xml "><code class="language-xml" data-lang="xml">    &lt;shmem name="looking-glass"&gt;
+      &lt;model type="ivshmem-plain"/&gt;
+      &lt;size unit="M"&gt;64&lt;/size&gt;
+      &lt;address type="pci" domain="0x0000" bus="0x0b" slot="0x12" function="0x0"/&gt;
+    &lt;/shmem&gt;
+</code></pre>
+<p>You'll also want to remove the old systemd-tmpfiles entry since we will no longer need to generate the old shared memory block. We'll remove the shared memory block itself as well. Enter the below chained command:</p>
+<pre><code>sudo rm /etc/tmpfiles.d/10-looking-glass.conf &amp;&amp; sudo rm /dev/shm/looking-glass
+</code></pre>
+<p>Finally, edit <code>/etc/libvirt/qemu.conf</code> and find the ACL list we added in the EvDev device section, and add <code>"/dev/kvmfr0"</code> so it looks like the below (refer back to the <a href="https://asus-linux.org/guides/vfio-guide/#option-2-evdev-input">EvDev Input</a> section if you need to):</p>
+<pre><code>cgroup_device_acl = [
+    "/dev/input/by-id/KEYBOARD_NAME",
+    "/dev/input/by-id/MOUSE_NAME",
+    "/dev/null", "/dev/full", "/dev/zero",
+    "/dev/random", "/dev/urandom", "/dev/ptmx",
+    "/dev/kvm", "/dev/rtc", "/dev/hpet", "/dev/kvmfr0"
+]
+</code></pre>
+<p>Save the file, then restart the libvirtd service:</p>
+<pre><code>sudo systemctl restart libvirtd
+</code></pre>
+<p>Start the VM, and run Looking Glass with this additional flag (if you have other flags, they'll still work fine, just ensure this flag and its option are at the end):</p>
+<pre><code>looking-glass-client -f /dev/kvmfr0
+</code></pre>
+<p>You should see <code>Using DMA buffer support</code> in the terminal while running Looking Glass if you've done this properly!</p>
+<p>Now that we've confirmed it works properly, we just need to add a few things so that the kernel module automatically loads at boot and the permissions are properly set, so we don't need to go through the setup steps every time we want to use the VM.</p>
+<p>First create a file <code>/etc/modules-load.d/kvmfr.conf</code> and save it with the below content to load the module at boot:</p>
+<pre><code>#KVMFR Looking Glass Module
+kvmfr
+</code></pre>
+<p>Next, create a file <code>/etc/modprobe.d/kvmfr.conf</code> and save with the below content to set the size at boot (again, ensure the value matches what you are using):</p>
+<pre><code>#KVMFR Looking Glass Module
+options kvmfr static_size_mb=64
+</code></pre>
+<p>Finally, we will create a new <code>udev</code> rule. Create and save the below file (remember to replace <code>user</code> with your username):</p>
+<p><code>/etc/udev/rules.d/99-kvmfr.rules</code>:</p>
+<pre><code>SUBSYSTEM=="kvmfr", OWNER="user", GROUP="kvm", MODE="0660"
+</code></pre>
+<p>After creating these, you should be able to reboot and use Looking Glass with DMABUF!</p>
+<p><em><strong>Note: Remember that any time you update the Looking Glass client to a new version, you should also reinstall the DKMS module</strong></em></p>
+<h2 id="one-click-launcher">One-Click Launcher</h2>
+<p>We've put in a ton of work to get ourselves set with an awesome VM that performs like a dream. When we start it, it configures all of our performance options for us. But if you can't tell, I love going all-out. We can add a desktop file entry so that we can simply start our VM from our application launcher without ever opening the virt-manager application. It's all led to this moment so let's get into it!</p>
+<p>You may have noticed I don't have a script to start Lookinig Glass. You can certainly add one if you want, but there's a reason I do not add one, keep reading.</p>
+<p>First things first, let's add the VM icon. I've created a nice little Windows 10 icon we can use, but of course you can use anything you wish.</p>
+<p>Enter the chained command below. It will create the necessary directory in your home folder if it does not exist, and then download the icon to the correct directory:</p>
+<pre><code>mkdir -p ~/.local/share/icons/hicolor/256x256/emblems &amp;&amp; wget https://asus-linux.org/files/vfio/Win10Logo.png -O ~/.local/share/icons/hicolor/256x256/emblems/Win10Logo.png
+</code></pre>
+<p>Next, create and save the following file:</p>
+<p><code>~/.local/share/applications/windows-vm.desktop</code>:</p>
+<pre><code>[Desktop Entry]
+Type=Application
+Version=1.0
+Name=Windows Virtual Machine
+GenericName=Start Windows Gaming VM
+Comment=Launches a Windows VM with dedicated graphics for high-performance applications
+Exec=sh -c "virsh --connect=qemu:///system start win10; sleep 13; looking-glass-client -F -S -s -f /dev/kvmfr0;"
+Icon=Win10Logo
+Terminal=false
+Categories=Application;Games;System
+</code></pre>
+<p>You can edit the <code>Name</code>, <code>GenericName</code>, <code>Comment</code>, and <code>Categories</code> fields to suit your tastes. The rest should be left alone, with the exception of  the <code>Exec</code> field.</p>
+<p>If you will be using Looking Glass, use the following, substituting my flags with your preferred ones:</p>
+<pre><code>Exec=sh -c "virsh --connect=qemu:///system start win10; sleep 13; looking-glass-client -F -S -s -f /dev/kvmfr0;"
+</code></pre>
+<p>If you're not using Looking Glass, and just an external display, then use this one:</p>
+<pre><code>Exec=sh -c "virsh --connect=qemu:///system start win10"
+</code></pre>
+<p>That's it! You should be able to see the entry for the VM in your application launcher, and click it to start your VM with (or without) Looking Glass!</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>Congrats, you did it! Give yourself a pat on the back...or a beer! Thanks for reading to the end, and I hope this guide has been both helpful and informative. If you  notice any errors, or have any concerns, questions, or whatever! - Just ping me on Discord!</p>
+
+  </article>
+</div>
+</section>
+
+  </main>
+  
+    
+
+
+<footer id="site-footer">
+  <div class="container">
+    <section class="footer-content">
+      <section class="footer-socials">
+        <ul class="social-logos">
+        <script src="./Linux for ROG Notebooks_files/overlay-widget.js"></script>
+        <script>
+          kofiWidgetOverlay.draw('flukejones', {
+            'type': 'floating-chat',
+            'floating-chat.donateButton.text': 'Support me',
+            'floating-chat.donateButton.background-color': '#00b9fe',
+            'floating-chat.donateButton.text-color': '#fff'
+          });
+        </script>
+
+          
+          <li><a class="discord-logo" href="https://discord.gg/z8y99XqPb7" target="_blank" title="Join us on Discord!"><img src="./Linux for ROG Notebooks_files/discord-logo.svg" alt=""></a></li>
+          
+          <li><a class="gitlab-logo" href="https://gitlab.com/asus-linux" target="_blank" title="Fork us on GitLab!"><img src="./Linux for ROG Notebooks_files/gitlab-logo.svg" alt=""></a></li>
+          
+          <li><a class="patreon-logo" href="https://www.patreon.com/join/flukejones" target="_blank" title="Support us on Patreon!"><img src="./Linux for ROG Notebooks_files/patreon-logo.svg" alt=""></a></li>
+          
+        </ul>
+      </section>
+      <section class="row footer-copyright space-between">
+        <p></p>
+        <p>© 2020-2025 asus-linux.org</p>
+        <p>
+          <a class="toc-link" href="https://asus-linux.org/guides/vfio-guide/#">Legal</a>
+          <span> | </span>
+          <a class="toc-link" href="https://asus-linux.org/guides/vfio-guide/#">Privacy Policy</a>
+        </p>
+      </section>
+    </section>
+  </div>
+</footer><div id="kofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6"><div class="floatingchat-container-wrap" style="z-index: 10000;"><iframe class="floatingchat-container" style="" id="kofi-wo-containerkofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6" src="./Linux for ROG Notebooks_files/saved_resource.html"></iframe></div><div class="floatingchat-container-wrap-mobi" style="z-index: 10000;"><iframe class="floatingchat-container-mobi" style="" id="kofi-wo-container-mobikofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6" src="./Linux for ROG Notebooks_files/saved_resource(1).html"></iframe></div><div id="kofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6-kofi-popup-iframe" class="floating-chat-kofi-popup-iframe" style="z-index: 10000; height: 0px; width: 0px; opacity: 0; transition: 0.6s;"><div class="floating-chat-kofi-popup-iframe-notice"><a href="https://ko-fi.com/flukejones" target="_blank" class="kfds-text-is-link-dark">ko-fi.com/flukejones</a></div><div class="floating-chat-kofi-popup-iframe-closer"><span><svg height="0px" width="15px"><line x1="2" y1="8" x2="13" y2="18" style="stroke:#000; stroke-width:3"></line><line x1="13" y1="8" x2="2" y2="18" style="stroke:#000; stroke-width:3"></line></svg></span></div><div class="floating-chat-kofi-popup-iframe-container" id="kofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6-kofi-popup-iframepopup-iframe-container" style="height: 100%;"></div></div><div id="kofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6-kofi-popup-iframe-mobi" class="floating-chat-kofi-popup-iframe-mobi" style="z-index: 10000; height: 0px; width: 0px; opacity: 0; transition: 0.6s;"><div class="floating-chat-kofi-popup-iframe-notice-mobi"><a href="https://ko-fi.com/flukejones" target="_blank" class="kfds-text-is-link-dark">ko-fi.com/flukejones</a></div><div class="floating-chat-kofi-popup-iframe-closer-mobi"><span><svg height="0px" width="15px"><line x1="2" y1="8" x2="13" y2="18" style="stroke:#000; stroke-width:3"></line><line x1="13" y1="8" x2="2" y2="18" style="stroke:#000; stroke-width:3"></line></svg></span></div><div class="floating-chat-kofi-popup-iframe-container-mobi" id="kofi-widget-overlay-5911e21b-ddfe-42d8-ae0e-392486137cb6-kofi-popup-iframe-mobipopup-iframe-container-mobi" style="height: 100%;"></div></div></div>
+<div class="toc-modal">
+  <div class="toc-item">
+    <div class="toc-title">
+      <h3>Legal Matters</h3>
+      <img class="toc-close" src="./Linux for ROG Notebooks_files/close.svg">
+    </div>
+    <div class="toc-content">
+      <p>ASUS and ROG Trademark is either a US registered trademark or trademark of ASUSTeK Computer Inc. in the United States and/or other countries.</p>
+<p>Reference to any ASUS products, services, processes, or other information and/or use of ASUS Trademarks does not constitute or imply endorsement, sponsorship, or recommendation thereof by ASUS.</p>
+<p>The use of ROG and ASUS trademarks within this website and associated tools and libraries is only to provide a recognisable identifier to users to enable them to associate that these tools will work with ASUS ROG laptops.</p>
+
+    </div>
+  </div>
+  <div class="toc-item">
+    <div class="toc-title">
+      <h3>Privacy Policy</h3>
+      <img class="toc-close" src="./Linux for ROG Notebooks_files/close.svg">
+    </div>
+    <div class="toc-content">
+      <h2 id="we-use-matomo">We use Matomo</h2>
+<p>Matomo is an open source web analytics platform. A web analytics platform is used by a website owner in order to measure, collect, analyse and report visitor data for purposes of understanding and optimizing their website.</p>
+<h2 id="purpose-of-the-processing">Purpose of the processing</h2>
+<p>Matomo is used to get an idea how our website is used by our users so we can optimize things further so that the user may find the most relevant information more quickly.</p>
+<h3 id="data-matomo-is-processing">Data Matomo is processing</h3>
+<ul>
+<li>User IP address</li>
+<li>Optional User ID</li>
+<li>Date and time of the request</li>
+<li>Title of the page being viewed</li>
+<li>URL of the page being viewed</li>
+<li>Referrer URL</li>
+<li>Screen resolution being used</li>
+<li>Time in local user’s timezone</li>
+<li>Files that were clicked and downloaded</li>
+<li>Links to an outside domain that were clicked</li>
+<li>Page generation time</li>
+<li>User location: country, region, city, approximate latitude and longitude</li>
+<li>Main Language of the browser being used</li>
+<li>User Agent of the browser being used</li>
+</ul>
+<h4 id="pick-up-the-one-you-are-using">Pick up the one you are using:</h4>
+<ul>
+<li>Cookies</li>
+<li>IP address</li>
+<li>User ID</li>
+<li>Custom Dimensions</li>
+<li>Custom Variables</li>
+<li>Location of the user</li>
+</ul>
+<p>And also:</p>
+<ul>
+<li>Date and time</li>
+<li>Title of the page being viewed</li>
+<li>URL of the page being viewed</li>
+<li>URL of the page that was viewed prior to the current page</li>
+<li>Screen resolution</li>
+<li>Time in local timezone</li>
+<li>Files that were clicked and downloaded</li>
+<li>Link clicks to an outside domain</li>
+<li>Pages generation time</li>
+<li>Country, region, city</li>
+<li>Main Language of the browser</li>
+<li>User Agent of the browser</li>
+</ul>
+<p>This list can be completed with additional features such as:</p>
+<ul>
+<li>Form interactions</li>
+<li>Media interactions</li>
+<li>A/B Tests</li>
+</ul>
+<p>The processing of personal data with Matomo is based on legitimate interests</p>
+<h3 id="the-right-to-withdraw-consent-at-any-time">The right to withdraw consent at any time</h3>
+<p>If you wish us to not process any personal data with Matomo, you can opt-out from it at any time. There will be no consequences at all regarding the use of our website.</p>
+<p>You can withdraw at any time your consent by clicking here</p>
+<iframe style="border: 0; height: 200px; width: 600px; max-width: 100%;" src="./Linux for ROG Notebooks_files/index.html"></iframe>
+<h3 id="the-right-to-lodge-a-complaint-with-a-supervisory-authority">The right to lodge a complaint with a supervisory authority</h3>
+<p>If you think that the way we process your personal data with Matomo analytics is infringing the law, you have the right to lodge a complaint with a supervisory authority.</p>
+<h3 id="we-are-not-doing-any-profiling">We are not doing any profiling.</h3>
+
+    </div>
+  </div>
+</div>
+  
+
+  <script src="./Linux for ROG Notebooks_files/main.js"></script>
+
+</body></html>

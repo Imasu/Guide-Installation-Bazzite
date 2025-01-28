@@ -1,0 +1,147 @@
+/* Object Framework */
+.row {
+  display: flex;
+  flex-wrap: wrap;
+}
+.row.align-stretch {
+  align-items: stretch;
+}
+.row.align-center {
+  align-items: center;
+}
+
+.col-1,.col-2,.col-3,.col-4,.col-5,
+.col-6,.col-7,.col-8,.col-9,.col-10 {
+  width: 100%;
+  max-width: 100%;
+  padding: 0 1rem;
+}
+ 
+.row.center {
+  justify-content: center;
+}
+.justify-evenly {
+  justify-content: space-evenly;
+}
+.justify-between {
+  justify-content: space-between;
+}
+ 
+.mb-1 {
+  margin-bottom: 1rem;
+}
+.mb-2 {
+  margin-bottom: 2rem;
+}
+.my-1 {
+  margin: 1rem 0;
+}
+ 
+/* Buttons */
+.btn {
+  font-size: 1.25rem;
+  font-weight: bold;
+  display: inline-block;
+  color: white;
+  border-radius: .5rem;
+  padding: 1rem 1.5rem;
+  background-color: #d56503;
+  text-decoration: none;
+  transition: 0.3s ease-in-out;
+}
+.btn:hover {
+  background: #049fff;
+}
+/*.btn-nav {
+  font-size: 1.25rem;
+  font-weight: bold;
+  display: inline-block;
+  color: white;
+  border-radius: .5rem;
+  padding: 0.75rem 1rem;
+  background-color: #d56503;
+  text-decoration: none;
+  border: 1px solid transparent;
+}*/
+ 
+
+.container {
+  width: 100%;
+  margin: 0 auto;
+}
+/* Desktop Layout */
+@media only screen and (min-width: 768px) {
+  .container {
+      max-width: 70rem;
+      margin: 0 auto;
+  }
+  .row {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+  }
+  /* Column classes are named in easy to remember fashion. Objctv uses a 
+  12-column row layout. Class name reflects how many grid columns are used. 
+  5 decimal places seems reasonable enough for most scenarios here. */
+  .col-12 {
+      flex: 0 0 100%;
+      max-width: 100%;
+  }
+  .col-11 {
+      flex: 0 0 91.66667%;
+      max-width: 91.66667%;
+  }
+  .col-10 {
+      flex: 0 0 83.33333%;
+      max-width: 83.33333%;
+  }
+  .col-9 {
+      flex: 0 0 75%;
+      max-width: 75%;
+  }
+  .col-8 {
+      flex: 0 0 66.66667%;
+      max-width: 66.66667%;
+  }
+  .col-7 {
+      flex: 0 0 58.33333%;
+      max-width: 58.33333%;
+  }
+  .col-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+  }
+  .col-5 {
+      flex: 0 0 41.66667%;
+      max-width: 41.66667%;
+  }
+  .col-4 {
+      flex: 0 0 33.33333%;
+      max-width: 33.33333%;
+  }
+  .col-3 {
+      flex: 0 0 25%;
+      max-width: 25%;
+  }
+  .col-2 {
+      flex: 0 0 16.66667%;
+      max-width: 16.66667%;
+  }
+  .col-1 {
+      flex: 0 0 8.33333%;
+      max-width: 8.33333%;
+  }
+}
+ 
+/* Text */
+.text-center {
+  text-align: center;
+}
+ 
+/* Spacing *
+.pr-4 {
+  padding-right: 4rem;
+}
+.pl-4 {
+  padding-left: 4rem;
+}*/

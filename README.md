@@ -101,11 +101,11 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Gestion de la souris: `set mouse`  
 - Thèmes: `include /usr/share/nano/*.nanorc` et `include /usr/share/nano/extra/*.nanorc`
 - Key bindings: décommenter les raccourcis nécessaires : `Crl+X, C, V, Q, S, F, G, Z, Y`
-<br><br><br><br>
 
 
 
 
+<br><br><br>
 ## Setup des applications
 
 ### Flatpak
@@ -132,7 +132,7 @@ flatpak uninstall system firefox
 - Le répertoire `$HOME/.mozilla` peut être supprimé.
 <br>
 
-#### Applications intéressantes  
+#### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
 flatpak install system brave gedit betterbird
@@ -145,7 +145,7 @@ Autre service d'applications notament pour celles achetées.
 Gestion à partir de l'application `Gear Level`.  
 Créer un répertoire `~/.AppImages` pour les stocker.  
 
-#### Applications intéressantes  
+#### Applications utilisées  
 - Cider (achetée via [itch.io](https://itch.io)).  
 <br><br>
 
@@ -153,19 +153,18 @@ Créer un répertoire `~/.AppImages` pour les stocker.
 ### Brew
 Applications et services sans GUI. Permet l'installation d'applications utilisées dans les lignes de commande.   
 
-#### Applications intéressantes
+#### Applications utilisées
 - OneDrive (couplé à une AppImage pour le GUI).  
 **/!\ Finalement moins pratique que l'utilisation de la fonctionnalité de comptes en lignes de Gnome avec Microsoft 365 car cette application télécharge tous les fichiers sous OneDrive.**  
 En alternative, il y a également "onedriver" qui présente les mêmes fonctionnalités.
 [Processus d'installation One Drive en mode application](https://universal-blue.discourse.group/t/installing-onedrive-in-fedora-silverblue-bluefin-via-brew-gui-and-system-tray-icon/1071).  L'installation en mode service ne fonctionnera pas avec le GUI AppImage.  
 Fichier de config OneDrive, sélectionner ces options: `download_only = "false"`, `skip_symlinks = "true"`, `cleanup_local_files = "true"`  
+
+
+
+
+
 <br><br><br>
-
-
-
-
-
-
 ## Modding du système GNOME
 
 ### Extensions supplémentaires
@@ -217,8 +216,8 @@ flatpak --system install WhiteSur-Light/org.gtk.Gtk3theme.WhiteSur-Light-x86_64.
 7. Paramétrer les permissions Flatpak à partir de FlatSeal  
 Ajouter dans la section `Filesystem` pour toutes les applications les permissions suivantes  
 ```
-/var/home/<user name>/.local/share/icons/*:ro
-/var/home/<user name>/.local/share/themes/*:ro
+/var/home/$user name$/.local/share/icons/*:ro
+/var/home/$user name$/.local/share/themes/*:ro
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
@@ -233,24 +232,69 @@ Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.
 
 
 <br><br><br>
+## Paramétrage de Steam pour le partage des jeux entre comptes
+Solution dérivée de [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/) et du paramétrage de KVM.  
+
+### Configuration de la bibliothèque
+Répertoire utilisé comme bibliothèque: /var/steam-library/.  
+```
+sudo groupadd gamers
+#Ajout des utilisateurs au nouveau groupe
+sudo usermod -a -G gamers user1
+sudo usermod -a -G gamers user2
+sudo mkdir /var/steam-library
+sudo chgrp gamers /var/steam-library/
+sudo setfacl -R -b /var/steam-library/
+sudo setfacl -R -m g:gamers:rwX /var/steam-library/
+sudo setfacl -m d:g:gamers:rwx /var/steam-library/
+```
+<br>
+
+### Configuration de Steam
+Modifier dans steam, pour tous les utilisateurs, le répertoire de stockage des jeux.  
+
+
+
+
+
+<br><br><br>
 ## Installation d'une machine virtuelle Windows avec copier/coller et taille de bureau ajustable
 Bazzite offre une configuration fonctionnelle par utilisation du script `ujust setup-virtualization`.  /!\ Il y a souvent des bugs dans le script d'origine -> reprendre les instructions erronées manuellement (ujust --show ...).  
 Il est nécessaire d'activer VFIO /IOMMU pour bénéficier de meilleures performances. Pas de procédure fonctionnelle de CPU pass-through pour l'instant avec un iGPU... donc pas de cristal glass...  
 <br>
 Chemin des images sous libvirt: `/var/lib/libvirt/images`  
 <br>
-Bons guides pour l'installation du VM Windows. Une version au 26/11/2024 est sauvegardée dans le github.  
+Guides pour l'installation du VM Windows. Une version est sauvegardée dans le github.  
 - [How Do I Properly Install KVM on Linux](https://sysguides.com/install-kvm-on-linux)  
 - [How to Properly Install a Windows 11 Virtual Machine on KVM](https://sysguides.com/install-a-windows-11-virtual-machine-on-kvm)  
+- [VFIO dGPU Passthrough Guide](https://asus-linux.org/guides/vfio-guide/)  
 <br>
 
-Remarques:    
-- Concernant l'installation de KVM, seules les sections 9 et 10 restent pertinentes.  
-- Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.  
-- Concernant l'installation de la VM Windows, la configuration de KVM proposée n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-uBlue/blob/main/KVM%20Settings).  
+Remarques & étapes:  
+- Concernant l'installation de KVM, seules les sections 9 et 10 du 1er guide restent pertinentes. Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.  
+- Le guide Asus est très intéressant pour les hooks qemu et la conf KVM qu'il propose (hooks, memballoon...).
+- En partant du principe d'une machine virtuelle nommée `Window_11`, le github contient le fichier KVM optimisé et le répertoire pour les hooks à déposer dans `/etc/libvirt/hooks/qemu.d/`. **Les deux fonctionnent ensemble, sinon des erreurs seront remontées par KVM.**  
+- Concernant l'installation de la VM Windows, la configuration de KVM proposée dans les 2 premiers guides n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-Bazzite/tree/main/KVM%20Setup/).  
+<br>
+
+Drivers Virtio:  
 - [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
 - [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
-<br>
+
+
+
+
+
+<br><br><br>
+## Installation de git
+L'installation de git sur le poste principal est très simple grace à l'utilisation de GitHub CLI.  
+Le choix du protocole HTTPS permet un clonage effectif des répertoires avec un `git clone <lien https>`  
+```
+git config --global user.name  "Imasu"
+git config --global user.email "@gmail.com"
+brew install gh
+gh auth login
+```
 
 
 
@@ -324,29 +368,6 @@ Suivre les wiki Arch:
 - Julia : [install Julia in Arch (wiki Arch)](https://wiki.archlinux.org/title/Julia).  Installation sans difficulté. Il convient de paramétrer le chemin de l'exécutable dans l'extension VSCode [source](https://blog.glcs.io/install-julia-and-vscode#heading-installing-julia-2).  
 
 
-
-
-<br><br><br>
-## Paramétrage de Steam pour le partage des jeux entre comptes
-Solution dérivée de [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/) et du paramétrage de KVM.  
-
-### Configuration de la bibliothèque
-Répertoire utilisé comme bibliothèque: /var/steam-library/.  
-```
-sudo groupadd gamers
-#Ajout des utilisateurs au nouveau groupe
-sudo usermod -a -G gamers user1
-sudo usermod -a -G gamers user2
-sudo mkdir /var/steam-library
-sudo chgrp gamers /var/steam-library/
-sudo setfacl -R -b /var/steam-library/
-sudo setfacl -R -m g:gamers:rwX /var/steam-library/
-sudo setfacl -m d:g:gamers:rwx /var/steam-library/
-```
-<br>
-
-### Configuration de Steam
-Modifier dans steam, pour tous les utilisateurs, le répertoire de stockage des jeux.  
 
 
 
