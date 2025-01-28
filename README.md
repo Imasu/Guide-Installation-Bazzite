@@ -137,7 +137,7 @@ A installer sur la session System pour éviter les doublons des packages de base
 ```
 flatpak install system brave gedit betterbird
 ```
-<br><br>
+<br>
 
 
 ### AppImage
