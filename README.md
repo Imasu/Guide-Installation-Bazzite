@@ -362,7 +362,7 @@ Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée s
 ```
 <br>
 
-#### Installation des langages
+#### Installation des languages
 Suivre les wiki Arch:  
 - Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
 - Rust : [install Rust in Arch (wiki Arch)](https://wiki.archlinux.org/title/Rust). Installer les packages `rustup` et `sccache`. Suivre le guide associé avec l'installation de la toolchain, l'optimisation de la compilation CPU et des temps de compilation par création du fichier `~/.cargo/config.toml`.  
@@ -395,10 +395,11 @@ flatpak --system install flathub com.visualstudio.code
 ```
 
 Configuration du flatpak  
-A partir d'une configuration standard (flatseal)  
+A partir d'une configuration standard  
 ```
 flatpak --system override --env HOST_DISPLAY="$DISPLAY" --env HOST_SHELL="$SHELL" --env HOST_SSH_AUTH_SOCK="$SSH_AUTH_SOCK" com.visualsudio.code
 ```
+Cela créé le fichier `/var/lib/flatpak/overrides/com.visualsudio.code`
 <br>
 
 #### Rend visible podman depuis VS Code sous flatpak  
