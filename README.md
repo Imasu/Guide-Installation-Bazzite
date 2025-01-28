@@ -295,6 +295,8 @@ git config --global user.email "@gmail.com"
 brew install gh
 gh auth login
 ```
+<br>
+Guide synthétique d'utilisation de git: [Git Push Local Branch to Remote – How to Publish a New Branch in Git](https://www.freecodecamp.org/news/git-push-local-branch-to-remote-how-to-publish-a-new-branch-in-git/)  
 
 
 
