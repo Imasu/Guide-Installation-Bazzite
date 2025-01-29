@@ -57,10 +57,13 @@
     <vmport state="off"/>
     <smm state="on"/>
   </features>
-  <cpu mode="host-passthrough" check="partial" migratable="on">
+  <cpu mode="custom" match="exact" check="none">
+    <model fallback="forbid">IvyBridge-IBRS</model>
     <topology sockets="1" dies="1" clusters="1" cores="3" threads="2"/>
-    <cache mode="passthrough"/>
-    <feature policy="require" name="vmx"/>
+    <feature policy="require" name="ibpb"/>
+    <feature policy="require" name="md-clear"/>
+    <feature policy="require" name="spec-ctrl"/>
+    <feature policy="require" name="ssbd"/>
   </cpu>
   <clock offset="localtime">
     <timer name="rtc" present="no" tickpolicy="catchup"/>
@@ -197,9 +200,7 @@
     </sound>
     <audio id="1" type="spice"/>
     <video>
-      <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes">
-        <acceleration accel3d="no"/>
-      </model>
+      <model type="qxl" ram="65536" vram="65536" vgamem="16384" heads="1" primary="yes"/>
       <address type="pci" domain="0x0000" bus="0x00" slot="0x01" function="0x0"/>
     </video>
     <redirdev bus="usb" type="spicevmc">
@@ -212,4 +213,3 @@
     <memballoon model="none"/>
   </devices>
 </domain>
-
