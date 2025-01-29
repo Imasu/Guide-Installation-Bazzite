@@ -272,9 +272,10 @@ Guides pour l'installation du VM Windows. Une version est sauvegardée dans le g
 
 Remarques & étapes:  
 - Concernant l'installation de KVM, seules les sections 9 et 10 du 1er guide restent pertinentes. Ce n'est pas peine de créer les services libvirtd individuels car Bazzite fonctionne déjà ainsi.  
-- Le guide Asus est très intéressant pour les hooks qemu et la conf KVM qu'il propose (hooks, memballoon...).
-- En partant du principe d'une machine virtuelle nommée `Window_11`, le github contient le fichier KVM optimisé et le répertoire pour les hooks à déposer dans `/etc/libvirt/hooks/qemu.d/`. **Les deux fonctionnent ensemble, sinon des erreurs seront remontées par KVM.**  
-- Concernant l'installation de la VM Windows, la configuration de KVM proposée dans les 2 premiers guides n'est pas optimale pour mon PC. Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-Bazzite/tree/main/KVM%20Setup/).  
+- Le guide Asus est très intéressant pour les hooks qemu et la conf KVM qu'il propose (hooks, memballoon...).  
+En partant du principe d'une machine virtuelle nommée `Window_11`, le github contient le fichier KVM optimisé et le répertoire pour les hooks à déposer dans `/etc/libvirt/hooks/qemu.d/`. **Les deux fonctionnent ensemble, sinon des erreurs seront remontées par KVM.**  
+- Concernant l'installation de la VM Windows, la configuration de KVM proposée dans les 2 premiers guides n'est pas optimale pour mon PC.  Elément le plus important: Configuration du processeur en mode : IvyBridge-IBRS [source](https://serverfault.com/questions/980386/high-cpu-usage-on-windows-guest-kvm-machine) avec PIN des CPU.  
+Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/Guide-Installation-Bazzite/tree/main/KVM%20Setup/).  
 <br>
 
 Drivers Virtio:  
