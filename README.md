@@ -78,7 +78,7 @@ gsettings set org.gnome.desktop.interface enable-hot-corners false
 gsettings set org.gnome.desktop.interface font-antialiasing 'rgba'
 gsettings set org.gnome.desktop.interface font-hinting 'full'
 gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
-gsettings set org.gnome.desktop.interface text-scaling-factor 0,92
+gsettings set org.gnome.desktop.interface text-scaling-factor 0.92
 gsettings set org.gnome.desktop.calendar show-weekdate true
 ```
 <br>
@@ -305,6 +305,16 @@ gh auth login
 ```
 <br>
 Guide synthétique d'utilisation de git: [Git Push Local Branch to Remote – How to Publish a New Branch in Git](https://www.freecodecamp.org/news/git-push-local-branch-to-remote-how-to-publish-a-new-branch-in-git/)  
+Quelques commandes utiles:  
+- `git init` pour initialiser un dépôt local
+- `git add .` pour ajouter tous les fichiers du répertoire au dépôt local
+- `git commit -m 'commit message'` pour sauvegarder les changements fait aux fichiers locaux
+<br>
+- `git remote add origin <url.git>` pour attacher le dépôt à un serveur distant Git
+- `git remote -v` pour vérifier l'attachement au serveur distant
+<br>
+- `git pull` pour synchroniser depuis le serveur distant
+- `git push -u origin main` pour envoyer les modifications sur le serveur distant (il est possible de changer la branche avec la commande `git branch -M main`)  
 
 
 
