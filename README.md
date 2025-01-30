@@ -286,8 +286,8 @@ Configuration optimisée: [Configuration KVM Windows](https://github.com/Imasu/G
 <br>
 
 Drivers Virtio:  
-- [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/)  
-- [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe)  
+- [Lien vers les drivers Virtuo (iso & exe)](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/archive-virtio/).  
+- [Lien vers les spice tools](https://www.spice-space.org/download/windows/spice-guest-tools/spice-guest-tools-latest.exe).  
 
 
 
@@ -304,17 +304,18 @@ brew install gh
 gh auth login
 ```
 <br>
-Guide synthétique d'utilisation de git: [Git Push Local Branch to Remote – How to Publish a New Branch in Git](https://www.freecodecamp.org/news/git-push-local-branch-to-remote-how-to-publish-a-new-branch-in-git/)  
+
+Guide synthétique d'utilisation de git: [Git Push Local Branch to Remote – How to Publish a New Branch in Git](https://www.freecodecamp.org/news/git-push-local-branch-to-remote-how-to-publish-a-new-branch-in-git/).  
 Quelques commandes utiles:  
-- `git init` pour initialiser un dépôt local
-- `git add .` pour ajouter tous les fichiers du répertoire au dépôt local
-- `git commit -m 'commit message'` pour sauvegarder les changements fait aux fichiers locaux
+-`git init` pour initialiser un dépôt local  
+-`git add .` pour ajouter tous les fichiers du répertoire au dépôt local  
+-`git commit -m "commit message"` pour sauvegarder les changements fait aux fichiers locaux  
 <br>
-- `git remote add origin <url.git>` pour attacher le dépôt à un serveur distant Git
-- `git remote -v` pour vérifier l'attachement au serveur distant
+-`git remote add origin <url.git>` pour attacher le dépôt à un serveur distant Git  
+-`git remote -v` pour vérifier l'attachement au serveur distant  
 <br>
-- `git pull` pour synchroniser depuis le serveur distant
-- `git push -u origin main` pour envoyer les modifications sur le serveur distant (il est possible de changer la branche avec la commande `git branch -M main`)  
+-`git pull` pour synchroniser depuis le serveur distant  
+-`git push -u origin main` pour envoyer les modifications sur le serveur distant (il est possible de changer la branche avec la commande `git branch -M main`)  
 
 
 
