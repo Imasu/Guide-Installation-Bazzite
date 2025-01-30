@@ -64,6 +64,7 @@ Changement du nom du PC
 ```
 hostnamectl set-hostname <hostname>
 ```
+<br>
 
 
 ### Configuration Gnome
@@ -80,6 +81,7 @@ gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
 gsettings set org.gnome.desktop.interface text-scaling-factor 0,92
 gsettings set org.gnome.desktop.calendar show-weekdate true
 ```
+<br>
 
 
 ### Configuration des services OneDrive, Google Calandar ou Drive
@@ -97,9 +99,6 @@ Dans le fichier `.bashrc`:
 3. Corriger un problème d'autocompletion par ajout **en fin** de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
 4. Prise en compte des modifications par la commande `source .bashrc`.  
 <br>
-La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
-Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
-<br><br>
 
 
 ### Configuration de NANO
@@ -145,7 +144,7 @@ A installer sur la session System pour éviter les doublons des packages de base
 ```
 flatpak install system brave gedit betterbird
 ```
-<br>
+<br><br>
 
 
 ### AppImage
