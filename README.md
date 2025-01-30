@@ -58,12 +58,13 @@ Suivre ce guide pour réinstaller le Secure Boot
 [Documentation Bazzite - Secure Boot Instructions](https://docs.bazzite.gg/General/Installation_Guide/secure_boot/#method-b-after-installation-method).  
 <br>
 
+
 ### Configuration système
 Changement du nom du PC  
 ```
 hostnamectl set-hostname <hostname>
 ```
-<br>
+
 
 ### Configuration Gnome
 Taille des polices, couleurs, etc
@@ -79,7 +80,13 @@ gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
 gsettings set org.gnome.desktop.interface text-scaling-factor 0,92
 gsettings set org.gnome.desktop.calendar show-weekdate true
 ```
+
+
+### Configuration des services OneDrive, Google Calandar ou Drive
+Pour rendre disponible OneDrive et les services Google, il convient d'utiliser le service de comptes distants de Gnome.  
+Il peut être nécessaire d'installer le flatpak : `Gnome Keyring`  
 <br>
+
 
 ### Configuration de BASH
 Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
@@ -92,7 +99,8 @@ Dans le fichier `.bashrc`:
 <br>
 La commande `shopt -s globstar` permet de rendre la chaine `**` équivalente à 'tous les répertoires fils' dans les commandes shell.  
 Exemple `ls **/*/*.txt`. Ne fonctionne que dans les sous-répertoire de '$HOME'.  
-<br><br><br>
+<br><br>
+
 
 ### Configuration de NANO
 Modification du fichier de configuration `/etc/nanorc` :  
