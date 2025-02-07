@@ -335,6 +335,7 @@ Exemple pour une image Arch-Toolbox (optimisée pour un container) avec impléme
 ```
 distrobox create --image archlinux:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
 ```
+Distributions testées et fonctionnelles (wayland): Archlinux, Ubuntu 24.04  
 <br>
 
 ### Paramétrage du container Arch
