@@ -46,6 +46,10 @@ Installation d'un package sur la couche de base `rpm-ostree install <package>`.
 Désinstallation d'un package sur la couche de base `rpm-ostree uninstall <package>`.  
 <br>
 Suppression d'un package livré par défaut dans la couche de base `rpm-ostree override remove <package>`.  
+<br>
+
+### Commandes linux
+- `rpm -qi <nom du package/programme>` : description de diverses informations sur le package (version, release, date d'installation...)
 <br><br><br>
 
 
