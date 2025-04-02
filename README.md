@@ -252,10 +252,12 @@ sudo usermod -a -G gamers user1
 sudo usermod -a -G gamers user2
 sudo mkdir /var/steam-library
 sudo chgrp -R gamers /var/steam-library/
-sudo setfacl -R -b /var/steam-library/
-sudo setfacl -R -m g:gamers:rwX /var/steam-library/
-sudo setfacl -m d:g:gamers:rwx /var/steam-library/
+sudo setfacl -PRdm u::rwx,g:gamers:rwx,o::r /var/steam-library
+//sudo setfacl -R -b /var/steam-library/
+//sudo setfacl -R -m g:gamers:rwX /var/steam-library/
+//sudo setfacl -m d:g:gamers:rwx /var/steam-library/
 ```
+[source pour la commande setfacl](https://www.baeldung.com/linux/new-files-dirs-default-permission)
 <br>
 
 ### Configuration de Steam
