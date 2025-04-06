@@ -336,13 +336,13 @@ Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la ve
 Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)  
 
 Distributions testées et fonctionnelles (wayland):  
-- Fedora : --image quay.io/toolbx/arch-toolbox:latest,  
-- Archlinux : --image archlinux:latest,  
+- Fedora : --image quay.io/fedora/fedora-toolbox:latest,  
+- Archlinux : --image quay.io/toolbx/arch-toolbox:latest,  
 <br>
 
 Exemples avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
 ```
-distrobox create --image fedora:latest --name Name-FedoraOS --nvidia --unshare-all --home /home/$USER/.containers-home/Name-FedoraOS
+distrobox create --image quay.io/fedora/fedora-toolbox:latest --name Name-FedoraOS --nvidia --unshare-all --home /home/$USER/.containers-home/Name-FedoraOS
 distrobox create --image quay.io/toolbx/arch-toolbox:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
 ```
 
@@ -373,15 +373,21 @@ Ajouter la commande `cd ~/` en dernière ligne pour démarrer dans le répertoir
 #### Paquets à installer
 Installation des paquets essentiels : nano, git...  
 ```
-FEDORA:   sudo dnf install nano git
-ARCH:     sudo pacman -S nano git
+FEDORA:
+  sudo dnf update
+  sudo dnf install nano git
+
+ARCH:
+  sudo pacman -Syu
+  sudo pacman -S nano git
 ```  
 Optionnel:
 - Installation de `Oh-My-Bash` en suivant le guide supra. Ne fonctionne que si l'on est entré dans le container à partir du menu du Shell. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
 - Configuration de `nano` en suivant le guide supra.  
 <br>
 
-Installation de VS Code: suivre la procédure de MS (la version du paquet Arch n'est pas la version complète par exmple): (https://code.visualstudio.com/docs/setup/linux)  
+Installation de VS Code: depuis la racine du $HOME du container (cd ~/), suivre la procédure de MS  
+Note: la version du paquet Arch n'est pas la version complète par exmple): (https://code.visualstudio.com/docs/setup/linux)  
 <br>
 
 Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
