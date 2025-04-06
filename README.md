@@ -368,10 +368,6 @@ Vérification par installation de `vulkan-tools` puis par la commande `vulkaninf
 Définir un profil pour le Bash avec la palette `Tokyo Night Moon`  
 Ajouter la commande `cd ~/` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
 <br>
-Optionnel:
-- Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
-- Configuration de `nano` en suivant le guide supra.  
-<br>
 
 
 #### Paquets à installer
@@ -380,6 +376,9 @@ Installation des paquets essentiels : nano, git...
 FEDORA:   sudo dnf install nano git
 ARCH:     sudo pacman -S nano git
 ```  
+Optionnel:
+- Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
+- Configuration de `nano` en suivant le guide supra.  
 <br>
 
 Installation de VS Code: suivre la procédure de MS (la version du paquet Arch n'est pas la version complète par exmple): (https://code.visualstudio.com/docs/setup/linux)  
