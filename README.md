@@ -95,8 +95,10 @@ Il peut être nécessaire d'installer le flatpak : `Gnome Keyring`
 
 
 ### Configuration de BASH
-Installation possible de Oh-My-Bash en suivant ce guide [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/). L'installation via wget fonctionne bien.  
-<br>
+Installation de Oh-My-Bash à partir de cette ligne de commande (source: [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/).  
+```
+bash -c "$(wget https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"
+```
 Dans le fichier `.bashrc`:  
 1. Thème sélectionné: `powerline-multiline`, avec la palette `GNOME`,  
 2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
