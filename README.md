@@ -377,7 +377,7 @@ FEDORA:   sudo dnf install nano git
 ARCH:     sudo pacman -S nano git
 ```  
 Optionnel:
-- Installation de `Oh-My-Bash` en suivant le guide supra. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
+- Installation de `Oh-My-Bash` en suivant le guide supra. Ne fonctionne que si l'on est entré dans le container à partir du menu du Shell. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
 - Configuration de `nano` en suivant le guide supra.  
 <br>
 
