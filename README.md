@@ -336,14 +336,14 @@ Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la ve
 Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)  
 
 Distributions testées et fonctionnelles (wayland):  
-- Fedora : --image fedora:latest,  
+- Fedora : --image quay.io/toolbx/arch-toolbox:latest,  
 - Archlinux : --image archlinux:latest,  
 <br>
 
 Exemples avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
 ```
 distrobox create --image fedora:latest --name Name-FedoraOS --nvidia --unshare-all --home /home/$USER/.containers-home/Name-FedoraOS
-distrobox create --image archlinux:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
+distrobox create --image quay.io/toolbx/arch-toolbox:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
 ```
 
 ### Paramétrage du container
