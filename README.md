@@ -88,7 +88,7 @@ gsettings set org.gnome.desktop.calendar show-weekdate true
 <br>
 
 
-### Configuration des services OneDrive, Google Calandar ou Drive
+### Configuration des services OneDrive, Google Calendar ou Drive
 Pour rendre disponible OneDrive et les services Google, il convient d'utiliser le service de comptes distants de Gnome.  
 Il peut être nécessaire d'installer le flatpak : `Gnome Keyring`  
 <br>
@@ -146,7 +146,7 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system brave gedit betterbird simplescan
+flatpak install system vivaldi gedit betterbird simplescan
 ```
 <br><br>
 
@@ -241,7 +241,7 @@ Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.
 
 <br><br><br>
 ## Paramétrage de Steam pour le partage des jeux entre comptes
-Solution dérivée de [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/) et du paramétrage de KVM.  
+Solution dérivée de [configuration du répertoire steam](https://steamcommunity.com/discussions/forum/1/4543572701313233470/) et de [source pour la commande setfacl](https://www.baeldung.com/linux/new-files-dirs-default-permission).  
 
 ### Configuration de la bibliothèque
 Répertoire utilisé comme bibliothèque: /var/steam-library/.  
@@ -257,7 +257,6 @@ sudo setfacl -PRdm u::rwx,g:gamers:rwx,o::r /var/steam-library
 //sudo setfacl -R -m g:gamers:rwX /var/steam-library/
 //sudo setfacl -m d:g:gamers:rwx /var/steam-library/
 ```
-[source pour la commande setfacl](https://www.baeldung.com/linux/new-files-dirs-default-permission)
 <br>
 
 ### Configuration de Steam
@@ -334,35 +333,34 @@ Installation d'une distrobox selon cette commande. Il ne faut pas utiliser la ve
 
 Liste de containers [distrobox containers distros](https://github.com/89luca89/distrobox/blob/main/docs/compatibility.md#containers-distros)  
 
-Exemple pour une image Arch-Toolbox (optimisée pour un container) avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
+Distributions testées et fonctionnelles (wayland):  
+- Fedora : --image fedora:latest,  
+- Archlinux : --image archlinux:latest,  
+<br>
+
+Exemples avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
 ```
+distrobox create --image fedora:latest --name Name-FedoraOS --nvidia --unshare-all --home /home/$USER/.containers-home/Name-FedoraOS
 distrobox create --image archlinux:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
 ```
-Distributions testées et fonctionnelles (wayland):  
-- Archlinux: fonctionne nativement,  
-- Ubuntu 24.04: il convient d'installer en plus un plugin ALSA  
+
+### Paramétrage du container
+
+#### Activation du pilote Vulkan (bug lié à Fedora/Silverblue/Bazzite, non corrigé au 06/04/2025)
+Par défaut, le pilote Vulkan ne fonctionnera pas car le flag --nvidia ne trouvera pas l'un des fichiers de configuration [source](https://github.com/NVIDIA/nvidia-container-toolkit/issues/811)  
+Solution le temps que Fedora/Silverblue/Bazzite introduise un fix:  
 ```
-sudo apt install pipewire-audio-client-libraries
+## Copier le fichier manquant depuis l'hôte en le renommant puis le recopier dans le bon répertoire du conteneur
+Hôte:
+cp /usr/share/vulkan/icd.d/nvidia_icd.x86_64.json ~/Téléchargements/nvidia_icd.json
+
+Conteneur:
+sudo cp Téléchargements/nvidia_icd.json /usr/share/vulkan/icd.d/
+
 ```
+Vérification par installation de `vulkan-tools` puis par la commande `vulkaninfo --summary`  
 <br>
 
-### Paramétrage du container Arch
-
-#### Installation des paquets
-Installation des paquets essentiels
-```
-sudo pacman -Syu
-sudo pacman -S nano git code
-```  
-<br>
-
-Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
-```
-git config --global user.name  "Imasu"
-git config --global user.email "@gmail.com"
-```
-Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
-<br>
 
 #### Configuration du shell
 Définir un profil pour le Bash avec la palette `Tokyo Night Moon`  
@@ -373,6 +371,26 @@ Optionnel:
 - Configuration de `nano` en suivant le guide supra.  
 <br>
 
+
+#### Paquets à installer
+Installation des paquets essentiels : nano, git...  
+```
+FEDORA:   sudo dnf install nano git
+ARCH:     sudo pacman -S nano git
+```  
+<br>
+
+Installation de VS Code: suivre la procédure de MS (la version du paquet Arch n'est pas la version complète par exmple): (https://code.visualstudio.com/docs/setup/linux)  
+<br>
+
+Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
+```
+git config --global user.name  "Imasu"
+git config --global user.email "@gmail.com"
+```
+Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
+<br>
+
 #### Mise en oeuvre de code & git
 **Sous environnement GNOME**
 1. Installer en plus `gnome-keyring`
@@ -380,20 +398,11 @@ Optionnel:
 3. Thèmes: `Tokyo Night Dark Enhanced` , `Atom One Dark Theme`
 <br>
 
-**Sous KDE**
-Lors de l'utilisation de git sous VS-Code, si sous KDE, VS-Code affiche un message d'erreur sur la gestion du portefeuille de clé.
-> You're running in a KDE environment but the OS keyring is not available for encryption. Ensure you have kwallet running.  
-
-Ajouter dans le fichier de configuration `${HOME}/.vscode/argv.json` l'entrée suivante (raccourci depuis VS-Code `Ctrl+Shift+P` puis `Preferences : Configure Runtime Arguments`):
-```
-"password-store": "gnome-libsecret"
-```
-<br>
-
 #### Installation des languages
-Suivre les wiki Arch:  
+Languages testés:  
+- Rust : [Install Rust in Fedora](https://developer.fedoraproject.org/tech/languages/rust/rust-installation.html).  Installer via Rustup.
+- Rust : (Arch) [Install Rust in Arch (wiki Arch)](https://wiki.archlinux.org/title/Rust). Installer les packages `base-devel`, `rustup` et `sccache`. Suivre le guide associé avec l'installation de la toolchain, l'optimisation de la compilation CPU et des temps de compilation par création du fichier `~/.cargo/config.toml`.
 - Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
-- Rust : [install Rust in Arch (wiki Arch)](https://wiki.archlinux.org/title/Rust). Installer les packages `base-devel`, `rustup` et `sccache`. Suivre le guide associé avec l'installation de la toolchain, l'optimisation de la compilation CPU et des temps de compilation par création du fichier `~/.cargo/config.toml`.  
 - Go : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/). Installation sans difficulté. Pas besoin de mettre à jour le GOPATH. Un répertoire go sera créé avec les packages et binaires associés nécessaires.
 - Julia : [install Julia in Arch (wiki Arch)](https://wiki.archlinux.org/title/Julia).  Installation sans difficulté. Il convient de paramétrer le chemin de l'exécutable dans l'extension VSCode [source](https://blog.glcs.io/install-julia-and-vscode#heading-installing-julia-2).
 - C++ : [Installation & fonctionnement avec make](https://www.youtube.com/watch?v=VXvPpPCF7E0) ; [fonctionnement avec cmake](https://www.youtube.com/watch?v=DMSROwPyhAE)
