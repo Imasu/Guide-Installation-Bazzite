@@ -366,7 +366,6 @@ Vérification par installation de `vulkan-tools` puis par la commande `vulkaninf
 
 #### Configuration du shell
 Définir un profil pour le Bash avec la palette `Tokyo Night Moon`  
-Ajouter la commande `cd ~/` en dernière ligne pour démarrer dans le répertoire $HOME du container.  
 <br>
 
 
