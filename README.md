@@ -400,8 +400,8 @@ Dans les projets, pour éviter la synchronisation de certains fichiers ou réper
 
 #### Mise en oeuvre de code & git
 **Sous environnement GNOME**
-1. Installer en plus `gnome-keyring`
-2. Lancer VS-Code, sur l'écran d’accueil, sélectionner 'Clone Git Repository...' et suivre les instructions. Tout se met ensuite en place...
+1. Pour un container Arch, installer le packet `gnome-keyring` (pas besoin pour Fedora).  
+2. Lancer VS-Code, sur l'écran d’accueil, sélectionner 'Clone Git Repository...' et suivre les instructions. Sur Fedora, faire plusieurs cancel pour arriver à la méthode avec saisie d'un code.  
 3. Thèmes: `Tokyo Night Dark Enhanced` , `Atom One Dark Theme`
 <br>
 
