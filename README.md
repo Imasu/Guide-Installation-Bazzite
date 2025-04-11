@@ -114,6 +114,12 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Gestion de la souris: `set mouse`  
 - Thèmes: `include /usr/share/nano/*.nanorc` et `include /usr/share/nano/extra/*.nanorc`
 - Key bindings: décommenter les raccourcis nécessaires : `Crl+X, C, V, Q, S, F, G, Z, Y`
+<br>
+
+
+### Bug ayant fait l'objet d'un contournement (à suivre pour le désactiver)
+#### [pb sur le réveil de la carte graphique, pb gnome](https://github.com/ublue-os/bazzite/issues/2437)
+- 11/04/2025. Version: 41.20250409.1 (2025-04-09T19:07:51Z)  
 
 
 
