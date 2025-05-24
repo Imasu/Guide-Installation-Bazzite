@@ -88,7 +88,17 @@ gsettings set org.gnome.desktop.calendar show-weekdate true
 <br>
 
 
-### Configuration des services OneDrive, Google Calendar ou Drive
+### Gnome Tweaks -> remplacé par Refine & Ignition
+Bazzite a supprimé en version 42 Gnome Tweaks, il est remplacé par Refine. Eventuellement à installer via Flatpak.  
+L'application pour gérer les applications lancées automatiquement est Ignition.  
+Exemple de configuration d'un script pour Solaar (cf. infra, section flatpak):
+```
+flatpak run io.github.pwr_solaar.solaar --window=hide
+```
+<br>
+
+
+### Configuration des services kDrive, OneDrive, Google Calendar ou Drive
 Pour rendre disponible OneDrive et les services Google, il convient d'utiliser le service de comptes distants de Gnome.  
 Il peut être nécessaire d'installer le flatpak : `Gnome Keyring`  
 <br>
@@ -133,6 +143,7 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Liste les flatpack d'une session `flatpack remote-ls <remote>`  
 - Installation et désinstallation sur la session utilisateur `flatpak install <remote> <package>` / `flatpak uninstall <remote> <package>`  
 - Rechercher un package `flatpak search <package>`  
+- Lancer un package `flatpak run <package>`  
 - Permissions d'un package `flatpak info --show-permissions <package>`  
 <br>
 
@@ -154,8 +165,9 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system vivaldi gedit betterbird simplescan solaar
+flatpak install system vivaldi gedit betterbird simplescan libreoffice solaar
 ```
+solaar = gestionnaire de périphériques Logitech.  
 <br><br>
 
 
