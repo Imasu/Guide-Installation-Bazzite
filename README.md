@@ -154,7 +154,7 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system vivaldi gedit betterbird simplescan
+flatpak install system vivaldi gedit betterbird simplescan solaar
 ```
 <br><br>
 
