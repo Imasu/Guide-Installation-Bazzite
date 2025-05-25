@@ -406,6 +406,9 @@ Optionnel:
 Installation de VS Code: depuis la racine du $HOME du container (cd ~/), suivre la procédure de MS  
 Note: la version du paquet Arch n'est pas la version complète par exmple): (https://code.visualstudio.com/docs/setup/linux)  
 <br>
+Installation de RustRover (JetBrains): depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
+Il est possible après de créer un symlink vers ~/.local/bin pour pouvoir lancer RustRover directement sans aller dans son répertoire d'installation (/opt/RustRover...)  
+<br>
 
 Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
 ```
