@@ -50,6 +50,7 @@ Suppression d'un package livré par défaut dans la couche de base `rpm-ostree o
 
 ### Commandes linux
 - `rpm -qi <nom du package/programme>` : description de diverses informations sur le package (version, release, date d'installation...)
+- `passwd username` : forçage du mot de passe sans tenir compte des restriction de format  
 <br><br><br>
 
 
