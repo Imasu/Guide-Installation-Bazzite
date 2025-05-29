@@ -220,7 +220,7 @@ distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.containers-ho
 cd
 git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
 cd WhiteSur-gtk-theme
-./install.sh -l
+./install.sh
 ./tweaks.sh -F
 ```
 4. Depuis la console du système hôte, copier le contenu des répertoires suivants dans leur homologue du système hôte  
@@ -234,7 +234,7 @@ ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk.css
 ln -s -f $HOME/.config/gtk-4.0/gtk-Dark.css $HOME/.config/gtk-4.0/gtk-dark.css
 ```
 7. Installer les Flatpaks générés par l'installation  
-Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.local/share/containers/home-folder/sys-deskcustom/.cache/pakitheme`.  
+Le script d'installation a généré des fichiers flatpak dans le répertoire `$HOME/.containers-home/sys-deskcustom/.cache/pakitheme`  
 Depuis la console du système hôte, aller dans ce répertoire et pour chaque sous répertoire installer le flatpak en mode system:  
 ```
 cd $HOME/.containers-home/sys-deskcustom/.cache/pakitheme
@@ -250,10 +250,10 @@ Ajouter dans la section `Filesystem` pour toutes les applications les permission
 xdg-config/gtk-4.0:ro
 xdg-config/gtk-3.0:ro
 ```
-8. Les icônes [WhiteSur Icon Theme](https://www.pling.com/p/1405756/) sont à déposer dans le répertoire `$HOME/.local/share/icons`.  
+8. Les icônes [WhiteSur Icon Theme](https://www.pling.com/p/1405756/) sont à déposer dans le répertoire `$HOME/.local/share/icons`  
 Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.  
 9. Les curseurs [Bibata Modern Ice](https://www.gnome-look.org/p/1197198) sont à déposer dans le même répertoire `$HOME/.local/share/icons`  
-10. Le thème est à appliquer depuis Gnome Tweaks  
+10. Le thème est à appliquer depuis Refine  
 11. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.containers-home/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
