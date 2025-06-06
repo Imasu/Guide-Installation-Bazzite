@@ -65,7 +65,7 @@ Suivre ce guide pour réinstaller le Secure Boot
 
 
 ### Configuration système
-Passer le clavier en `Français` et non en `Français (alternative)`
+Passer le clavier en `Français` et non en `Français (alternative)`  
 Changement du nom du PC  
 ```
 hostnamectl set-hostname <hostname>
