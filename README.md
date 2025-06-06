@@ -65,6 +65,7 @@ Suivre ce guide pour réinstaller le Secure Boot
 
 
 ### Configuration système
+Passer le clavier en `Français` et non en `Français (alternative)`
 Changement du nom du PC  
 ```
 hostnamectl set-hostname <hostname>
@@ -85,6 +86,7 @@ gsettings set org.gnome.desktop.interface font-hinting 'full'
 gsettings set org.gnome.desktop.interface font-rgba-order 'rgb'
 gsettings set org.gnome.desktop.interface text-scaling-factor 0.92
 gsettings set org.gnome.desktop.calendar show-weekdate true
+gsettings set org.gnome.mutter.attach-modal-dialogs false
 ```
 <br>
 
