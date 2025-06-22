@@ -168,8 +168,9 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system vivaldi gedit betterbird simplescan libreoffice solaar
+flatpak install system vivaldi gedit betterbird simplescan libreoffice solaar digiKam
 ```
+digiKam = gestionnaire de photos.  
 solaar = gestionnaire de périphériques Logitech.  
 <br><br>
 
@@ -188,10 +189,19 @@ Créer un répertoire `~/.AppImages` pour les stocker.
 Applications et services sans GUI. Permet l'installation d'applications utilisées dans les lignes de commande.   
 
 #### Applications utilisées
--  
+- exiftool : manipulation de fichiers images et vidéo par ligne de commande  
+```
+Utiliser les paramètres   DateTimeOriginal   ou  CreateDate   pour ces commandes
 
+// Renomme les fichiers par leur date de prise de vue (format YYY-MM-DD_HH:MM_id)
+exiftool '-FileName<DateTimeOriginal' -d '%Y-%m-%d_%H:%M_%%-c.%%e' -r ~/Images/Google Photos/
 
+// Crée des répertoires de type YYYY/MM et y déplace les fichiers selon leur date de prise de vue
+exiftool -r -d %Y/%m "-directory<createdate" ~/Images
 
+// Remplace les dates de dernière modification des fichiers par leur date de prise de vue
+exiftool -overwrite_original '-FileModifyDate<DateTimeOriginal' -r ~/Images/
+```
 
 
 <br><br><br>
