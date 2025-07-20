@@ -212,7 +212,7 @@ Liste d'extensions à installer:
 - Dash to Dock: Position et taille -> `taille des icônes: 40`, Apparence -> `réduire les marges`, `utiliser le thème par défaut`
 - Desktop Icons NG  
 - Extension List  
-- OpenWeather Refined -> clé API personnelle [WeatherAPI.com](https://www.weatherapi.com/)  
+- SimpleWeather -> clé API personnelle [WeatherAPI.com](https://www.weatherapi.com/)  
 - Hide Top Bar: activer l'option Sensitivity -> `Show panel when mouse approaches...`; désactiver les options Sensitivity -> `In the above case, also show panel when fullscreen`, Intellihide -> `only when the active window takes the space`.  
 <br>
 
