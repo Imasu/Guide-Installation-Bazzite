@@ -237,7 +237,7 @@ distrobox create -i "fedora:latest" -n "sys-deskcustom" -H "$HOME/.containers-ho
 cd
 git clone https://github.com/vinceliuice/WhiteSur-gtk-theme.git --depth=1
 cd WhiteSur-gtk-theme
-./install.sh
+./install.sh -l -HD
 ./tweaks.sh -F
 ```
 4. Depuis la console du système hôte, copier le contenu des répertoires suivants dans leur homologue du système hôte  
@@ -270,7 +270,7 @@ xdg-config/gtk-3.0:ro
 8. Les icônes [WhiteSur Icon Theme](https://www.pling.com/p/1405756/) sont à déposer dans le répertoire `$HOME/.local/share/icons`  
 Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.  
 9. Les curseurs [Bibata Modern Ice](https://www.gnome-look.org/p/1197198) sont à déposer dans le même répertoire `$HOME/.local/share/icons`  
-10. Le thème est à appliquer depuis Refine  
+10. Le thème est à appliquer depuis Tuner  
 11. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.containers-home/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
