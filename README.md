@@ -92,7 +92,7 @@ gsettings set org.gnome.mutter.attach-modal-dialogs false
 
 
 ### Gnome Tweaks / Refine -> remplacés par Tuner & Ignition
-Bazzite a supprimé en version 42 Gnome Tweaks, puis de Refine. La configuration avancée de gnome est à réalisée depuis Tuner.    
+Bazzite a supprimé en version 42 Gnome Tweaks, puis de Refine pour Tuner. Au 08/08/2025, il est préférable de rester sur `Refine` pour disposer de davantage d'options et de moins de bugs.    
 L'application pour gérer les applications lancées automatiquement est Ignition.  
 Exemple de configuration d'un script pour Solaar (cf. infra, section flatpak):
 ```
@@ -173,7 +173,7 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system vivaldi gedit betterbird simplescan libreoffice solaar digiKam
+flatpak install system refine vivaldi gedit betterbird simplescan libreoffice solaar digiKam
 ```
 digiKam = gestionnaire de photos.  
 solaar = gestionnaire de périphériques Logitech.  
@@ -270,7 +270,7 @@ xdg-config/gtk-3.0:ro
 8. Les icônes [WhiteSur Icon Theme](https://www.pling.com/p/1405756/) sont à déposer dans le répertoire `$HOME/.local/share/icons`  
 Ne pas utiliser les icônes WhiteSur qui posent des problèmes sur Wayland.  
 9. Les curseurs [Bibata Modern Ice](https://www.gnome-look.org/p/1197198) sont à déposer dans le même répertoire `$HOME/.local/share/icons`  
-10. Le thème est à appliquer depuis Tuner  
+10. Le thème est à appliquer depuis Refine    
 11. Supprimer le container `distrobox rm sys-deskcustom`, le répertoire `$HOME/.containers-home/sys-deskcustom`, le réperoirte `WhiteSur-gtk-theme` créé lors du processus d'installation.  
 
 
