@@ -107,13 +107,18 @@ L'installation de kDrive se réalise depuis l'interface de comptes en ligne de G
 <br>
 
 
+### Configuration de TERMINAL
+Thème : Palette = `GNOME`  
+<br>
+
+
 ### Configuration de BASH
 Installation de Oh-My-Bash à partir de cette ligne de commande (source: [Configurer Bash avec Oh-my-Bash](https://just-sudo-it.be/configurer-et-personnaliser-bash-avec-oh-my-bash/).  
 ```
 bash -c "$(wget https://raw.githubusercontent.com/ohmybash/oh-my-bash/master/tools/install.sh -O -)"
 ```
 Dans le fichier `.bashrc`:  
-1. Thème sélectionné: `powerline-multiline`, avec la palette `GNOME`,  
+1. Thème sélectionné: `powerline-multiline`,  
 2. Recopier les lignes originales du `.bashrc` de Bazzite dans la version générée par Oh-My-Bash. Nécessaire pour que `Brew` fonctionne,  
 3. Corriger un problème d'autocompletion par ajout **en fin** de .bashrc de `complete -d cd` ([Source issue 448](https://github.com/ohmybash/oh-my-bash/issues/448)),  
 4. Prise en compte des modifications par la commande `source .bashrc`.  
@@ -150,7 +155,7 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Permissions d'un package `flatpak info --show-permissions <package>`  
 <br>
 
-#### Paramétrage pour toutes les applications
+#### FLATSEAL
 Ajouter pour toutes les applications les permissions suivantes:  
 ```
 Accélaration GPU : enable
@@ -177,7 +182,7 @@ solaar = gestionnaire de périphériques Logitech.
 
 ### AppImage
 Autre service d'applications notament pour celles achetées.  
-Gestion à partir de l'application `Gear Level`.  
+Gestion à partir de l'application `Levier de vitesse / Gear Level`.  
 Créer un répertoire `~/.AppImages` pour les stocker.  
 
 #### Applications utilisées  
@@ -208,11 +213,11 @@ exiftool -overwrite_original '-FileModifyDate<DateTimeOriginal' -r ~/Images/
 ## Modding du système GNOME
 
 ### Extensions supplémentaires
-Liste d'extensions à installer:  
+Liste d'extensions à installer depuis `Gestionnaire d'extensions`:  
 - Dash to Dock: Position et taille -> `taille des icônes: 40`, Apparence -> `réduire les marges`, `utiliser le thème par défaut`
 - Desktop Icons NG  
 - Extension List  
-- SimpleWeather -> clé API personnelle [WeatherAPI.com](https://www.weatherapi.com/)  
+- SimpleWeather.  Clé API personnelle [WeatherAPI.com](https://www.weatherapi.com/) si besoin    
 - Hide Top Bar: activer l'option Sensitivity -> `Show panel when mouse approaches...`; désactiver les options Sensitivity -> `In the above case, also show panel when fullscreen`, Intellihide -> `only when the active window takes the space`.  
 <br>
 
