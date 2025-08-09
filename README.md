@@ -91,8 +91,8 @@ gsettings set org.gnome.mutter.attach-modal-dialogs false
 <br>
 
 
-### Gnome Tweaks -> remplacé par Refine & Ignition
-Bazzite a supprimé en version 42 Gnome Tweaks, il est remplacé par Refine. Eventuellement à installer via Flatpak.  
+### Gnome Tweaks / Refine -> remplacés par Tuner & Ignition
+Bazzite a supprimé en version 42 Gnome Tweaks, puis de Refine. La configuration avancée de gnome est à réalisée depuis Tuner.    
 L'application pour gérer les applications lancées automatiquement est Ignition.  
 Exemple de configuration d'un script pour Solaar (cf. infra, section flatpak):
 ```
@@ -102,8 +102,8 @@ flatpak run io.github.pwr_solaar.solaar --window=hide
 
 
 ### Configuration des services kDrive, OneDrive, Google Calendar ou Drive
-Pour rendre disponible OneDrive et les services Google, il convient d'utiliser le service de comptes distants de Gnome.  
-Il peut être nécessaire d'installer le flatpak : `Gnome Keyring`  
+L'installation de kDrive se réalise depuis l'interface de comptes en ligne de Gnome, connecter un compte `Agendas, contacts et fichier`.  
+[Mode opératoire](https://www.infomaniak.com/fr/support/faq/2409/se-connecter-a-kdrive-par-webdav)  
 <br>
 
 
