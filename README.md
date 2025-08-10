@@ -378,8 +378,7 @@ Distributions testées et fonctionnelles (wayland):
 
 Exemples avec implémentation du driver nvidia et une isolation renforcée (--unshare-all --init). Attention au répertoire pour le dossier $HOME du conteneur  
 ```
-distrobox create --image quay.io/fedora/fedora-toolbox:latest --name Name-FedoraOS --nvidia --unshare-all --home /home/$USER/.containers-home/Name-FedoraOS
-distrobox create --image quay.io/toolbx/arch-toolbox:latest --name Name-ArchEnv --nvidia --unshare-all --init --home /home/$USER/.containers-home/Name-ArchEnv
+distrobox create --image quay.io/fedora/fedora-toolbox:latest --name <Name>-FedoraOS --nvidia --unshare-all --home /home/$USER/.containers-home/<Name>-FedoraOS
 ```
 
 ### Paramétrage du container
@@ -410,43 +409,37 @@ Installation des paquets essentiels : nano, git...
 ```
 FEDORA:
   sudo dnf update
-  sudo dnf install nano git
-
-ARCH:
-  sudo pacman -Syu
-  sudo pacman -S nano git
+  sudo dnf install nano git chromium
 ```  
 Optionnel:
 - Installation de `Oh-My-Bash` en suivant le guide supra. Ne fonctionne que si l'on est entré dans le container à partir du menu du Shell. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
 - Configuration de `nano` en suivant le guide supra.
-- Installation de `chromium` pour qu'un navigateur soit actif sur le conteneur (nécessaire par exemple pour la documentation des programmes Rust)
+- Installation de `chromium` requise pour disposer des librairies graphiques et pour qu'un navigateur soit actif sur le conteneur (nécessaire par exemple pour la documentation des programmes Rust)
 <br>
 
-Installation de VS Code: depuis la racine du $HOME du container (cd ~/), suivre la procédure de MS  
-Note: la version du paquet Arch n'est pas la version complète par exmple): (https://code.visualstudio.com/docs/setup/linux)  
-<br>
-Installation de RustRover (JetBrains): depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
-Il est possible après de créer un symlink vers ~/.local/bin pour pouvoir lancer RustRover directement sans aller dans son répertoire d'installation (/opt/RustRover...)  
+
+Installation de RustRover (JetBrains):  
+- Depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
+- Il est possible après de créer un symlink vers ~/.local/bin pour pouvoir lancer RustRover directement sans aller dans son répertoire d'installation (/opt/RustRover...)  
 ```
 ln -s /opt/RustRover-2025.2/bin/rustrover ~/.local/bin/rustrover
 ln -s ~/.local/bin/rustrover ~/.local/bin/RR
 ```
+- Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.   
 <br>
+
+Alternative - Installation de VS Code: depuis la racine du $HOME du container (cd ~/), suivre la procédure de MS  [source](https://code.visualstudio.com/docs/setup/linux)  
+<br>
+
 
 Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
 ```
 git config --global user.name  "Imasu"
 git config --global user.email "@gmail.com"
 ```
-Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
+Note. Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
 <br>
 
-#### Mise en oeuvre de code & git
-**Sous environnement GNOME**
-1. Pour un container Arch, installer le packet `gnome-keyring` (pas besoin pour Fedora).  
-2. Lancer VS-Code, sur l'écran d’accueil, sélectionner 'Clone Git Repository...' et suivre les instructions. Sur Fedora, faire plusieurs cancel pour arriver à la méthode avec saisie d'un code.  
-3. Thèmes: `Tokyo Night Dark Enhanced` , `Atom One Dark Theme`
-<br>
 
 #### Installation des languages
 Languages testés:  
