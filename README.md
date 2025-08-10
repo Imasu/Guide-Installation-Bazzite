@@ -451,9 +451,9 @@ Dans les projets, pour éviter la synchronisation de certains fichiers ou réper
 #### Installation des languages
 Languages testés:  
 - Rust : [Install Rust in Fedora](https://developer.fedoraproject.org/tech/languages/rust/rust-installation.html). Installer via Rustup.  
--- Debugger : `lldb` à installer séparément.  
--- Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).
--- Créer un fichier `config.toml` dans le répertoire `~/.cargo/` avec la valeur d'optimisation du cache de compilation [source](https://wiki.archlinux.org/title/Rust)  
+  * Debugger : `lldb` à installer séparément.  
+  * Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).  
+  * Créer un fichier `config.toml` dans le répertoire `~/.cargo/` avec la valeur d'optimisation du cache de compilation [source](https://wiki.archlinux.org/title/Rust)  
 ```
 [build]
 rustc-wrapper = "sccache"
