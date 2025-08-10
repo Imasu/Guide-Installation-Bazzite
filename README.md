@@ -409,12 +409,14 @@ Installation des paquets essentiels : nano, git...
 ```
 FEDORA:
   sudo dnf update
-  sudo dnf install nano git chromium
+  sudo dnf install gcc nano git chromium
 ```  
+- `gcc` : outil de compilation  
+- `chromium` : requis pour disposer des librairies graphiques et pour qu'un navigateur soit actif sur le conteneur (nécessaire par exemple pour la documentation des programmes Rust)  
+
 Optionnel:
 - Installation de `Oh-My-Bash` en suivant le guide supra. Ne fonctionne que si l'on est entré dans le container à partir du menu du Shell. Thèmes à utiliser: `agnoster` ou `powerline-multiline`.  
 - Configuration de `nano` en suivant le guide supra.
-- Installation de `chromium` requise pour disposer des librairies graphiques et pour qu'un navigateur soit actif sur le conteneur (nécessaire par exemple pour la documentation des programmes Rust)
 <br>
 
 
