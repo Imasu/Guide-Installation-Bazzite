@@ -173,7 +173,7 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system refine vivaldi gedit betterbird simplescan libreoffice solaar digiKam
+flatpak install system refine gearlever vivaldi gedit betterbird simplescan libreoffice solaar digiKam
 ```
 digiKam = gestionnaire de photos.  
 solaar = gestionnaire de périphériques Logitech.  
