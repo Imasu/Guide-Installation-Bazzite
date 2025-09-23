@@ -243,7 +243,7 @@ cd WhiteSur-gtk-theme
 4. Depuis la console du système hôte, copier le contenu des répertoires suivants dans leur homologue du système hôte  
 ```
 cp -r $HOME/.containers-home/sys-deskcustom/.config/gtk-4.0 $HOME/.config/
-cp -r $HOME/.containers-home/sys-deskcustom/.themes  $HOME/.local/share/themes
+cp -r $HOME/.containers-home/sys-deskcustom/.themes/*  $HOME/.local/share/themes
 ```
 5. Depuis la console du système hôte, modifier les deux fichiers liens qui pointent vers le répertoire du container  
 ```
