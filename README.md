@@ -292,7 +292,7 @@ sudo usermod -a -G gamers user2
 sudo mkdir /var/steam-library
 sudo chgrp -R gamers /var/steam-library/
 sudo setfacl -PRdm u::rwx,g:gamers:rwX,o::r /var/steam-library
-sudo setfacl -m g:gamers:rwx,d:g:gamers:rwx /var/steam-library
+sudo setfacl -m g:gamers:rwX,d:g:gamers:rwX /var/steam-library
 
 //sudo setfacl -R -b /var/steam-library/
 //sudo setfacl -R -m g:gamers:rwX /var/steam-library/
