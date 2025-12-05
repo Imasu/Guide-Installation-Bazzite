@@ -3,6 +3,7 @@
 Synthèse de mon installation de Bazzite Gnome Nvidia 
 <br>
 [Documentation Bazzite](https://docs.bazzite.gg)  
+[Bazzite releases](https://github.com/ublue-os/bazzite/releases)  
 [Blog généraliste sur Linux avec astuces](https://www.linuxtricks.fr/pages/bienvenue-sur-linuxtricks)  
 <br><br><br>
 
