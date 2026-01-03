@@ -93,7 +93,7 @@ gsettings set org.gnome.mutter.attach-modal-dialogs false
 
 
 ### Gnome Tweaks / Refine -> remplacés par Tuner & Ignition
-Bazzite a supprimé en version 42 Gnome Tweaks, puis de Refine pour Tuner. Au 08/08/2025, il est préférable de rester sur `Refine` pour disposer de davantage d'options et de moins de bugs.    
+Bazzite a supprimé en version 42 Gnome Tweaks pour Refine, puis Refine pour Tuner. Au 08/08/2025, il est préférable néanmoins de rester sur `Refine` pour disposer de davantage d'options et de moins de bugs.    
 L'application pour gérer les applications lancées automatiquement est Ignition.  
 Exemple de configuration d'un script pour Solaar (cf. infra, section flatpak):
 ```
@@ -175,7 +175,7 @@ flatpak uninstall system firefox
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
 ```
-flatpak install system refine gearlever vivaldi gedit betterbird simplescan libreoffice solaar digiKam
+flatpak install system refine gearlever vivaldi evolution gedit simplescan solaar digiKam onlyoffice
 ```
 digiKam = gestionnaire de photos.  
 solaar = gestionnaire de périphériques Logitech.  
@@ -183,7 +183,7 @@ solaar = gestionnaire de périphériques Logitech.
 
 
 ### AppImage
-Autre service d'applications notament pour celles achetées.  
+Autre service d'applications notamment pour celles achetées.  
 Gestion à partir de l'application `Levier de vitesse / Gear Level`.  
 Créer un répertoire `~/.AppImages` pour les stocker.  
 
