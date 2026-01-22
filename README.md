@@ -291,21 +291,17 @@ sudo groupadd gamers
 sudo usermod -a -G gamers user1
 sudo usermod -a -G gamers user2
 sudo mkdir /var/steam-library
+
 sudo chgrp -R gamers /var/steam-library/
-sudo setfacl -PRdm u::rwx,g:gamers:rws,o::r /var/steam-library
-sudo setfacl -m g:gamers:rwX,d:g:gamers:rws /var/steam-library
 
-Alternative
-sudo chgrp -R gamers /var/steam-library/
-sudo chmod -R u+rwx /var/steam-library
-sudo chmod -R g+rwx /var/steam-library
-sudo chmod -R o+rw  /var/steam-library
+sudo setfacl -RP -m u::rwX,g:gamers:rwX,o::r /var/steam-library
+sudo setfacl -RP -m d:g:gamers:rwX /var/steam-library
 
-pour supprimer une autorisation, par exemple:  chmod -R o-x
+pour vérifier les ACL : getfacl /var/steam-library
 
-//sudo setfacl -R -b /var/steam-library/
-//sudo setfacl -R -m g:gamers:rwX /var/steam-library/
-//sudo setfacl -m d:g:gamers:rwx /var/steam-library/
+pour supprimer une autorisation (différent d'un ACL, -R = récursif) : chmod -R o-x
+pour ajouter une autorisation (différent d'un ACL, -R = récursif) : chmod -R o+x
+
 ```
 <br>
 
