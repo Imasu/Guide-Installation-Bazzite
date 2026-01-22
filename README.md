@@ -296,8 +296,11 @@ sudo setfacl -PRdm u::rwx,g:gamers:rws,o::r /var/steam-library
 sudo setfacl -m g:gamers:rwX,d:g:gamers:rws /var/steam-library
 
 Alternative
-chmod -R g+rws /var/steam-library
-chmod -R o+rw  /var/steam-library
+sudo chgrp -R gamers /var/steam-library/
+sudo chmod -R u+rwx /var/steam-library
+sudo chmod -R g+rwx /var/steam-library
+sudo chmod -R o+rw  /var/steam-library
+
 pour supprimer une autorisation, par exemple:  chmod -R o-x
 
 //sudo setfacl -R -b /var/steam-library/
