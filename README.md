@@ -154,7 +154,7 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Rechercher un package `flatpak search <package>`  
 - Lancer un package `flatpak run <package>`  
 - Permissions d'un package `flatpak info --show-permissions <package>`
-- Suppression des données cache d'applications supprimées `flatpak remove --delete-data`
+- Suppression des packages inutilisés et des données cache d'applications supprimées `flatpak remove --delete-data --unused`
 <br>
 
 #### FLATSEAL
