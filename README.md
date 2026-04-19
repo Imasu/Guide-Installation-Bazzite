@@ -248,13 +248,18 @@ Si cela ne fonctionne pas, pb SELinux. Vérification:
   getenforce  -> Si Enforcing, teste temporairement :
   sudo setenforce 0
 Si le service se lance, c'est bien un pb SELinux. Solution:
-  sudo restorecon -Rv /home/linuxbrew
+  sudo setenforce 1                                           # Remettre le service
+  sudo systemctl start rclone-kdrive.service                  # Reproduire le problème
+  sudo ausearch -m avc -ts recent                             # Récupère les logs SELinux
+  sudo ausearch -m avc -ts recent | audit2allow -M rclone_local   # Génère une règle autorisant ce comportement
+  sudo semodule -i rclone_local.pp                            # Installe la règle
+  
 Retester le fonctionnement
 
 Programmer le service au démarrage:
   sudo systemctl enable rclone-kdrive.service
 
-Pour supprimer le service:
+Pour supprimer un service:
   systemctl stop <nom service>
   systemctl disable <nom service>
   rm /etc/systemd/system/<nom service>
