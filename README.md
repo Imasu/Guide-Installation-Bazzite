@@ -196,7 +196,7 @@ Créer un répertoire `~/.AppImages` pour les stocker.
 Applications et services sans GUI. Permet l'installation d'applications utilisées dans les lignes de commande.   
 
 #### Applications utilisées
-- exiftool : manipulation de fichiers images et vidéo par ligne de commande  
+- exiftool : manipulation de fichiers images et vidéo par ligne de commande
 ```
 Utiliser les paramètres   DateTimeOriginal   ou  CreateDate   pour ces commandes
 
@@ -209,6 +209,59 @@ exiftool -r -d %Y/%m "-directory<createdate" ~/Images
 // Remplace les dates de dernière modification des fichiers par leur date de prise de vue
 exiftool -overwrite_original '-FileModifyDate<DateTimeOriginal' -r ~/Images/
 ```
+- rclone : montage des disques Webdav  
+```
+Créer le fichier de configuration comme indiqué dans la documentation
+
+// Montage sous forme de service systemd
+Créer un fichier pour le service:  sudo nano /etc/systemd/system/rclone-kdrive.service
+Contenu:
+  [Unit]
+  Description=Rclone mount Kdrive
+  Wants=network-online.target
+  After=network-online.target
+
+  [Service]
+  Type=simple
+  User=xxx
+  Group=xxx
+  ExecStartPre=/usr/bin/mkdir -p /home/xxx/Kdrive
+  ExecStart=/home/linuxbrew/.linuxbrew/bin/rclone mount kdrive: /home/xxx/Kdrive --config=/home/xxx/.config/rclone/rclone.conf --vfs-cache-mode full --allow-other
+  ExecStop=/usr/bin/fusermount3 -uz /home/xxx/Kdrive
+
+  [Install]
+  WantedBy=multi-user.target
+
+Le rendre exécutable: sudo chmod +x  /etc/systemd/system/rclone-kdrive.service
+Essayer de le lancer:
+  sudo systemctl daemon-reload
+  sudo systemctl start rclone-kdrive.service
+
+Vérification par:
+  sudo systemctl status rclone-kdrive.service
+  ou
+  sudo journalctl -u rclone-kdrive.service -b
+
+En cas d'erreur, essayer de lancer la ligne saisie pour vérifier s'il ne s'agit pas d'une typo:
+  sudo -u xxx /home/linuxbrew/.linuxbrew/bin/rclone mount kdrive: /home/xxx/Kdrive --config=/home/xxx/.config/rclone/rclone.conf --vfs-cache-mode full --allow-other
+Si cela ne fonctionne pas, pb SELinux. Vérification:
+  getenforce  -> Si Enforcing, teste temporairement :
+  sudo setenforce 0
+Si le service se lance, c'est bien un pb SELinux. Solution:
+  sudo restorecon -Rv /home/linuxbrew
+Retester le fonctionnement
+
+Programmer le service au démarrage:
+  sudo systemctl enable rclone-kdrive.service
+
+Pour supprimer le service:
+  systemctl stop <nom service>
+  systemctl disable <nom service>
+  rm /etc/systemd/system/<nom service>
+  rm /usr/lib/systemd/system/<nom service>
+  systemctl daemon-reload
+  systemctl reset-failed  
+``` 
 
 
 <br><br><br>
