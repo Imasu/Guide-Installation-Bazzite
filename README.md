@@ -350,7 +350,9 @@ sudo usermod -a -G gamers user1
 sudo usermod -a -G gamers user2
 sudo mkdir /var/steam-library
 
+#Attribue le propriétaire puis fait en sorte de le conserver sur les nouveaux éléments
 sudo chgrp -R gamers /var/steam-library/
+sudo chmod -R 2775 /var/steam-library
 
 sudo setfacl -RP -m u::rwX,g:gamers:rwX,o::r /var/steam-library
 sudo setfacl -RP -m d:g:gamers:rwX /var/steam-library
