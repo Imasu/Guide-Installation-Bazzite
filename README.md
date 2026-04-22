@@ -466,6 +466,15 @@ sudo cp Téléchargements/nvidia_icd.json /usr/share/vulkan/icd.d/
 Vérification par installation de `vulkan-tools` puis par la commande `vulkaninfo --summary`  
 <br>
 
+#### Fonctionnement de vulkan (22/04/2026)
+Avec Distrobox + --nvidia, le GPU est bien exposé, mais l’accès au display (X11/Wayland) n’est pas automatique.
+KDE Plasma 6 tourne souvent en Wayland, ce qui complique encore plus XCB
+
+Autoriser l’accès X11, sur l’hôte, lancer la commande:  
+```
+xhost +si:localuser:$(whoami)
+```
+<br>
 
 #### Configuration du shell
 Définir un profil pour le Bash avec la palette `Tokyo Night Moon`  
