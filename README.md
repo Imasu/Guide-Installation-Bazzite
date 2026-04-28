@@ -154,6 +154,7 @@ Modification du fichier de configuration `/etc/nanorc` :
 - Rechercher un package `flatpak search <package>`  
 - Lancer un package `flatpak run <package>`  
 - Permissions d'un package `flatpak info --show-permissions <package>`
+- Supprime les 'pins' des packahes `flatpak pin | xargs -n 1 -t sudo flatpak pin --remove`
 - Suppression des packages inutilisés et des données cache d'applications supprimées `flatpak remove --delete-data --unused`
 <br>
 
