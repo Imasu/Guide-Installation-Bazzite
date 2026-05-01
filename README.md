@@ -88,21 +88,19 @@ Thèmes et apparences depuis le menu `Couleurs & Thèmes de KDE`
 - Pointeurs -> WhiteSur Cursors  
 - Ecran de démarrage -> Aucun  
 <br>
-Depuis le menu Applications & Fenêtres / Gestion des fenêtres / Effets de bureau, il est possible de gérer les effets de fenêtre et leur transparence.
+Depuis le menu `Applications & Fenêtres / Gestion des fenêtres / Effets de bureau`, il est possible de gérer les effets de fenêtre et leur transparence.  
 <br>
 Configuration de Kvantum  
-Ressources: [WhiteSur KDE](https://github.com/vinceliuice/WhiteSur-kde)  
+Ressources: [WhiteSur KDE](https://github.com/vinceliuice/WhiteSur-kde)    
 - Depuis la page du thème WhiteSur, télécharger les deux fichiers de configuration Kvantum  
 - Les charger depuis Kvantum Manager, et sélectionner le thème WhiteSur  
 <br>
-Ecran de connexion et de verrouillage  
-```
-Il est possible de modifier les fonds d'écran à utiliser pour les deux processus.
-Pour garder le thème, le fond d'écran WhiteSur peut être utilisé.
-```
+Ecran de connexion et de verrouillage
+- Il est possible de modifier les fonds d'écran à utiliser pour les deux processus.  
+- Pour garder le thème, le fond d'écran WhiteSur peut être utilisé.  
 <br>
 Configuration des barres et panneaux  
-A faire à la main, vidéo youtube explicative; [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
+ - A faire à la main, vidéo youtube explicative; [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
 <br>
 
 
