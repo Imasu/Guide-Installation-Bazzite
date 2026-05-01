@@ -181,7 +181,18 @@ exiftool -overwrite_original '-FileModifyDate<DateTimeOriginal' -r ~/Images/
 ```
 - rclone : montage des disques Webdav  
 ```
-Créer le fichier de configuration comme indiqué dans la documentation
+// Créer le fichier de configuration comme indiqué dans la documentation
+  rclone config
+  -> n) New remote
+  -> name> kdrive
+  -> type of storage> 63 / WebDAV
+  -> url> https://123456.connect.kdrive.infomaniak.com     avec 123456 à remplacer par son id
+  -> vendor> 8/ Other site
+  -> User name> mail de connexion à kdrive
+  -> Password> y) Yes    puis saisir son mot de passe
+  -> bearer_token>   Enter to leave empty
+  -> edit advanced config> n) No
+  -> keep this remote ?> y) Yes
 
 // Montage sous forme de service systemd
 Créer un fichier pour le service:  sudo nano /etc/systemd/system/rclone-kdrive.service
