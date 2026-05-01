@@ -104,7 +104,8 @@ Ressources: [WhiteSur KDE](https://github.com/vinceliuice/WhiteSur-kde)
 <br>
 
 #### Configuration des barres et panneaux  
- A faire à la main, vidéo youtube explicative: [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
+ - A faire à la main, vidéo youtube explicative: [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
+ - Installer le widget `Panel Colorizer` et le paramétrer sur chacune des barres (panneaux) pour les rendre transparet  
 <br>
 
 
