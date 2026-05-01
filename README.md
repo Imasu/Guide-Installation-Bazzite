@@ -88,8 +88,10 @@ Thèmes et apparences depuis le menu `Couleurs & Thèmes de KDE`
 - Pointeurs -> WhiteSur Cursors  
 - Ecran de démarrage -> Aucun  
 <br>
-Depuis le menu `Applications & Fenêtres / Gestion des fenêtres / Effets de bureau`, il est possible de gérer les effets de fenêtre et leur transparence.  
+
+Depuis le menu `Applications & Fenêtres / Gestion des fenêtres / Effets de bureau`, il est possible de gérer les effets de fenêtre et leur transparence  
 <br>
+
 Configuration de Kvantum  
 Ressources: [WhiteSur KDE](https://github.com/vinceliuice/WhiteSur-kde)    
 - Depuis la page du thème WhiteSur, télécharger les deux fichiers de configuration Kvantum  
