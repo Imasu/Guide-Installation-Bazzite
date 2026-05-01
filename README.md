@@ -78,7 +78,7 @@ hostnamectl set-hostname <hostname>
 Installer sous forme de layer Kvantum `rpm-ostree install kvantum`  
 <br>
 
-Thèmes et apparences depuis le menu `Couleurs & Thèmes de KDE`  
+#### Thèmes et apparences depuis le menu `Couleurs & Thèmes de KDE`  
 - Thème global -> Fedora Light (Ne pas installer le thème global WhiteSur, il ne fonctionne pas)  
 - Couleurs -> Installer WhiteSur et sélectionner WhiteSurAlt  
 - Style d'applications -> kvantum,  -> Configurer un style pour application GNOME / GTK -> Breeze  
@@ -92,19 +92,19 @@ Thèmes et apparences depuis le menu `Couleurs & Thèmes de KDE`
 Depuis le menu `Applications & Fenêtres / Gestion des fenêtres / Effets de bureau`, il est possible de gérer les effets de fenêtre et leur transparence  
 <br>
 
-Configuration de Kvantum  
+#### Configuration de Kvantum  
 Ressources: [WhiteSur KDE](https://github.com/vinceliuice/WhiteSur-kde)    
 - Depuis la page du thème WhiteSur, télécharger les deux fichiers de configuration Kvantum  
 - Les charger depuis Kvantum Manager, et sélectionner le thème WhiteSur  
 <br>
 
-Ecran de connexion et de verrouillage  
+#### Ecran de connexion et de verrouillage  
 - Il est possible de modifier les fonds d'écran à utiliser pour les deux processus.  
 - Pour garder le thème, le fond d'écran WhiteSur peut être utilisé.  
 <br>
 
-Configuration des barres et panneaux  
- - A faire à la main, vidéo youtube explicative; [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
+#### Configuration des barres et panneaux  
+ A faire à la main, vidéo youtube explicative: [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
 <br>
 
 
@@ -140,7 +140,6 @@ Ajouter pour toutes les applications les permissions suivantes:
 Accélaration GPU : enable
 ```
 <br>
-
 
 #### Applications utilisées  
 A installer sur la session System pour éviter les doublons des packages de base et gagner de la place:  
