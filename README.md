@@ -374,7 +374,7 @@ Languages testés:
   * Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).  
   * Rust / Bevy : suivre le [guide d'installation](https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md). Dépendances Bevy à installer:  
     ```
-    sudo dnf install gcc-c++ alsa-lib-devel systemd-devel wayland-devel libxkbcommon-devel
+    sudo dnf install gcc-c++ alsa-lib-devel systemd-devel libX11-devel wayland-devel libxkbcommon-devel
     ```
    * Installation de RustRover (JetBrains):  
        * Depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
