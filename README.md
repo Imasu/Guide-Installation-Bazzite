@@ -85,7 +85,7 @@ Installer sous forme de layer Kvantum `rpm-ostree install kvantum`
 - Style Plasma -> Breeze  
 - Décoration des fenêtres -> Installer Utterly-Round-Light et le sélectionnner  
 - Icônes -> Installer WhiteSur et sélectionner WhiteSur-light  
-- Pointeurs -> WhiteSur Cursors  
+- Pointeurs -> Bibata Modern Classic  ou  WhiteSur Cursors  
 - Ecran de démarrage -> Aucun  
 <br>
 
