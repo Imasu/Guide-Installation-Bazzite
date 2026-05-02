@@ -159,7 +159,7 @@ Créer un répertoire `~/.AppImages` pour les stocker.
 
 #### Applications utilisées  
 - Cider (acheté via [itch.io](https://itch.io))  
-- Chiaki-ng (depuis leur site, le flatpak génère trop d'entrées obsolètes ou en doublon)  
+- Chiaki-ng: [releases](https://github.com/streetpea/chiaki-ng/releases) (le flatpak génère trop d'entrées obsolètes ou en doublon)  
 <br><br>
 
 
