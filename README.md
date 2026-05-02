@@ -300,7 +300,11 @@ gh auth login
 ```
 <br>
 
-Guide synthétique d'utilisation de git: [Git Push Local Branch to Remote – How to Publish a New Branch in Git](https://www.freecodecamp.org/news/git-push-local-branch-to-remote-how-to-publish-a-new-branch-in-git/).  
+Guides synthétiques d'utilisation de git:  
+- [Git Push Local Branch to Remote – How to Publish a New Branch in Git](https://www.freecodecamp.org/news/git-push-local-branch-to-remote-how-to-publish-a-new-branch-in-git/).
+- [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)
+<br>
+
 Quelques commandes utiles:  
 -`git init` pour initialiser un dépôt local  
 -`git add .` pour ajouter tous les fichiers du répertoire au dépôt local  
@@ -355,21 +359,13 @@ Sous FEDORA:
   sudo dnf install gcc nano git chromium
 ```  
 - `gcc` : outil de compilation  
+- `git` : configuration comme guide supra  
+   Rappel, dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
 - `chromium` : requis pour disposer des librairies graphiques et pour qu'un navigateur soit actif sur le conteneur (nécessaire par exemple pour la documentation des programmes Rust)  
 
 Optionnel:
 - Configuration de `nano` en suivant le guide supra.
 <br>
-
-
-Paramétrage de base de Git [Commandes GIT de base](https://www.hostinger.fr/tutoriels/commandes-git)  
-```
-git config --global user.name  "Imasu"
-git config --global user.email "@gmail.com"
-```
-Note. Dans les projets, pour éviter la synchronisation de certains fichiers ou répertoires, créer un fichier `.gitignore` avec les paramètrages nécessaires.  
-<br>
-
 
 #### Installation des languages
 Languages testés:  
