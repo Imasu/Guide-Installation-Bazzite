@@ -258,26 +258,28 @@ Solution dérivée de [configuration du répertoire steam](https://steamcommunit
 
 ### Configuration de la bibliothèque
 Répertoire utilisé comme bibliothèque: /var/steam-library/.  
+Création du nouveau groupe `gamers`  
 ```
 sudo groupadd gamers
-#Ajout des utilisateurs au nouveau groupe
+```
+Ajout des utilisateurs au nouveau groupe  
+```
 sudo usermod -a -G gamers user1
 sudo usermod -a -G gamers user2
 sudo mkdir /var/steam-library
-
-#Attribue le propriétaire puis fait en sorte de le conserver sur les nouveaux éléments
+```
+Attribue le propriétaire puis fait en sorte de le conserver sur les nouveaux éléments  
+```
 sudo chgrp -R gamers /var/steam-library/
 sudo chmod -R 2775 /var/steam-library
 
 sudo setfacl -RP -m u::rwX,g:gamers:rwX,o::r /var/steam-library
 sudo setfacl -RP -m d:g:gamers:rwX /var/steam-library
-
-pour vérifier les ACL : getfacl /var/steam-library
-
-pour supprimer une autorisation (différent d'un ACL, -R = récursif) : chmod -R o-x
-pour ajouter une autorisation (différent d'un ACL, -R = récursif) : chmod -R o+x
-
 ```
+Quelques commmandes pour références:  
+- Pour vérifier les ACL : `getfacl /var/steam-library`  
+- Pour supprimer une autorisation (différent d'un ACL, -R = récursif) : `chmod -R o-x`  
+- Pour ajouter une autorisation (différent d'un ACL, -R = récursif) : `chmod -R o+x`  
 <br>
 
 ### Configuration de Steam
@@ -347,8 +349,8 @@ xhost +si:localuser:$(whoami)
 
 #### Paquets à installer
 Installation des paquets essentiels : nano, git...  
+Sous FEDORA:  
 ```
-FEDORA:
   sudo dnf update
   sudo dnf install gcc nano git chromium
 ```  
@@ -357,17 +359,6 @@ FEDORA:
 
 Optionnel:
 - Configuration de `nano` en suivant le guide supra.
-<br>
-
-
-Installation de RustRover (JetBrains):  
-- Depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
-- Il est possible après de créer un symlink vers ~/.local/bin pour pouvoir lancer RustRover directement sans aller dans son répertoire d'installation (/opt/RustRover...)  
-```
-ln -s /opt/RustRover-2025.2/bin/rustrover ~/.local/bin/rustrover
-ln -s ~/.local/bin/rustrover ~/.local/bin/RR
-```
-- Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.   
 <br>
 
 
@@ -383,13 +374,27 @@ Note. Dans les projets, pour éviter la synchronisation de certains fichiers ou 
 #### Installation des languages
 Languages testés:  
 - Rust : [Install Rust in Fedora](https://developer.fedoraproject.org/tech/languages/rust/rust-installation.html). Installer via Rustup.  
-  * Debugger : `lldb ou mold` à installer séparément.  
+  * Debugger : `lldb ou mold` à installer séparément.  Il faudra configurer le fichier `.cargo/config.toml` rn conséquence.  
   * Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).  
-  * Rust / Bevy : suivre le [guide d'installation](https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md),  
+  * Rust / Bevy : suivre le [guide d'installation](https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md). Dépendances Bevy à installer:  
+    ```
+    sudo dnf install gcc-c++ alsa-lib-devel systemd-devel wayland-devel libxkbcommon-devel
+    ```
+   * Installation de RustRover (JetBrains):  
+       * Depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
+       * Il est possible après de créer un symlink vers ~/.local/bin pour pouvoir lancer RustRover directement sans aller dans son répertoire d'installation (/opt/RustRover...)
+         ```
+         ln -s /opt/RustRover-2025.2/bin/rustrover ~/.local/bin/rustrover
+         ln -s ~/.local/bin/rustrover ~/.local/bin/RR
+         ```
+       * Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.
+     <br>
+     
 - Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
 - Go : [install go in arch using Pacman](https://www.bomberbot.com/golang/how-to-install-go-in-arch-linux-using-pacman/). Installation sans difficulté. Pas besoin de mettre à jour le GOPATH. Un répertoire go sera créé avec les packages et binaires associés nécessaires.
 - Julia : [install Julia in Arch (wiki Arch)](https://wiki.archlinux.org/title/Julia).  Installation sans difficulté. Il convient de paramétrer le chemin de l'exécutable dans l'extension VSCode [source](https://blog.glcs.io/install-julia-and-vscode#heading-installing-julia-2).
 - C++ : [Installation & fonctionnement avec make](https://www.youtube.com/watch?v=VXvPpPCF7E0) ; [fonctionnement avec cmake](https://www.youtube.com/watch?v=DMSROwPyhAE)
+
 
 
 <br><br><br>
