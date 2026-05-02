@@ -380,7 +380,7 @@ Languages testés:
        * Depuis la racine du $HOME du container (cd ~/), [suivre la procédure de JetBrains](https://www.jetbrains.com/help/rust/installation-guide.html#standalone)  
        * Il est possible après de créer un symlink vers ~/.local/bin pour pouvoir lancer RustRover directement sans aller dans son répertoire d'installation (/opt/RustRover...)
          ```
-         ln -s /opt/RustRover-2025.2/bin/rustrover ~/.local/bin/rustrover
+         ln -s /opt/RustRover-YYYY.V/bin/rustrover ~/.local/bin/rustrover
          ln -s ~/.local/bin/rustrover ~/.local/bin/RR
          ```
        * Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.
