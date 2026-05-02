@@ -294,7 +294,7 @@ L'installation de git sur le poste principal est très simple grace à l'utilisa
 Le choix du protocole HTTPS permet un clonage effectif des répertoires avec un `git clone <lien https>`  
 ```
 git config --global user.name  "Imasu"
-git config --global user.email "@gmail.com"
+git config --global user.email "user@mail"
 brew install gh
 gh auth login
 ```
