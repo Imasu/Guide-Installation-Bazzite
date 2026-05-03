@@ -371,7 +371,42 @@ Optionnel:
 #### Installation des languages
 Languages testés:  
 - Rust : [Install Rust in Fedora](https://developer.fedoraproject.org/tech/languages/rust/rust-installation.html). Installer via Rustup.  
-  * Debugger : `lldb ou mold` à installer séparément.  Il faudra configurer le fichier `~/.cargo/config.toml` en conséquence.  
+  * Debugger : `lldb ou mold` à installer séparément.  Il faudra configurer le fichier `~/.cargo/config.toml` en conséquence. Exemple:
+    ```
+    # This file is .cargo/config.toml
+
+    # 1. Use the "lld" oe "mold" linker for faster linking.
+    # On Windows, this is "rust-lld.exe",
+    # On MacOS, this is "lld",
+    # On Linux, you can use "lld" or, even better, "mold".
+    [target.x86_64-pc-windows-msvc]
+    linker = "rust-lld.exe"
+    rustflags = ["-Zshare-generics=y"]
+    
+    [target.x86_64-apple-darwin]
+    rustflags = ["-C", "link-arg=-fuse-ld=lld"]
+    
+    [target.x86_64-unknown-linux-gnu]
+    rustflags = ["-C", "link-arg=-fuse-ld=mold"]
+    
+    
+    # 2. Configure our development buid profile for speed.
+    [profile.dev]
+    #  This is our code. We want to compile it as fast as possible.
+    #  'opt-level = 1' provides a good balance of speed and 
+    #  fast compilation
+    opt-level = 1
+    
+    
+    # 3. Configure dependencies (like Bevy) differently.
+    # We don't change Bevy's code, so we can afford to
+    # spend more time optimizing it one.
+    [profile.dev.package."*"]
+    #  'opt-level = 3' is a high optimization level.
+    #  This makes our dependencies run fast, but we only
+    #  pay the compile-time cost for them once.
+    opt-level = 3
+    ```
   * (Optionnel) Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).  
   * Rust / Bevy : suivre le [guide d'installation](https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md). Dépendances Bevy à installer:  
     ```
