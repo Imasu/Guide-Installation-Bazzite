@@ -420,7 +420,11 @@ Languages testés:
          ln -s ~/.local/bin/rustrover ~/.local/bin/RR
          ```
        * Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.
-       * Configurer les Rust External Linters `Settings > Rust > External Linters` avec `Clippy` en remplacement de `Cargo Check`, et renseigner la ligne d'arguments avec `-- -Dclippy::pedantic -Aclippy::uninlined_format_args -Aclippy::no_effect_underscore_binding`. Ce qui rend Clippy pedantic. [Simple case of pedantic clippy](https://rust.code-maven.com/simple-case-of-pedantic-lints]  
+       * Configurer les Rust External Linters `Settings > Rust > External Linters` avec `Clippy` en remplacement de `Cargo Check`, et renseigner la ligne d'arguments avec  
+          ```
+          -- -Dclippy::pedantic -Aclippy::needless_pass_by_value -Aclippy::too_many_lines
+          ```
+          Ce qui rend Clippy pedantic mais avec quelques exceptions pour Bevy. Explication: [Simple case of pedantic clippy](https://rust.code-maven.com/simple-case-of-pedantic-lints]  
      <br>
      
 - Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
