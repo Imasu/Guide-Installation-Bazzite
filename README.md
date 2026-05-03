@@ -371,8 +371,8 @@ Optionnel:
 #### Installation des languages
 Languages testés:  
 - Rust : [Install Rust in Fedora](https://developer.fedoraproject.org/tech/languages/rust/rust-installation.html). Installer via Rustup.  
-  * Debugger : `lldb ou mold` à installer séparément.  Il faudra configurer le fichier `.cargo/config.toml` rn conséquence.  
-  * Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).  
+  * Debugger : `lldb ou mold` à installer séparément.  Il faudra configurer le fichier `~/.cargo/config.toml` en conséquence.  
+  * (Optionnel) Créer un fichier `rustfmt.toml` dans un répertoire `~/.config/rustfmt/` avec les valeurs de formatage à appliquer à tous les programmes Rust [source](https://rust-lang.github.io/rustfmt/?version=v1.8.0&search=).  
   * Rust / Bevy : suivre le [guide d'installation](https://github.com/bevyengine/bevy/blob/latest/docs/linux_dependencies.md). Dépendances Bevy à installer:  
     ```
     sudo dnf install gcc-c++ alsa-lib-devel systemd-devel libX11-devel wayland-devel libxkbcommon-devel
@@ -385,6 +385,7 @@ Languages testés:
          ln -s ~/.local/bin/rustrover ~/.local/bin/RR
          ```
        * Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.
+       * Configurer les Rust External Linters `Settings > Rust > External Linters` avec `Clippy` en remplacement de `Cargo Check`, et renseigner la ligne d'arguments avec `-- -Dclippy::pedantic -Aclippy::uninlined_format_args -Aclippy::no_effect_underscore_binding`. Ce qui rend Clippy pedantic. [Simple case of pedantic clippy](https://rust.code-maven.com/simple-case-of-pedantic-lints]  
      <br>
      
 - Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
