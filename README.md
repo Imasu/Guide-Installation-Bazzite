@@ -420,11 +420,13 @@ Languages testés:
          ln -s ~/.local/bin/rustrover ~/.local/bin/RR
          ```
        * Lors de la première connexion, l'enregistrement de la license est nécessaire. Sélectionner la méthode par token.
-       * Configurer les Rust External Linters `Settings > Rust > External Linters` avec `Clippy` en remplacement de `Cargo Check`, et renseigner la ligne d'arguments avec  
+       * Configurer les Rust External Linters `Settings > Rust > External Linters` avec `Clippy` en remplacement de `Cargo Check`, passer sur la channel `Stable` et renseigner la ligne d'arguments avec  
           ```
           -- -Dclippy::pedantic -Aclippy::needless_pass_by_value -Aclippy::too_many_lines
           ```
           Ce qui rend Clippy pedantic mais avec quelques exceptions pour Bevy. Explication: [Simple case of pedantic clippy](https://rust.code-maven.com/simple-case-of-pedantic-lints]  
+        * Configurer Rustfmt `Settings > Rust > Rustfmt` en passant sur la channel `nightly` ce qui débloque les options instables.  
+          Le fichier de configuration `rustfmt.toml` est à placer dans le dossier du projet  
      <br>
      
 - Odin : Installer les packages `odin lldb`. Le dernier correspond au debugger. 
