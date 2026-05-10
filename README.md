@@ -276,9 +276,12 @@ sudo chgrp -R gamers /var/steam-library/
 /////sudo chmod -R 2775 /var/steam-library
 sudo find /var/steam-library -type d -exec chmod 2775 {} \;
 sudo find /var/steam-library -type f -exec chmod 664 {} \;
+sudo find /var/steam-library -type f -executable -exec chmod 775 {} \;
 
-sudo setfacl -RP -m u::rwX,g:gamers:rwX,o::r /var/steam-library
-sudo setfacl -RP -m d:g:gamers:rwX /var/steam-library
+///sudo setfacl -RP -m u::rwX,g:gamers:rwX,o::r /var/steam-library
+///sudo setfacl -RP -m d:g:gamers:rwX /var/steam-library
+sudo setfacl -RP -m g:gamers:rwX /var/steam-library
+sudo setfacl -RP -d -m g:gamers:rwX /var/steam-library
 ```
 Quelques commmandes pour références:  
 - Pour vérifier les ACL : `getfacl /var/steam-library`  
