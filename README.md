@@ -105,8 +105,12 @@ Ressources: [WhiteSur KDE](https://github.com/vinceliuice/WhiteSur-kde)
 
 #### Configuration des barres et panneaux  
  - A faire à la main, vidéo youtube explicative: [Personnalisation de KDE Plasma pour débutants](https://www.youtube.com/watch?v=u9Otce910qM)  
- - Installer le widget `Panel Colorizer` et le paramétrer sur chacune des barres (panneaux) pour les rendre transparet
+ - Installer le widget `Panel Colorizer` et le paramétrer sur chacune des barres (panneaux) pour les rendre transparente  
  - Pour la météo `Weather Widget Plus` est bien  
+<br>
+
+#### Configuration des fenêtres  
+ - Il est possible de régler les effets de transparences des fenêtres depuis l'option `Translucidité` qui est accessible depuis **Configuration du système** -> **Gestion des fenêtres** -> **Effets de bureau**
 <br>
 
 
