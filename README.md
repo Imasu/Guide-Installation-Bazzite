@@ -295,7 +295,13 @@ Quelques commmandes pour références:
 
 ### Configuration de Steam
 Modifier dans steam, pour tous les utilisateurs, le répertoire de stockage des jeux.  
+<br>
 
+### Dota 2
+Gestion de l'erreur `only one instance of the game can be running at one time`  
+```
+sudo chown root:root /tmp/source_engine_*.lock 
+```
 
 
 
