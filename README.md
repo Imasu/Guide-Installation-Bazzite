@@ -74,6 +74,14 @@ hostnamectl set-hostname <hostname>
 <br>
 
 
+### Contournement du problème de micro saccade après une mise en veille
+Lié à mon matériel ancien (vieux CPU & GPU)  
+```
+sudo rpm-ostree kargs --append="processor.max_cstate=1"
+```
+<br>
+
+
 ### Configuration KDE Plasma
 Installer sous forme de layer Kvantum `rpm-ostree install kvantum`  
 <br>
