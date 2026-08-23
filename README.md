@@ -75,11 +75,12 @@ hostnamectl set-hostname <hostname>
 
 
 ### Contournement du problème de micro saccade après une mise en veille
-Lié à mon matériel ancien (vieux CPU & GPU)  
-Raison probable : après la reprise S3, les compteurs TSC de vos cœurs se désynchronisent (bug connu sur certaines vieilles plateformes/BIOS, souvent lié à des SMI firmware ou à un souci de resynchronisation lors des transitions vers des C-states profonds). Le noyau détecte l'incohérence et marque le TSC "unstable", ce qui dérègle le scheduling / le calcul du frame pacing dans les jeux — d'où les micro-saccades, uniquement après veille, jamais après un boot à froid (cohérent avec votre dmesg de boot qui ne montre pas ce message).  
+Lié à mon CPU ancien (Intel(R) Core(TM) i7-3770 (8) @ 3.90 GHz)  
+Raison probable : après la reprise S3, les compteurs TSC de vos cœurs se désynchronisent (bug connu sur certaines vieilles plateformes/BIOS, souvent lié à des SMI firmware ou à un souci de resynchronisation lors des transitions vers des C-states profonds). Le noyau détecte l'incohérence et marque le TSC "unstable", ce qui dérègle le scheduling / le calcul du frame pacing dans les jeux — d'où les micro-saccades, uniquement après veille, jamais après un boot à froid.  
 ```
-sudo rpm-ostree kargs --append="processor.max_cstate=1"
+=> Passer le mode d'économie d'énergie en S1
 ```
+Bug visible avec la commande `sudo dmesg | grep -iE "nvidia|vram|alloc|failed"` qui remonte l'entrée `tsc: Marking TSC unstable due to check_tsc_sync_source failed` après une mise en veille en mode S3. Le paramétrage `sudo rpm-ostree kargs --append="intel_idle.max_cstate=1"` n'est pas suffisant, en mode S3, pour régler le problème.  
 <br>
 
 
